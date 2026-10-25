@@ -6,10 +6,10 @@
  * "a ficha mudou mas o card do roster continuou velho".
  */
 
-import { api } from './api.js?v=c6180d3193';
-import { CHAVES } from './config.js?v=c6180d3193';
-import { guardado } from './util.js?v=c6180d3193';
-import { enfileirar, marcarPendente } from './fila.js?v=c6180d3193';
+import { api } from './api.js?v=dd0875ae30';
+import { CHAVES } from './config.js?v=dd0875ae30';
+import { guardado } from './util.js?v=dd0875ae30';
+import { enfileirar, marcarPendente } from './fila.js?v=dd0875ae30';
 
 const estado = {
   /** null enquanto não sabemos se há sessão válida. */
@@ -136,9 +136,19 @@ export const acoes = {
    *
    * @return {{nivelMudou:boolean, de:number, para:number}|null}
    */
-  async atualizarSessao() {
+  async atualizarSessao(forcar) {
     if (!estado.token) return null;
-    if (Date.now() - ultimaConferida < 20000) return null;   // não martelar o servidor
+    /*
+     * ⚠ `forcar` EXISTE POR CAUSA DA MOLDURA.
+     *
+     * O travão de 20s protege o servidor de quem troca de aba sem parar — e
+     * estava certo até a moldura passar a mudar coisas que a tela mostra
+     * (o nome da moeda, o rótulo do dano). Quando o próprio Mestre escolhe a
+     * campanha, ele acabou de agir: esperar 20 segundos, ou que ele troque de
+     * aba, faz a escolha parecer que não funcionou. Foi o que aconteceu na
+     * mesa de 09/10/2026 — ela escolheu, olhou, não viu nada e reiniciou.
+     */
+    if (!forcar && Date.now() - ultimaConferida < 20000) return null;
     ultimaConferida = Date.now();
     try {
       const dados = await api.sessao(estado.token);
@@ -561,6 +571,17 @@ export const acoes = {
 
   async reiniciarMoldura(confirmado) {
     return api.reiniciarMoldura(estado.token, confirmado === true);
+  },
+
+  /**
+   * ANOTAR NA CAMPANHA — o caderno do Mestre.
+   *
+   * ⚠ NÃO É REGRA, e por isso não pede confirmação como a escolha de campanha:
+   * nada aqui muda ficha de ninguém. Valor vazio APAGA a chave, que é como se
+   * desfaz uma escolha da Leitura do Céu Noturno sem precisar de outra ação.
+   */
+  async anotarCampanha(chave, valor) {
+    return api.anotarCampanha(estado.token, chave, valor);
   },
 
   /*

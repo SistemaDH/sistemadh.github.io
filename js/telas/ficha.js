@@ -21,21 +21,21 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=c6180d3193';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=c6180d3193';
-import { acoes, obterEstado } from '../estado.js?v=c6180d3193';
-import { mensagemDoErro } from '../api.js?v=c6180d3193';
-import { aguardar, temPendente } from '../fila.js?v=c6180d3193';
-import * as dados from '../dados.js?v=c6180d3193';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=c6180d3193';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=c6180d3193';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=c6180d3193';
-import { botaoDeRegras } from './regras.js?v=c6180d3193';
-import { abrirDescanso } from './descanso.js?v=c6180d3193';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=c6180d3193';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=c6180d3193';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=c6180d3193';
-import { icone } from '../componentes/icone.js?v=c6180d3193';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=dd0875ae30';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=dd0875ae30';
+import { acoes, obterEstado } from '../estado.js?v=dd0875ae30';
+import { mensagemDoErro } from '../api.js?v=dd0875ae30';
+import { aguardar, temPendente } from '../fila.js?v=dd0875ae30';
+import * as dados from '../dados.js?v=dd0875ae30';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=dd0875ae30';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=dd0875ae30';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=dd0875ae30';
+import { botaoDeRegras } from './regras.js?v=dd0875ae30';
+import { abrirDescanso } from './descanso.js?v=dd0875ae30';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=dd0875ae30';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=dd0875ae30';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=dd0875ae30';
+import { icone } from '../componentes/icone.js?v=dd0875ae30';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -4458,6 +4458,24 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
             botaoDeResolucaoManual(c.nome),
             resumoDeEfeitoDerivado(c.nome, ficha),
             blocoDeRetaliacao(c.nome, ficha),
+            /*
+             * ⚠ QUANDO A CAMPANHA TROCOU A HABILIDADE, A FICHA DIZ ISSO.
+             *
+             * Em Placa-mãe o Treinamento de Combate do guerreiro é substituído
+             * por Treinamento Ikonis (livro p.295). Sem esta linha, quem abre a
+             * ficha com o livro ao lado vê uma habilidade que não está na
+             * página da classe e conclui que o app errou — e quem não tem o
+             * livro nunca descobre que perdeu a original.
+             *
+             * O nome do que saiu vem do servidor (`trocadaPelaMoldura`), não de
+             * uma tabela escrita aqui: a segunda campanha que trocar algo
+             * aparece sozinha.
+             */
+            c.trocadaPelaMoldura
+              ? el('p', { class: 'texto-xs texto-fraco', texto:
+                `Esta campanha substituiu ${c.trocadaPelaMoldura} por esta habilidade.` +
+                (c.fonte ? ` ${c.fonte}` : '') })
+              : null,
             c.origem ? el('span', { class: 'selo', texto: c.origem }) : null
           ]);
         }))));
@@ -6297,6 +6315,25 @@ function ouroEmPunhados(ouro) {
       return modal;
     };
 
+    /*
+     * ⚠ A MOEDA DA CAMPANHA PRECISA DIZER QUE NÃO CONVERTEU NADA.
+     *
+     * A moldura troca o NOME e a granularidade, não o valor — está decidido e
+     * escrito em `4E_Mesa.gs`, e é a decisão certa: a escada é a mesma, então
+     * converter daria o mesmo número com risco de arredondamento, e sair da
+     * campanha seria caminho sem volta.
+     *
+     * Só que a tela não dizia isso. Em 09/10/2026 a Mestra escolheu a
+     * Placa-mãe, olhou a Mochila, viu o mesmo número de sempre e concluiu que
+     * a campanha não tinha funcionado. A regra estava certa; faltava a frase.
+     */
+    const avisoDaMoeda = moedaDaMesa
+      ? el('p', { class: 'texto-xs texto-fraco', texto:
+        `Nesta campanha o dinheiro se chama ${moedaDaMesa.nomePlural}. ` +
+        'O valor guardado é o mesmo de sempre — nada foi convertido, e sair da ' +
+        'campanha devolve a contagem em ouro.' })
+      : null;
+
     pai.append(secao('Ouro', el('div', { class: 'coluna' }, [
       el('div', { class: 'ficha__ouroLinha' }, [
         el('p', { class: 'ficha__ouroFrase' }, fraseDoOuro()),
@@ -6307,10 +6344,11 @@ function ouroEmPunhados(ouro) {
             onClick: () => abrirLoteDeOuro(-1) }, 'Gastar ouro')
         ])
       ]),
+      avisoDaMoeda,
       el('p', { class: 'texto-xs texto-fraco', texto: comMoedas
         ? '10 moedas viram 1 punhado, 10 punhados 1 bolsa, 10 bolsas 1 baú — e o livro não deixa passar de 1 baú. As moedas são a regra opcional, ligada pelo Mestre.'
         : '10 punhados viram 1 bolsa, 10 bolsas viram 1 baú — e o livro não deixa passar de 1 baú.' })
-    ])));
+    ].filter(Boolean))));
 
     const inv = ficha.inventario || [];
     const campoNovo = el('input', semCorretor({
@@ -7312,6 +7350,17 @@ function ouroEmPunhados(ouro) {
       pai.append(secao('Laços', el('div', { class: 'pilha' },
         h.conexoes.map((c) => blocoDePergunta(c)))));
     }
+    /*
+     * ⚠ O QUE A CAMPANHA PERGUNTOU tem seção própria, e não entra em "Passado".
+     * O artefato de fragmento celeste de Castle High não é passado nem laço: é
+     * uma coisa que esta campanha dá a todo personagem. Misturado no Passado,
+     * ele viraria mais uma resposta sem dono quando a mesa trocasse de campanha
+     * — e a resposta já carrega a pergunta justamente para sobreviver a isso.
+     */
+    if ((h.campanha || []).length) {
+      pai.append(secao('Desta campanha', el('div', { class: 'pilha' },
+        h.campanha.map((c) => blocoDePergunta(c)))));
+    }
     if ((h.projetos || []).length) {
       pai.append(secao('Projetos no repouso', el('ul', { class: 'ficha__inventario' },
         h.projetos.map((pr) => el('li', { class: 'ficha__item' }, [
@@ -7919,14 +7968,8 @@ export async function carregarCatalogo() {
       return s ? String(s.id).replace(new RegExp('^' + c.id + '-'), '') : '';
     },
 
-    /** Patamar do nível (1, 2-4, 5-7, 8-10) — a mesma conta do servidor. */
-    patamarDoNivel: (nivel) => {
-      const n = Number(nivel) || 1;
-      if (n >= 8) return 4;
-      if (n >= 5) return 3;
-      if (n >= 2) return 2;
-      return 1;
-    },
+    /** Patamar do nível (1, 2-4, 5-7, 8-10) — um leitor só, em `dados.js`. */
+    patamarDoNivel: (nivel) => dados.patamarDoNivel(nivel),
 
     /**
      * As CARTAS DE SUBCLASSE que este personagem tem na mesa.

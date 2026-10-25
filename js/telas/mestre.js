@@ -20,20 +20,20 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=c6180d3193';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=c6180d3193';
-import { acoes } from '../estado.js?v=c6180d3193';
-import { mensagemDoErro } from '../api.js?v=c6180d3193';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=c6180d3193';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=c6180d3193';
-import { botaoDeRegras } from './regras.js?v=c6180d3193';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=c6180d3193';
-import { secaoDoEncontro } from './encontro.js?v=c6180d3193';
-import { icone } from '../componentes/icone.js?v=c6180d3193';
-import * as dados from '../dados.js?v=c6180d3193';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=dd0875ae30';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=dd0875ae30';
+import { acoes } from '../estado.js?v=dd0875ae30';
+import { mensagemDoErro } from '../api.js?v=dd0875ae30';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=dd0875ae30';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=dd0875ae30';
+import { botaoDeRegras } from './regras.js?v=dd0875ae30';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=dd0875ae30';
+import { secaoDoEncontro } from './encontro.js?v=dd0875ae30';
+import { icone } from '../componentes/icone.js?v=dd0875ae30';
+import * as dados from '../dados.js?v=dd0875ae30';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=c6180d3193';
+} from '../componentes/carta.js?v=dd0875ae30';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -789,24 +789,27 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         ])
       : null;
 
-    const mecanicas = (c.mecanicas || []).map((m) => el('div', { class: 'cartao' }, [
-      el('h5', { class: 'cartao__titulo', texto: m.nome }),
-      ...(m.texto || []).map((t) => el('p', { class: 'texto-sm', texto: t })),
-      m.automacao
-        ? el('p', { class: 'texto-xs', texto: '✓ O app aplica esta mecânica.' })
-        : el('p', { class: 'texto-xs texto-fraco', texto: 'Fica com a mesa: o app não aplica.' }),
-      botaoDaMecanica(m),
-      /*
-       * ⚠ O QUE FICA COM A MESA, ESCRITO AQUI E NÃO NO CÓDIGO. Quando a mecânica
-       * tem parte que o app não resolve — reacender uma Chama apagada, achar
-       * combustível —, o texto vem do dado (`automacao.efeitoManual`), não de uma
-       * frase escrita na tela. Frase na tela é a regra em dois lugares: muda a
-       * moldura no JSON e a tela continua dizendo o que dizia antes.
-       */
-      (m.automacao && m.automacao.efeitoManual)
-        ? el('p', { class: 'texto-xs texto-fraco', texto: m.automacao.efeitoManual })
-        : null,
-      fichaDeCampanha(m)
+    const mecanicas = (c.mecanicas || []).map(cartaoDaMecanica);
+
+    /*
+     * ⚠ AS FERRAMENTAS HERDADAS, com a fonte ao lado.
+     *
+     * O Coração Sombrio de Andaluria usa as mecânicas de caça a monstros do SRD
+     * 2.0, que já estavam no app como apêndice. O motor resolve a herança e
+     * manda em `apendicesDaMoldura`; aqui elas são desenhadas pelo MESMO
+     * `cartaoDaMecanica` das próprias — porque são mecânicas iguais às outras,
+     * e um segundo desenho seria um segundo jeito de mostrar a mesma coisa.
+     *
+     * ⚠ O CABEÇALHO DIZ DE ONDE VEM. Sem ele, a trilha da Caçada apareceria
+     * dentro de Andaluria sem jeito de saber que é o procedimento do SRD, que
+     * serve para qualquer campanha — e, pior, pareceria conteúdo que alguém
+     * copiou para dentro desta moldura.
+     */
+    const herdadas = (painel.apendicesDaMoldura || []).map((a) => el('div', { class: 'pilha' }, [
+      el('p', { class: 'mestre__herdado', texto:
+        `Herdado de ${a.nome}${a.paginasLivro ? ' · ' + a.paginasLivro : ''} — ` +
+        'as mesmas mecânicas, numa fonte só.' }),
+      ...(a.mecanicas || []).map(cartaoDaMecanica)
     ]));
 
     const perguntas = (c.perguntasDeSessaoZero || []).length
@@ -829,14 +832,266 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         'Complexidade ' + '•'.repeat(Math.max(1, Number(c.complexidade) || 1)) +
         (c.criadoPor ? ' · criado por ' + c.criadoPor : '') +
         (c.paginasLivro ? ' · livro p.' + c.paginasLivro : '') }) : null,
+      quandoAMolduraMuda(c),
       c.proposta ? el('p', { class: 'texto-sm', texto: c.proposta }) : null,
       linha('Tom', c.tom),
       linha('Temas', c.temas),
       linha('Referências', c.referencias),
       ...(c.visaoGeral || []).map((t) => el('p', { class: 'texto-xs texto-fraco', texto: t })),
+      blocoDasOrigens(c),
+      blocoDosPrincipios(c),
       ...mecanicas,
+      ...herdadas,
       perguntas
     ]);
+  }
+
+  /**
+   * A DOBRA DO CENÁRIO — e por que o conteúdo da moldura nasce fechado.
+   *
+   * ⚠ O CAPÍTULO 5 NÃO CABE ABERTO. Só as origens do Colosso das Terras Áridas
+   * são seis comunidades, quatro ancestralidades e quatro classes, cada uma com
+   * até três perguntas de sessão zero: aberto de uma vez, isso empurra o Medo e
+   * as contagens — o que a Mestra toca a cada cena — para fora da tela do
+   * celular. Fechado, cada seção é uma linha de toque com a contagem do lado.
+   *
+   * Mesma forma da ficha (`.dobra`), de propósito: é o gesto que a Vanessa já
+   * conhece de "Condições" e "Inventário".
+   */
+  function dobraDoCenario(titulo, resumo, conteudo) {
+    const caixa = el('details', { class: 'dobra' });
+    caixa.append(
+      el('summary', { class: 'dobra__topo' }, [
+        el('span', { class: 'dobra__nome', texto: titulo }),
+        resumo ? el('span', { class: 'dobra__resumo', texto: resumo }) : null,
+        el('span', { class: 'dobra__seta', 'aria-hidden': 'true' }, icone('avancar'))
+      ]),
+      el('div', { class: 'dobra__corpo' }, conteudo)
+    );
+    return caixa;
+  }
+
+  /**
+   * AS ORIGENS DO CENÁRIO — o que muda em comunidade, ancestralidade e classe.
+   *
+   * ⚠ ESTE BLOCO É A METADE DO RELATO QUE SOBROU. Quando a Vanessa disse que "o
+   * sistema de cenários está faltando coisas", uma das faltas era esta: o livro
+   * dedica duas páginas por cenário a dizer como cada comunidade se encaixa
+   * nele, e o app guardava esse texto em `data/molduras.json` SEM NENHUMA TELA
+   * QUE O LESSE. Mesmo o único cenário preenchido estava invisível.
+   *
+   * ⚠ O NOME VEM EM DOIS: o da CARTA ("Highborne"), que é como a ficha chama a
+   * comunidade, e o do LIVRO ("Aristocrática"), que é como a prosa do Capítulo 5
+   * chama. Sem os dois lado a lado, quem lê o painel não consegue casar a seção
+   * com a comunidade que está escrita na ficha do jogador — e foi por isso que
+   * a forma antiga, de dois parágrafos corridos, não servia nem se fosse lida.
+   */
+  function blocoDasOrigens(c) {
+    const o = c.origens;
+    // A forma antiga era lista. Só o objeto da versão 2 tem as três seções.
+    if (!o || Array.isArray(o)) return null;
+
+    const comunidades = o.comunidades || [];
+    const ancestralidades = o.ancestralidades || [];
+    const classes = o.classes || [];
+    if (!comunidades.length && !ancestralidades.length && !classes.length) {
+      return o.nota ? el('p', { class: 'texto-xs texto-fraco', texto: o.nota }) : null;
+    }
+
+    const entrada = (e) => el('div', { class: 'mestre__origem' }, [
+      el('h6', { class: 'mestre__origemNome' }, [
+        el('span', { texto: e.nome }),
+        e.nomeLivro && e.nomeLivro !== e.nome
+          ? el('span', { class: 'mestre__origemLivro', texto: 'no livro: ' + e.nomeLivro })
+          : null
+      ]),
+      el('p', { class: 'texto-sm', texto: e.texto }),
+      (e.perguntas || []).length
+        ? el('ul', { class: 'lista-simples' }, e.perguntas.map((q) =>
+            el('li', { class: 'texto-xs texto-fraco', texto: q })))
+        : null
+    ]);
+
+    const secao = (titulo, lista) => lista.length
+      ? dobraDoCenario(titulo, String(lista.length), lista.map(entrada))
+      : null;
+
+    return el('div', { class: 'mestre__origens' }, [
+      o.nota ? el('p', { class: 'texto-xs texto-fraco', texto: o.nota }) : null,
+      /*
+       * ⚠ A PROIBIÇÃO APARECE FORA DA DOBRA. Placa-mãe é o único cenário que
+       * PROÍBE uma ancestralidade — clanks não existem lá (livro p.294) — e
+       * isso não é cor: é regra de criação de ficha. Quem vai criar personagem
+       * precisa ler antes de escolher, não depois de abrir uma seção.
+       */
+      c.origensProibidas && c.origensProibidas.motivo
+        ? el('p', { class: 'mestre__molduraQuando', texto: '⚠ ' + c.origensProibidas.motivo })
+        : null,
+      secao('Comunidades', comunidades),
+      secao('Ancestralidades', ancestralidades),
+      secao('Classes', classes)
+    ]);
+  }
+
+  /**
+   * OS PRINCÍPIOS — os dos jogadores e os do Mestre, nessa ordem.
+   *
+   * ⚠ A ORDEM É A DO LIVRO, e ela tem motivo de mesa: os princípios dos
+   * JOGADORES são o que se lê em voz alta ANTES da criação de personagem (o
+   * livro diz isso em cada cenário, com essas palavras), e os do Mestre são o
+   * que fica na cabeça de quem conduz. Quem abre o painel na sessão zero quer o
+   * primeiro; quem abre no meio da cena quer o segundo.
+   */
+  function blocoDosPrincipios(c) {
+    const dos = (titulo, lista) => (lista && lista.length)
+      ? dobraDoCenario(titulo, String(lista.length), lista.map((p) => el('div', { class: 'mestre__origem' }, [
+          el('h6', { class: 'mestre__origemNome' }, [el('span', { texto: p.nome })]),
+          el('p', { class: 'texto-sm', texto: p.texto })
+        ])))
+      : null;
+    const jog = dos('Princípios dos jogadores', c.principiosDosJogadores);
+    const mes = dos('Princípios do Mestre', c.principiosDoMestre);
+    if (!jog && !mes) return null;
+    return el('div', { class: 'mestre__origens' }, [jog, mes]);
+  }
+
+  /**
+   * ⚠ O QUE ESTA CAMPANHA MUDA AGORA, E O QUE SÓ MUDA EM FICHA NOVA.
+   *
+   * ISTO NASCEU DE UM RELATO DA MESA: a Vanessa escolheu um cenário, abriu uma
+   * ficha que já existia, e não viu nada mudar — nem o ouro, nem as armas.
+   *
+   * E o app estava certo. Medido nas oito molduras: **quatro delas (Festim das
+   * Feras, Colosso das Terras Áridas, Caça a Monstros e Reinado do Weredragão)
+   * não mudam NADA numa ficha que já existe.** A única coisa que elas fazem é
+   * trocar as tabelas da CRIAÇÃO — equipamento inicial é, por definição, do
+   * nascimento da personagem.
+   *
+   * O erro não era de regra, era de CONVERSA: em lugar nenhum o painel dizia
+   * isso. Quem escolhe uma campanha e volta para a ficha procurando a mudança
+   * conclui, com razão, que o app não aplicou.
+   *
+   * ⚠ A CONTA É FEITA DO QUE O SERVIDOR MANDA, não de uma lista escrita aqui.
+   * `mecanicas[].automacao` diz o que o app aplica em ficha viva;
+   * `equipamentoInicial.modo` diz o que muda na criação. Escrever "o Festim não
+   * muda nada" à mão seria a regra em dois lugares — e a frase sobreviveria à
+   * moldura que um dia ganhar mecânica.
+   */
+  /**
+   * O QUE A CAMPANHA FAZ COM O EQUIPAMENTO DE FICHA NOVA — uma frase por modo, e
+   * ESTE é o único lugar do painel que responde isso.
+   *
+   * ⚠ ELE JÁ EXISTIA AQUI, E O PAINEL MENTIA DO LADO. Este mapa nasceu com o
+   * comentário certo ("dizer 'substitui' para quem acrescenta foi exatamente o
+   * que fez a mesa procurar um efeito que não existia") — e, no mesmo arquivo, a
+   * frase do alto da campanha dizia "ela só TROCA o equipamento inicial" para
+   * TODOS os modos, inclusive para os três que ACRESCENTAM. A lição tinha sido
+   * aprendida num lugar e não no outro, que é a forma exata do defeito deste
+   * projeto. Agora as duas frases saem daqui.
+   *
+   * ⚠ A tela da CRIAÇÃO tem a frase dela, para outra pergunta ("o que vai
+   * acontecer com a MINHA ficha agora"), e há conferência cobrando que as duas
+   * telas cubram os mesmos modos.
+   */
+  function fraseDoModoDeEquipamento(modo) {
+    return {
+      substitui: 'Fichas NOVAS escolhem o equipamento inicial só nas tabelas desta campanha.',
+      acrescenta: 'Fichas NOVAS ganham as opções desta campanha ao lado das do Capítulo 2.',
+      'arma-unica': 'Fichas NOVAS não escolhem arma: começam com a arma desta campanha, de duas mãos e sem secundária.',
+      saque: 'Os itens desta campanha são de enredo — você entrega em jogo, não na criação.'
+    }[modo] || '';
+  }
+
+  function quandoAMolduraMuda(c) {
+    /*
+     * ⚠ NEM TODA AUTOMAÇÃO MUDA FICHA, e esta frase já mentiu por uma. As
+     * relações políticas do Cinco Estandartes e a Leitura do Céu Noturno do
+     * Weredragão são TABELAS DE CONSULTA do Mestre: o app as desenha, mas elas
+     * não tocam ficha nenhuma. Contá-las aqui faria o painel prometer, para o
+     * Weredragão, exatamente a mudança que a Vanessa foi procurar e não achou.
+     *
+     * Quem diz de que lado cada uma está é o DADO (`automacao.escopo`), e o
+     * gerador recusa a automação que não disser.
+     */
+    /*
+     * ⚠ AS HERDADAS CONTAM, porque elas APARECEM ABAIXO. A frase promete "N
+     * ferramentas de mesa aparecem abaixo": se o Coração Sombrio de Andaluria
+     * contasse só as próprias, ela diria zero e desenharia quatro.
+     */
+    const doApendice = (painel.apendicesDaMoldura || [])
+      .reduce((lista, a) => lista.concat(a.mecanicas || []), []);
+    const comAutomacao = (c.mecanicas || []).concat(doApendice)
+      .filter((m) => m && m.automacao);
+    const agora = comAutomacao.filter((m) => m.automacao.escopo === 'ficha').length;
+    const deMesa = comAutomacao.filter((m) => m.automacao.escopo === 'mesa').length;
+    /*
+     * ⚠ A DE CRIAÇÃO ENTRA NA FRASE DAS FICHAS NOVAS, não na das que já existem.
+     * O artefato de Castle High muda o que a criação PERGUNTA e não toca em
+     * ninguém que já está em jogo: contá-lo em "o app aplica nas fichas que já
+     * existem" seria a mesma mentira que o Cinco Estandartes contou por meses.
+     */
+    const naCriacaoPorMecanica = comAutomacao
+      .filter((m) => m.automacao.escopo === 'criacao').length;
+    const naCriacao = (((painel.molduras || []).find((x) => x.id === c.id) || {})
+      .equipamentoInicial || {}).modo || 'nenhum';
+    const mudaNaCriacao = naCriacao !== 'nenhum' && naCriacao !== 'saque';
+
+    if (!agora && !mudaNaCriacao && !deMesa && !naCriacaoPorMecanica) return null;
+
+    const partes = [];
+    if (agora) {
+      partes.push(`${agora} mecânica${agora === 1 ? '' : 's'} que o app aplica nas fichas que já existem`);
+    }
+    if (mudaNaCriacao) partes.push('o equipamento inicial de fichas NOVAS');
+    if (naCriacaoPorMecanica) {
+      partes.push(`${naCriacaoPorMecanica} pergunta${naCriacaoPorMecanica === 1 ? '' : 's'} ` +
+        'a mais na criação de fichas NOVAS');
+    }
+
+    /*
+     * A ferramenta de mesa entra numa frase PRÓPRIA, e não na lista do que
+     * muda: ela é o que a Mestra consulta, não o que acontece com o grupo.
+     */
+    /*
+     * ⚠ "TABELA DE CONSULTA" ERA ESTREITO DEMAIS, e por isso era impreciso. Do
+     * lado da mesa há três coisas diferentes: tabelas que só se consultam (as
+     * relações políticas do Cinco Estandartes), tabelas que a mesa PREENCHE (a
+     * Leitura do Céu Noturno) e acompanhamentos que ela MARCA (a trilha da
+     * Caçada, as pistas, a torre de Castle High). Chamar tudo de tabela de
+     * consulta descrevia errado duas das três.
+     */
+    const consulta = deMesa
+      ? ` ${deMesa} ferramenta${deMesa === 1 ? '' : 's'} de mesa do Mestre ` +
+        `${deMesa === 1 ? 'aparece' : 'aparecem'} abaixo, sem mexer em ficha.`
+      : '';
+
+    if (!agora && !mudaNaCriacao && !naCriacaoPorMecanica) {
+      return el('p', { class: 'mestre__molduraQuando esta-so-na-criacao', texto:
+        '⚠ Esta campanha NÃO muda nada nas fichas, nem nas que já existem nem nas ' +
+        'novas.' + consulta });
+    }
+
+    /*
+     * ⚠ O VERBO SAI DO MODO, e ele vem de `fraseDoModoDeEquipamento` — a mesma
+     * função que o seletor de moldura usa. Antes esta frase dizia "ela só TROCA
+     * o equipamento inicial" para qualquer modo, e três campanhas (Caça a
+     * Monstros, Colosso e agora Andaluria) são `acrescenta`, que não troca nada:
+     * põe as opções AO LADO das tabelas do Capítulo 2.
+     *
+     * ⚠ O pior é onde a frase certa estava: NO MESMO ARQUIVO, no seletor de
+     * moldura, com o comentário dizendo que "dizer substitui para quem acrescenta
+     * foi exatamente o que fez a mesa procurar um efeito que não existia".
+     */
+    const doModo = fraseDoModoDeEquipamento(naCriacao);
+    const soNaCriacaoTexto = '⚠ Esta campanha NÃO muda nada nas fichas que já existem. ' +
+      (doModo || 'Ela só mexe no equipamento inicial de quem for criado a partir de agora.');
+
+    return el('p', {
+      class: `mestre__molduraQuando ${agora ? '' : 'esta-so-na-criacao'}`.trim(),
+      texto: (agora
+        ? `Esta campanha muda: ${partes.join(' e ')}.`
+        : soNaCriacaoTexto) + consulta
+    });
   }
 
   /**
@@ -951,6 +1206,737 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * inicial já tira o livro da mesa; um editor pela metade, que não guarda o que
    * o Mestre mudou, seria pior que não ter nenhum.
    */
+  /*
+   * As cinco escolhas da Astromante — agora NA MESA, não na aba.
+   *
+   * ⚠ ELAS VIVIAM SÓ NA TELA, E ISSO ERA O DEFEITO. A leitura é feita UMA VEZ,
+   * na sessão zero, e decide a campanha inteira: onde ir, quem ajuda, o que
+   * carregar, onde acaba. Guardada num `Map` do navegador, ela se perdia no
+   * recarregar — a Mestra abriria o painel na sessão três e não acharia o que a
+   * mesa tinha decidido na zero.
+   *
+   * O que me travava era "e quando a mesa troca de campanha?". A resposta foi a
+   * ANOTAÇÃO DE CAMPANHA do motor: um mapa por ID DE MOLDURA. Nada se perde —
+   * reiniciar destrava a escolha e a anotação da antiga continua ali para
+   * quando ela voltar, do mesmo jeito que o livro deixa a leitura ser refeita
+   * (p.140).
+   *
+   * ⚠ A CHAVE É `ceu:<coluna>`, com prefixo. O caderno é um só para a campanha,
+   * e a batida da Caçada e as pistas liminares vão morar nele também: sem
+   * prefixo, a terceira coisa a entrar colidiria com a primeira.
+   */
+  const CEU_PREFIXO = 'ceu:';
+
+  function faceEscolhidaNoCeu(colunaId) {
+    const n = Number(anotado(CEU_PREFIXO + colunaId));
+    return Number.isFinite(n) && n > 0 ? n : null;
+  }
+
+  /**
+   * A LEITURA DO CÉU NOTURNO — a mecânica central do Reinado do Weredragão.
+   *
+   * ⚠ O APP NÃO ROLA, E ESTA É A LEI DA MESA. São 5d6 rolados pelos jogadores,
+   * em conjunto, na mesa de verdade: o painel PERGUNTA o resultado de cada
+   * coluna e nomeia o que saiu. Botão de rolar aqui romperia "só ficha, sem
+   * dados" na única mecânica em que o livro faz os JOGADORES rolarem juntos.
+   *
+   * ⚠ E A TABELA VEM DO DADO, inteira — as seis linhas, as cinco colunas e o
+   * efeito de cada revelação saem de `data/molduras.json`. Dezoito linhas de
+   * tabela escritas aqui seriam dezoito lugares para discordar da fonte.
+   */
+  function leituraDoCeuNoturno(m) {
+    const t = ((m || {}).automacao || {}).leituraDoCeuNoturno;
+    if (!t || !Array.isArray(t.colunas) || !Array.isArray(t.linhas)) return null;
+
+    const colunas = t.colunas.slice().sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+    const faces = t.linhas.slice().sort((a, b) => Number(a.d6) - Number(b.d6));
+    const caixa = el('div', { class: 'pilha' });
+
+    const desenhar = () => {
+      limpar(caixa);
+      caixa.append(
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          `Role ${t.dados || '5d6'} na mesa e diga aqui o que saiu em cada coluna — ` +
+          'um dado por coluna.' }),
+        ...colunas.map((col, i) => {
+          const escolhido = faceEscolhidaNoCeu(col.id);
+          const linha = escolhido
+            ? faces.find((f) => Number(f.d6) === Number(escolhido))
+            : null;
+          const valor = linha ? (linha[col.id] || null) : null;
+
+          const sel = el('select', { class: 'campo__entrada' });
+          sel.append(el('option', { value: '', texto: '— qual face?' }));
+          faces.forEach((f) => {
+            const op = el('option', { value: String(f.d6), texto: `${f.d6} · ${((f[col.id] || {}).texto || '').slice(0, 44)}` });
+            if (Number(escolhido) === Number(f.d6)) op.selected = true;
+            sel.append(op);
+          });
+          /*
+           * ⚠ O DESENHO SÓ VOLTA DEPOIS QUE O SERVIDOR CONFIRMOU. Redesenhar na
+           * hora e gravar em seguida mostraria a revelação escolhida mesmo
+           * quando a gravação falha — e a Mestra sairia da sessão zero achando
+           * que a leitura estava guardada.
+           */
+          sel.addEventListener('change', () => {
+            sel.disabled = true;
+            anotar(CEU_PREFIXO + col.id, sel.value ? Number(sel.value) : '', desenhar);
+          });
+
+          return el('div', { class: 'mestre__revelacao' }, [
+            el('h6', { class: 'mestre__origemNome' }, [
+              el('span', { texto: `${col.ordem || i + 1}ª — ${col.nome}` })
+            ]),
+            el('p', { class: 'texto-xs texto-fraco', texto: col.efeito || '' }),
+            sel,
+            valor
+              ? el('p', { class: 'mestre__molduraQuando', texto: valor.texto })
+              : null,
+            (valor && valor.nota)
+              ? el('p', { class: 'texto-xs texto-fraco', texto: '⚠ ' + valor.nota })
+              : null
+          ].filter(Boolean));
+        }),
+        /*
+         * ⚠ O AVISO DO LIVRO FICA EMBAIXO DAS CINCO, não em cada uma: ele é
+         * sobre o CONJUNTO. "Evite que mais de uma revelação caia em Elevarne ou
+         * em Nightshade" só faz sentido depois de ver as cinco juntas.
+         */
+        repetidosNoCeu(colunas, faces)
+      );
+    };
+    desenhar();
+    return caixa;
+  }
+
+  /**
+   * ⚠ O AVISO SAI DA CONTA, NÃO DE UMA FRASE ESCRITA.
+   *
+   * O livro pede para espalhar os lugares da leitura. Em vez de repetir o
+   * conselho sempre, o painel confere as duas colunas de LUGAR e só fala quando
+   * elas de fato caíram no mesmo — que é quando o conselho serve.
+   */
+  function repetidosNoCeu(colunas, faces) {
+    const deLugar = colunas.filter((c) => /lugar/i.test(c.id));
+    if (deLugar.length < 2) return null;
+    const vistos = deLugar
+      .map((c) => faceEscolhidaNoCeu(c.id))
+      .filter((x) => x !== undefined && x !== null);
+    if (vistos.length < 2) return null;
+    if (new Set(vistos).size === vistos.length) return null;
+    const face = faces.find((f) => Number(f.d6) === Number(vistos[0]));
+    const nome = face ? ((face[deLugar[0].id] || {}).texto || '') : '';
+    return el('p', { class: 'mestre__molduraQuando esta-so-na-criacao', texto:
+      `⚠ O segredo e o desfecho caíram no mesmo lugar${nome ? ` (${nome})` : ''}. ` +
+      'O livro pede para espalhar: vale trocar um dos dois por outra face.' });
+  }
+
+  /**
+   * ANOTAR NO CADERNO DA CAMPANHA, com a tela esperando a confirmação.
+   *
+   * ⚠ UM AUXILIAR SÓ PARA AS TRÊS COISAS que escrevem no caderno — a Leitura do
+   * Céu Noturno, a batida da Caçada e as Pistas Liminares. Cada uma com o seu
+   * `try/catch` seria a mesma regra ("só redesenhe depois que o servidor
+   * confirmou") escrita em três lugares, e o terceiro é sempre o que esquece.
+   */
+  async function anotar(chave, valor, redesenhar) {
+    await anotarSemDesenhar(chave, valor);
+    redesenhar();
+  }
+
+  /**
+   * A MESMA GRAVAÇÃO, SEM REDESENHAR — para quem grava várias de uma vez.
+   *
+   * ⚠ NASCEU DA TRILHA DA RUÍNA: desmarcar uma caixa leva as filhas dela junto,
+   * e cada filha é uma gravação. Redesenhando a cada uma, a árvore piscaria no
+   * meio do caminho e a pessoa veria estados que o livro não tem (mãe vazia com
+   * filha marcada). Quem chama desenha UMA vez, no fim.
+   */
+  async function anotarSemDesenhar(chave, valor) {
+    try {
+      const r = await acoes.anotarCampanha(chave, valor);
+      painel.anotacoesDaCampanha = r.anotacoes || {};
+    } catch (e) {
+      avisarErro(mensagemDoErro(e));
+    }
+  }
+
+  /** O que está anotado nesta chave, ou `null`. */
+  function anotado(chave) {
+    const v = (painel.anotacoesDaCampanha || {})[chave];
+    return (v === undefined || v === '') ? null : v;
+  }
+
+  /**
+   * A TRILHA DA CAÇADA — em que batida a mesa está (SRD 2.0, p.202).
+   *
+   * ⚠ MARCAR A BATIDA NÃO MUDA REGRA NENHUMA, e por isso isto é anotação. O que
+   * resolve é memória: uma caçada atravessa sessões, e lembrar de cabeça em que
+   * ponto o grupo parou é o que faz o Mestre repetir a Investigação ou pular o
+   * Confronto sem querer.
+   *
+   * ⚠ E DESVIAR CONTINUA PERMITIDO — o livro diz isso com essas palavras. Então
+   * qualquer batida pode ser marcada a qualquer momento, e tocar na que já está
+   * marcada DESMARCA. Uma trilha que só anda para frente seria o app inventando
+   * uma ordem obrigatória que a fonte não tem.
+   */
+  function trilhaDaCacada(m) {
+    const t = ((m || {}).automacao || {}).trilhaDaCacada;
+    if (!t || !Array.isArray(t.batidas) || !t.batidas.length) return null;
+
+    const caixa = el('div', { class: 'pilha' });
+    const batidas = t.batidas.slice().sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+
+    const desenhar = () => {
+      limpar(caixa);
+      const atual = anotado(t.chave);
+      caixa.append(
+        el('p', { class: 'texto-xs texto-fraco', texto: atual
+          ? 'Toque na batida em que a mesa está. Tocar na marcada desmarca.'
+          : 'Nenhuma batida marcada. Toque na que a mesa está vivendo.' }),
+        ...batidas.map((b) => {
+          const marcada = String(atual || '') === b.id;
+          const botao = el('button', {
+            type: 'button',
+            class: `cartao mestre__batida ${marcada ? 'esta-marcada' : ''}`.trim(),
+            'aria-pressed': marcada ? 'true' : 'false',
+            onClick: () => anotar(t.chave, marcada ? '' : b.id, desenhar)
+          }, [
+            el('span', { class: 'mestre__batidaNome', texto: `${b.ordem}. ${b.nome}` }),
+            el('span', { class: 'texto-xs texto-fraco', texto: b.texto || '' })
+          ]);
+          return botao;
+        }),
+        t.podeDesviar
+          ? el('p', { class: 'texto-xs texto-fraco', texto:
+              '⚠ O livro permite desviar desta estrutura quando fizer sentido — ' +
+              'a trilha não obriga ordem nenhuma.' })
+          : null
+      );
+    };
+    desenhar();
+    return caixa;
+  }
+
+
+  /**
+   * A TRILHA DA RUÍNA — as caixas aninhadas do apêndice, com a regra do livro.
+   *
+   * ⚠ A FORMA É O PONTO. As contagens do Mestre são lineares, com degraus em
+   * fila; esta é uma ÁRVORE: cada caixa de cima abre as de baixo, e o livro diz
+   * com todas as letras que "não dá para marcar uma caixa aninhada antes de
+   * marcar a caixa sob a qual ela está". Desenhar isto como cinco contagens
+   * lineares perderia justamente a regra.
+   *
+   * ⚠ DUAS TRAVAS, E AS DUAS DIZEM O MOTIVO NA TELA:
+   *
+   *  • a mãe não marcada tranca as filhas — regra do livro;
+   *  • o patamar acima do grupo fica trancado, porque o livro manda marcar "uma
+   *    caixa do patamar do grupo ou abaixo". O patamar vem do NÍVEL ANUNCIADO da
+   *    mesa, pela mesma conta do servidor (`dados.patamarDoNivel`), que é o
+   *    único lugar onde o app sabe em que patamar o grupo está.
+   *
+   * ⚠ E DESMARCAR DESMARCA AS FILHAS JUNTO, senão sobraria filha marcada sob
+   * mãe vazia — um estado que o livro não tem. Está na tela antes de acontecer.
+   *
+   * ⚠ O MEDO DO PATAMAR 4 NÃO É APLICADO SOZINHO. A regra ("ganhe Medo igual ao
+   * número de caixas marcadas neste patamar") é determinística, mas o Medo é da
+   * mesa e já tem dono na tela: o painel diz quanto é e deixa o toque com você.
+   * Aplicar calado mexeria no Medo da mesa por causa de um clique numa lista.
+   */
+  function trilhaDaRuina(m) {
+    const t = ((m || {}).automacao || {}).trilhaDaRuina;
+    if (!t || !Array.isArray(t.patamares) || !t.patamares.length) return null;
+
+    const caixa = el('div', { class: 'pilha' });
+    const chaveDa = (id) => `${t.chavePrefixo || 'ruina:'}${id}`;
+    const marcada = (id) => Boolean(anotado(chaveDa(id)));
+
+    /* Todas as caixas de um patamar, mãe e filhas, para a conta do cabeçalho. */
+    const todasAsCaixas = (lista) => (lista || []).reduce((acc, c) =>
+      acc.concat([c], todasAsCaixas(c.filhas)), []);
+
+    const patamarDoGrupo = () => dados.patamarDoNivel((painel.mesa || {}).nivelDaMesa || 1);
+
+    async function alternar(c, desenhar) {
+      if (marcada(c.id)) {
+        /* Desmarcar leva as filhas junto — uma gravação por caixa, do fundo
+         * para cima, e só então redesenha. */
+        const descendentes = todasAsCaixas(c.filhas).map((x) => x.id).reverse();
+        for (const id of descendentes) {
+          if (marcada(id)) await anotarSemDesenhar(chaveDa(id), '');
+        }
+        await anotarSemDesenhar(chaveDa(c.id), '');
+        desenhar();
+        return;
+      }
+      await anotar(chaveDa(c.id), 'x', desenhar);
+    }
+
+    const desenharCaixa = (c, patamar, nivelDeAninhamento, maeMarcada) => {
+      const estaMarcada = marcada(c.id);
+      const acimaDoPatamar = patamar.numero > patamarDoGrupo();
+      const presaNaMae = nivelDeAninhamento > 0 && !maeMarcada;
+      const impedida = !estaMarcada && (acimaDoPatamar || presaNaMae);
+
+      const corpo = [
+        el('span', { class: 'mestre__ruinaTexto', texto: c.texto }),
+        impedida
+          ? el('span', { class: 'texto-xs mestre__impedida', texto: acimaDoPatamar
+              ? `Patamar ${patamar.numero}: a mesa está no patamar ${patamarDoGrupo()} ` +
+                '(nível anunciado) — o livro manda marcar do patamar do grupo ou abaixo.'
+              : 'Marque antes a caixa sob a qual esta está aninhada.' })
+          : null
+      ].filter(Boolean);
+
+      const classe = `mestre__ruinaCaixa mestre__ruinaCaixa--${nivelDeAninhamento}` +
+        (estaMarcada ? ' esta-marcada' : '') + (impedida ? ' esta-impedida' : '');
+
+      const alvo = impedida
+        ? el('div', { class: classe }, corpo)
+        : el('button', {
+            type: 'button', class: classe,
+            'aria-pressed': estaMarcada ? 'true' : 'false',
+            onClick: () => alternar(c, desenharTudo)
+          }, corpo);
+
+      return [alvo].concat(
+        (c.filhas || []).reduce((acc, f) =>
+          acc.concat(desenharCaixa(f, patamar, nivelDeAninhamento + 1, estaMarcada)), []));
+    };
+
+    function desenharTudo() {
+      limpar(caixa);
+      const doGrupo = patamarDoGrupo();
+      caixa.append(el('p', { class: 'texto-xs texto-fraco', texto: t.nota || '' }));
+
+      t.patamares.forEach((p) => {
+        const caixasDoPatamar = todasAsCaixas(p.caixas);
+        const marcadas = caixasDoPatamar.filter((c) => marcada(c.id)).length;
+        const bloco = el('div', { class: 'pilha mestre__ruinaPatamar' }, [
+          el('h6', { class: 'mestre__ruinaTitulo', texto:
+            `Patamar ${p.numero}: ${p.nome} — ${marcadas} de ${caixasDoPatamar.length}` +
+            (p.numero > doGrupo ? ' (acima do grupo)' : '') }),
+          el('p', { class: 'texto-xs texto-fraco', texto: p.regra || '' }),
+          marcadas >= 5
+            ? el('p', { class: 'mestre__revelacao', texto: 'Cinco caixas marcadas: ' + (p.regra || '') })
+            : null,
+          /*
+           * ⚠ A CONTA DO MEDO SAI SÓ QUANDO HÁ CAIXA MARCADA no patamar 4, e ela
+           * é a conta do livro: o Medo ganho é igual ao número de caixas marcadas
+           * AQUI, contado depois de marcar.
+           */
+          (p.numero === 4 && marcadas > 0)
+            ? el('p', { class: 'texto-xs', texto:
+                `A última caixa marcada deu ${marcadas} de Medo — marque no contador do Medo, acima.` })
+            : null,
+          ...p.caixas.reduce((acc, c) => acc.concat(desenharCaixa(c, p, 0, true)), [])
+        ].filter(Boolean));
+        caixa.append(bloco);
+      });
+
+      caixa.append(el('p', { class: 'texto-xs texto-fraco', texto: t.fonte || '' }));
+    }
+
+    desenharTudo();
+    return caixa;
+  }
+
+  /**
+   * OS NOVE ECOS DE ALMA — onde cada um está, e quais já entraram no Cálice.
+   *
+   * ⚠ O DÉCIMO NÃO TEM VAGA, e isso é o livro: o grupo COMEÇA com o Eco que
+   * Saraya pôs no Cálice. Dar dez vagas faria o Mestre procurar um santuário
+   * para um Eco que já está na mão do grupo desde a primeira cena.
+   *
+   * ⚠ O NÍVEL É COMPARADO, NÃO APLICADO. "O grupo sobe de nível a cada Eco novo
+   * no Cálice" é regra determinística, e o app TEM o nível anunciado — mas quem
+   * anuncia é o Mestre, e cada jogador escolhe os avanços um a um. Então o
+   * painel faz a conta, mostra a diferença e deixa o toque com ele. Subir
+   * sozinho tiraria da mesa a cena em que o Eco entra no Cálice.
+   */
+  function ecosDeAlma(m) {
+    const e = ((m || {}).automacao || {}).ecosDeAlma;
+    if (!e || !e.chaveDoLugar || !e.chaveDoCalice) return null;
+
+    const caixa = el('div', { class: 'pilha' });
+    const vagas = Math.max(1, Number(e.aRecolher) || 9);
+
+    const desenhar = () => {
+      limpar(caixa);
+      const noCalice = [];
+      for (let i = 1; i <= vagas; i++) if (anotado(`${e.chaveDoCalice}${i}`)) noCalice.push(i);
+      const total = (Number(e.comecaCom) || 1) + noCalice.length;
+      const nivel = Number((painel.mesa || {}).nivelDaMesa) || 1;
+
+      caixa.append(
+        el('p', { class: 'texto-xs texto-fraco', texto: e.nota || '' }),
+        el('p', { class: 'texto-sm', texto:
+          `${total} de ${e.total || 10} Ecos no Cálice de Luz` +
+          (total >= (e.total || 10) ? ' — o grupo pode ir aos Penhascos do Horizonte.' : '') }),
+        total !== nivel
+          ? el('p', { class: 'mestre__revelacao', texto:
+              `Nesta campanha o nível acompanha os Ecos: são ${total} no Cálice e a mesa está ` +
+              `anunciada no nível ${nivel}. Quem anuncia é você, na dobra "Sessão e nível".` })
+          : el('p', { class: 'texto-xs texto-fraco', texto:
+              `Nível anunciado ${nivel}, igual ao número de Ecos no Cálice.` })
+      );
+
+      for (let i = 1; i <= vagas; i++) {
+        const chaveLugar = `${e.chaveDoLugar}${i}`;
+        const chaveCalice = `${e.chaveDoCalice}${i}`;
+        const dentro = Boolean(anotado(chaveCalice));
+        const lugar = anotado(chaveLugar);
+
+        /* ⚠ `semCorretor` INLINE: nome de santuário é nome inventado, e a guarda
+         * da bateria só enxerga ±4 linhas em volta do `type: 'text'`. */
+        const campo = el('input', Object.assign(semCorretor({}), {
+          type: 'text',
+          class: 'campo__entrada',
+          value: lugar === null ? '' : String(lugar),
+          placeholder: `Santuário do ${i}º Eco`,
+          'aria-label': `Santuário do ${i}º Eco`,
+          onChange: (ev) => anotar(chaveLugar, ev.target.value, desenhar)
+        }));
+
+        caixa.append(el('div', { class: `cartao mestre__eco ${dentro ? 'esta-marcada' : ''}`.trim() }, [
+          el('span', { class: 'mestre__ecoNome', texto: `${i}º Eco` }),
+          campo,
+          el('button', {
+            type: 'button',
+            class: 'btn btn--fantasma',
+            'aria-pressed': dentro ? 'true' : 'false',
+            onClick: () => anotar(chaveCalice, dentro ? '' : 'x', desenhar)
+          }, [el('span', { texto: dentro ? 'No Cálice — tirar' : 'Guardar no Cálice' })])
+        ]));
+      }
+
+      caixa.append(el('p', { class: 'texto-xs texto-fraco', texto: e.fonte || '' }));
+    };
+
+    desenhar();
+    return caixa;
+  }
+
+
+  /**
+   * AS CARACTERÍSTICAS DE ADVERSÁRIO QUE A CAMPANHA ACRESCENTA.
+   *
+   * ⚠ O APP NÃO APLICA, E ISSO É A REGRA, NÃO PREGUIÇA. A Maldição do Vampiro e
+   * a Maldição do Lobo são características que o livro manda ACRESCENTAR à ficha
+   * de um adversário importante — elas rolam dados, comparam com o limiar do
+   * alvo e terminam numa transformação na ficha de quem joga. O app não rola, e
+   * ganhar uma transformação é escolha que passa pela ficha do jogador.
+   *
+   * O que faltava era mais simples e mais útil: ter o TEXTO à mão, em português,
+   * em vez de abrir o SRD em inglês no meio da cena — e não ter de montar a
+   * Contagem de Licantropia na unha toda vez.
+   *
+   * ⚠ A CONTAGEM É CRIADA PELO MESMO CAMINHO QUE A MÃO, e por isso ela nasce
+   * igual: `criarContagem` é a mesma ação do botão "Nova contagem". Um atalho que
+   * montasse a contagem por dentro faria duas contagens diferentes com o mesmo
+   * nome — e um dia elas discordariam.
+   */
+  function caracteristicasDeAdversario(m) {
+    const c = ((m || {}).automacao || {}).caracteristicasDeAdversario;
+    if (!c || !Array.isArray(c.itens) || !c.itens.length) return null;
+
+    const caixa = el('div', { class: 'pilha' });
+
+    const desenhar = () => {
+      limpar(caixa);
+      caixa.append(el('p', { class: 'texto-xs texto-fraco', texto: c.nota || '' }));
+
+      c.itens.forEach((item) => {
+        const jaExiste = item.contagem
+          ? (painel.mesa.contagens || []).some((x) =>
+              !x.encerrada && (x.nome || '').trim() === String(item.contagem.nome).trim())
+          : false;
+
+        caixa.append(el('div', { class: 'cartao mestre__caracteristica' }, [
+          el('h6', { class: 'mestre__caracteristicaNome',
+            texto: `${item.nome}${item.tipo ? ' — ' + item.tipo : ''}` }),
+          el('p', { class: 'texto-sm', texto: item.texto || '' }),
+          item.seOJogadorQuiser
+            ? el('p', { class: 'texto-xs texto-fraco', texto: item.seOJogadorQuiser })
+            : null,
+          /*
+           * ⚠ O BOTÃO SOME QUANDO A CONTAGEM JÁ EXISTE, e no lugar dele fica o
+           * aviso. Oferecer "criar" com uma Contagem de Licantropia já aberta
+           * faria duas, e no meio da sessão ninguém percebe qual é qual.
+           */
+          item.contagem
+            ? (jaExiste
+                ? el('p', { class: 'texto-xs mestre__revelacao', texto:
+                    `A ${item.contagem.nome} já está aberta nas contagens da mesa.` })
+                : el('button', {
+                    type: 'button', class: 'btn btn--fantasma',
+                    onClick: (ev) => travarBotao(ev.currentTarget, (async () => {
+                      try {
+                        const r = await acoes.criarContagem({
+                          nome: item.contagem.nome,
+                          tipo: item.contagem.tipo,
+                          valorInicial: item.contagem.valorInicial,
+                          valor: item.contagem.valorInicial,
+                          descricao: item.contagem.descricao || ''
+                        });
+                        painel.mesa = r.mesa;
+                        avisarSucesso(`${item.contagem.nome} criada.`);
+                      } catch (e) {
+                        avisarErro(mensagemDoErro(e));
+                      }
+                      desenhar();
+                    })())
+                  }, [el('span', { texto:
+                      `Criar a ${item.contagem.nome} (${item.contagem.valorInicial})` })]))
+            : null
+        ].filter(Boolean)));
+      });
+
+      caixa.append(el('p', { class: 'texto-xs texto-fraco', texto: c.fonte || '' }));
+    };
+
+    desenhar();
+    return caixa;
+  }
+
+  /**
+   * A PROMESSA DE CADA MECÂNICA, com a mesma resposta que a contagem usa.
+   *
+   * Três estados, porque são três coisas diferentes: o app APLICA (mexe em
+   * ficha), o app TRAZ A FERRAMENTA (desenha e guarda, sem tocar em ficha), ou
+   * não faz nada e a mecânica é da mesa.
+   */
+  /**
+   * O CARTÃO DE UMA MECÂNICA DE MOLDURA — um desenho só, para as próprias e as
+   * herdadas.
+   *
+   * ⚠ ELE ERA UM `map` ANÔNIMO, e virou função quando a herança entrou. Desenhar
+   * as mecânicas do apêndice de outro jeito faria a mesma trilha da Caçada ter
+   * duas aparências dependendo de por qual moldura você chegou nela.
+   */
+  function cartaoDaMecanica(m) {
+    return el('div', { class: 'cartao' }, [
+      el('h5', { class: 'cartao__titulo', texto: m.nome }),
+      ...(m.texto || []).map((t) => el('p', { class: 'texto-sm', texto: t })),
+      /*
+       * ⚠ ESTA LINHA MENTIA PARA TODA AUTOMAÇÃO DE MESA, e é a MESMA mentira que
+       * o aviso do alto da campanha já tinha cometido (veja
+       * `quandoAMolduraMuda`): lá eu consertei a CONTAGEM e deixei a promessa de
+       * cada mecânica dizendo "o app aplica" para a trilha da Caçada, para as
+       * pistas e para a Leitura do Céu Noturno — que o app DESENHA e GUARDA, sem
+       * aplicar nada em ficha nenhuma.
+       */
+      promessaDaMecanica(m),
+      botaoDaMecanica(m),
+      /*
+       * ⚠ O QUE FICA COM A MESA, ESCRITO NO DADO E NÃO NO CÓDIGO. Quando a
+       * mecânica tem parte que o app não resolve — reacender uma Chama apagada,
+       * achar combustível —, o texto vem de `automacao.efeitoManual`. Frase na
+       * tela é a regra em dois lugares.
+       */
+      (m.automacao && m.automacao.efeitoManual)
+        ? el('p', { class: 'texto-xs texto-fraco', texto: m.automacao.efeitoManual })
+        : null,
+      fichaDeCampanha(m),
+      leituraDoCeuNoturno(m),
+      trilhaDaCacada(m),
+      pistasLiminares(m),
+      escolhaDaMesa(m),
+      trilhaDaRuina(m),
+      ecosDeAlma(m),
+      caracteristicasDeAdversario(m),
+      tabelaRolada(m)
+    ]);
+  }
+
+  function promessaDaMecanica(m) {
+    if (!m || !m.automacao) {
+      return el('p', { class: 'texto-xs texto-fraco', texto: 'Fica com a mesa: o app não aplica.' });
+    }
+    if (m.automacao.escopo === 'mesa') {
+      return el('p', { class: 'texto-xs', texto:
+        '✓ O app traz esta ferramenta de mesa — e ela não muda ficha nenhuma.' });
+    }
+    return el('p', { class: 'texto-xs', texto: '✓ O app aplica esta mecânica.' });
+  }
+
+  /**
+   * A ESCOLHA DA MESA — uma de N, guardada no caderno da campanha.
+   *
+   * ⚠ POR QUE É GENÉRICA, e a trilha da Caçada não é. A trilha tem ORDEM e a
+   * palavra do livro sobre desviar dela; esta aqui é só "a mesa escolheu esta".
+   * Nasceu das quatro torres de Castle High, que o livro manda os JOGADORES
+   * escolherem juntos porque a escolha define o estilo da campanha inteira — e
+   * já entra genérica porque o próximo cenário do Hope & Fear com uma escolha
+   * dessas não deve virar uma segunda cópia desta função.
+   *
+   * ⚠ A OPÇÃO NÃO JOGÁVEL APARECE, e não pode ser escolhida. A Lock Tower está
+   * selada: o livro a oferece como gancho, não como casa do grupo. Sumir com ela
+   * faria quem conta quatro torres achar três; deixá-la clicável faria o app
+   * oferecer o que o livro não oferece.
+   */
+  function escolhaDaMesa(m) {
+    const e = ((m || {}).automacao || {}).escolhaDaMesa;
+    if (!e || !Array.isArray(e.opcoes) || !e.opcoes.length) return null;
+
+    const caixa = el('div', { class: 'pilha' });
+
+    const desenhar = () => {
+      limpar(caixa);
+      const atual = anotado(e.chave);
+      const escolhida = e.opcoes.find((o) => o && String(atual || '') === o.id);
+
+      caixa.append(
+        el('p', { class: 'texto-xs texto-fraco', texto: escolhida
+          ? `${e.rotulo || 'Escolha da mesa'}: ${escolhida.nome}. ${e.ajuda || ''}`.trim()
+          : `${e.rotulo || 'Escolha da mesa'}: nenhuma marcada. ${e.ajuda || ''}`.trim() }),
+        ...e.opcoes.map((o) => {
+          const marcada = String(atual || '') === o.id;
+          const corpo = [
+            el('span', { class: 'mestre__escolhaNome', texto: o.nome }),
+            o.texto ? el('span', { class: 'texto-xs texto-fraco', texto: o.texto }) : null,
+            o.escolhaSe ? el('span', { class: 'texto-xs', texto: o.escolhaSe }) : null,
+            /*
+             * ⚠ O GANCHO SÓ APARECE NA ESCOLHIDA. O livro escreve um gancho por
+             * torre, dirigido ao Mestre, para a torre que a mesa pegou. Mostrar
+             * os quatro de uma vez entregaria de graça o que ele manda guardar.
+             */
+            (marcada && o.gancho)
+              ? el('span', { class: 'mestre__revelacao', texto: o.gancho })
+              : null,
+            ...((marcada ? (o.perguntas || []) : []).map((q) =>
+              el('span', { class: 'texto-xs texto-fraco', texto: '• ' + q })))
+          ].filter(Boolean);
+
+          if (o.naoJogavel) {
+            return el('div', { class: 'cartao mestre__escolha esta-impedida' }, corpo);
+          }
+          return el('button', {
+            type: 'button',
+            class: `cartao mestre__escolha ${marcada ? 'esta-marcada' : ''}`.trim(),
+            'aria-pressed': marcada ? 'true' : 'false',
+            onClick: () => anotar(e.chave, marcada ? '' : o.id, desenhar)
+          }, corpo);
+        })
+      );
+    };
+    desenhar();
+    return caixa;
+  }
+
+  /**
+   * UMA TABELA ROLADA DO LIVRO, só para ler.
+   *
+   * ⚠ SEM ESTADO, DE PROPÓSITO. São as vinte perguntas que a mesa responde na
+   * sessão zero para construir Riley: a resposta é ficção falada, não dado que o
+   * app tenha o que fazer com. O que faltava era TER a tabela na tela em vez de
+   * mandar a Mestra abrir o livro em inglês no meio da sessão zero.
+   *
+   * ⚠ E ELA DIZ O DADO. "Role 1d20 para sortear ou deixe que escolham" é a
+   * instrução do livro; o app não rola — a mesa rola, como em todo o resto.
+   */
+  function tabelaRolada(m) {
+    const t = ((m || {}).automacao || {}).tabelaRolada;
+    if (!t || !Array.isArray(t.linhas) || !t.linhas.length) return null;
+
+    return el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-xs texto-fraco', texto:
+        `${t.rotulo || 'Tabela'} · role ${t.dado || '1d20'} na mesa, ou escolha.` }),
+      el('ol', { class: 'mestre__tabelaRolada' }, t.linhas.map((l) =>
+        el('li', { class: 'texto-sm' }, [
+          el('span', { class: 'mestre__tabelaNumero', texto: String(l.n) }),
+          el('span', { texto: l.texto || '' })
+        ])))
+    ]);
+  }
+
+  /**
+   * AS PISTAS LIMINARES — a pilha de cartões que o livro manda ter à mão.
+   *
+   * ⚠ OS CARTÕES NÃO SÃO INVENÇÃO NOSSA. O SRD manda escrever cada pista num
+   * cartão, manter a coleção à mão durante a sessão e, quando uma se manifesta,
+   * "registrá-la como descoberta inegável". É exatamente isso: escrever de 4 a
+   * 6, e marcar a que foi revelada.
+   *
+   * ⚠ REVELAR NÃO APAGA. A pista revelada continua na pilha, marcada — porque o
+   * texto do livro diz que ela "solidifica" e passa a ser parte da realidade do
+   * mundo. Sumir com ela tiraria da mesa justamente o que o grupo já descobriu.
+   */
+  function pistasLiminares(m) {
+    const p = ((m || {}).automacao || {}).pistasLiminares;
+    if (!p || !p.chaveDoTexto) return null;
+
+    const maximo = Math.max(1, Number(p.maximo) || 6);
+    const minimo = Math.max(1, Number(p.minimo) || 4);
+    const caixa = el('div', { class: 'pilha' });
+
+    const desenhar = () => {
+      limpar(caixa);
+      const escritas = [];
+      for (let i = 1; i <= maximo; i++) {
+        if (anotado(p.chaveDoTexto + i)) escritas.push(i);
+      }
+      const reveladas = escritas.filter((i) => anotado(p.chaveDaRevelada + i));
+
+      caixa.append(
+        el('p', { class: 'texto-xs texto-fraco', texto:
+          `${escritas.length} de ${maximo} pistas escritas · ${reveladas.length} revelada(s). ` +
+          `O livro pede de ${minimo} a ${maximo} antes da sessão.` }),
+        /*
+         * ⚠ O AVISO SAI DA CONTA. Dizer sempre "prepare de 4 a 6" seria repetir
+         * o livro; falar só quando faltam pistas é o que serve a quem está
+         * preparando a sessão agora.
+         */
+        (escritas.length && escritas.length < minimo)
+          ? el('p', { class: 'mestre__molduraQuando esta-so-na-criacao', texto:
+              `⚠ Faltam ${minimo - escritas.length} para o mínimo que o livro pede.` })
+          : null
+      );
+
+      for (let i = 1; i <= maximo; i++) {
+        const texto = anotado(p.chaveDoTexto + i);
+        const revelada = Boolean(anotado(p.chaveDaRevelada + i));
+        /* a pilha mostra as escritas e UMA vaga em branco — não seis vazias */
+        if (!texto && i !== escritas.length + 1) continue;
+
+        /*
+         * ⚠ `...semCorretor({})` NA PRÓPRIA CHAMADA, como os outros campos
+         * deste arquivo. Eu tinha escrito `semCorretor(campo)` cinco linhas
+         * abaixo e a conferência pegou: ela varre uma janela em torno do
+         * `type: 'text'`, e o que estava fora da janela estava fora da regra.
+         * Aqui o motivo é o de sempre neste app — "Ravena virou Ravana" —, e
+         * numa pista liminar o texto é nome inventado de lugar e de criatura.
+         */
+        const campo = el('input', {
+          ...semCorretor({}), type: 'text', class: 'campo__entrada',
+          placeholder: texto ? '' : `Pista ${i}: o que se manifesta`,
+          maxlength: 400
+        });
+        campo.value = texto || '';
+        campo.addEventListener('change', () => {
+          if ((campo.value || '').trim() === String(texto || '')) return;
+          anotar(p.chaveDoTexto + i, campo.value, desenhar);
+        });
+
+        const marcar = texto
+          ? el('button', {
+              type: 'button',
+              class: `btn btn--pequeno ${revelada ? 'btn--principal' : 'btn--fantasma'}`,
+              onClick: () => anotar(p.chaveDaRevelada + i, revelada ? '' : 1, desenhar)
+            }, revelada ? 'Revelada' : 'Marcar revelada')
+          : null;
+
+        caixa.append(el('div', { class: `mestre__pista ${revelada ? 'esta-revelada' : ''}`.trim() }, [
+          campo,
+          marcar
+        ].filter(Boolean)));
+      }
+    };
+    desenhar();
+    return caixa;
+  }
+
   function fichaDeCampanha(m) {
     const ficha = ((m || {}).automacao || {}).fichaDeCampanha;
     if (!ficha || !Array.isArray(ficha.nacoes) || !ficha.nacoes.length) return null;
@@ -1161,6 +2147,15 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         if (!sim) { sel.value = m.moldura || ''; return; }
         try {
           const r = await acoes.definirMoldura(escolhido, true);
+          /*
+           * ⚠ O PAYLOAD DA SESSÃO TEM DE SER RELIDO NA HORA.
+           *
+           * O nome da moeda e o rótulo do dano chegam pelo `sessao`, que o app
+           * só repergunta a cada 20s ou ao voltar para a aba. Quem acabou de
+           * escolher a campanha não espera: olha a tela e conclui que não
+           * funcionou — foi o que aconteceu em 09/10/2026.
+           */
+          await acoes.atualizarSessao(true);
           avisarSucesso('A mesa está jogando ' + nomeDaMolduraEscolhida(r.depois) + '.');
           recarregar();
         } catch (e2) { avisarErro(mensagemDoErro(e2)); recarregar(); }
@@ -1190,6 +2185,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
               if (!sim) return;
               try {
                 const r = await acoes.reiniciarMoldura(true);
+                await acoes.atualizarSessao(true);   // o dinheiro volta a se chamar ouro na hora
                 avisarSucesso(r.aviso, 8000);
                 recarregar();
               } catch (e2) { avisarErro(mensagemDoErro(e2)); recarregar(); }
@@ -1207,9 +2203,24 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         ? el('p', { class: 'texto-sm texto-fraco' }, textoAnotado(atual.regra || ''))
         : el('p', { class: 'texto-xs texto-fraco', texto:
           'Sem moldura, a criação de ficha usa as tabelas de equipamento do Capítulo 2.' }),
-      atual && atual.substituiEquipamentoInicial
-        ? el('p', { class: 'texto-xs mestre__atrasado', texto:
-          'Fichas novas vão escolher o equipamento inicial nas tabelas desta moldura.' })
+      /*
+       * ⚠ UMA FRASE POR MODO, porque a moldura faz cinco coisas diferentes com
+       * o equipamento — e dizer "substitui" para quem acrescenta foi
+       * exatamente o que fez a mesa procurar um efeito que não existia.
+       */
+      atual ? (() => {
+        const aviso = fraseDoModoDeEquipamento(((atual.equipamentoInicial || {}).modo) || 'nenhum');
+        return aviso ? el('p', { class: 'texto-xs mestre__atrasado', texto: aviso }) : null;
+      })() : null,
+      /*
+       * ⚠ E O QUE JÁ EXISTE NÃO MUDA. Isto não é detalhe: a Mestra escolheu a
+       * campanha, abriu a ficha de quem já estava criado e não viu nada — e
+       * estava certa, porque equipamento inicial é da CRIAÇÃO. Dizer isso aqui
+       * é mais barato que descobrir no meio da sessão.
+       */
+      atual && (((atual.equipamentoInicial || {}).modo) || 'nenhum') !== 'nenhum'
+        ? el('p', { class: 'texto-xs texto-fraco', texto:
+          'Fichas que já existem não mudam de equipamento — isso vale na criação.' })
         : null,
       (m.molduraTravada && m.moldura)
         ? el('p', { class: 'texto-xs texto-fraco', texto:

@@ -365,7 +365,9 @@
         "nomeIngles": "Oasis",
         "nome": "Oásis",
         "texto": "Durante um descanso curto, você ou um aliado pode rerrolar um dado usado em um movimento de descanso e ficar com o resultado maior.",
-        "automacao": "rerrolagem-manual-durante-descanso-curto"
+        "automacao": {
+          "classificacao": "rerrolagem-manual-durante-descanso-curto"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Nascido nas Dunas.png",
@@ -406,7 +408,9 @@
         "nomeIngles": "Unbound",
         "nome": "Liberto",
         "texto": "Uma vez por sessão, quando fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
-        "automacao": "uso-por-sessao-e-conversao-de-resultado"
+        "automacao": {
+          "classificacao": "uso-por-sessao-e-conversao-de-resultado"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Nascido Livre.png",
@@ -447,7 +451,9 @@
         "nomeIngles": "Hardy",
         "nome": "Resistente",
         "texto": "Quando fizer um descanso, limpe 1 Ponto de Vida.",
-        "automacao": "cura-automatica-em-descanso"
+        "automacao": {
+          "classificacao": "cura-automatica-em-descanso"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Nascido no Gelo.png",
@@ -488,7 +494,9 @@
         "nomeIngles": "Close-Knit",
         "nome": "Laços Estreitos",
         "texto": "Uma vez por descanso longo, você pode gastar qualquer quantidade de Esperança para conceder a um aliado em alcance Distante a mesma quantidade de Esperança.",
-        "automacao": "transferencia-de-recurso-uma-vez-por-descanso-longo"
+        "automacao": {
+          "classificacao": "transferencia-de-recurso-uma-vez-por-descanso-longo"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Nascido no Lar.png",
@@ -529,7 +537,9 @@
         "nomeIngles": "Found Family",
         "nome": "Família Escolhida",
         "texto": "Uma vez por descanso, você pode gastar 1 Esperança para usar a Experiência de um aliado como se fosse sua. Ao fazer isso, descreva como o tempo ao lado desse aliado preparou você para este momento. Quando ingressar em uma nova comunidade ou redescobrir sua antiga comunidade, você pode trocar esta carta permanentemente pela carta daquela comunidade.",
-        "automacao": "uso-contextual-de-experiencia-e-troca-permanente-manual"
+        "automacao": {
+          "classificacao": "uso-contextual-de-experiencia-e-troca-permanente-manual"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Renascido.png",
@@ -570,7 +580,9 @@
         "nomeIngles": "Brave Face",
         "nome": "Cara de Coragem",
         "texto": "Uma vez por sessão, quando você seria forçado a marcar 1 Estresse, pode gastar 1 Esperança em vez disso.",
-        "automacao": "substituicao-de-custo-uma-vez-por-sessao"
+        "automacao": {
+          "classificacao": "substituicao-de-custo-uma-vez-por-sessao"
+        }
       },
       "caracteristicaNoLivro": null,
       "imagem": "assets/cartas/comunidades/Nascido na Guerra.png",

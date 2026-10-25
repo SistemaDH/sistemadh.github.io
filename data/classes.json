@@ -2612,14 +2612,18 @@
             "rotuloAtivar": "Marcar para Morrer · 1 Estresse",
             "lembrete": "Use depois de um ataque com arma bem-sucedido. Enquanto a marca durar, some à jogada de dano contra ele uma quantidade de dados igual ao seu patamar — o dado é da mesa. A marca acaba num descanso, quando o alvo é derrotado ou quando o Mestre gasta Medo: encerre-a aqui quando isso acontecer."
           },
-          "automacao": "deterministica-com-alvo-e-dano-contextual",
+          "automacao": {
+            "classificacao": "deterministica-com-alvo-e-dano-contextual"
+          },
           "fonteDoCusto": "SRD 2.0 / Guilda dos Executores — \"Após um ataque bem-sucedido com arma, você pode marcar 1 Estresse para deixar o alvo Marcado para Morrer… Você só pode manter um adversário Marcado para Morrer por vez.\" Errata de 25/08/2026 não toca nesta característica."
         },
         {
           "nomeIngles": "Get In & Get Out",
           "nome": "Entrar e Sair",
           "texto": "Gaste 1 Esperança para perguntar ao Mestre por uma maneira rápida ou discreta de entrar ou sair de um lugar que você possa ver. A próxima jogada que você fizer usando essa informação tem vantagem.",
-          "automacao": "custo-e-estado-da-proxima-jogada"
+          "automacao": {
+            "classificacao": "custo-e-estado-da-proxima-jogada"
+          }
         }
       ],
       "perguntasDeFundo": [
@@ -2650,13 +2654,17 @@
                   "nomeIngles": "First Strike",
                   "nome": "Primeiro Golpe",
                   "texto": "Na primeira vez em uma cena que tiver sucesso em um ataque, você causa o dobro do dano.",
-                  "automacao": "dano-contextual-uma-vez-por-cena"
+                  "automacao": {
+                    "classificacao": "dano-contextual-uma-vez-por-cena"
+                  }
                 },
                 {
                   "nomeIngles": "Ambush",
                   "nome": "Emboscada",
                   "texto": "Sua característica Marcado para Morrer usa d6 em vez de d4.",
-                  "automacao": "altera-dado-de-classe"
+                  "automacao": {
+                    "classificacao": "altera-dado-de-classe"
+                  }
                 }
               ],
               "texto": "",
@@ -2681,13 +2689,17 @@
                   "nomeIngles": "Death Strike",
                   "nome": "Golpe Mortal",
                   "texto": "Quando causar dano Severo a uma criatura, você pode marcar 1 Estresse para forçá-la a marcar 1 Ponto de Vida adicional.",
-                  "automacao": "custo-proprio-e-efeito-no-alvo"
+                  "automacao": {
+                    "classificacao": "custo-proprio-e-efeito-no-alvo"
+                  }
                 },
                 {
                   "nomeIngles": "Scorpion’s Poise",
                   "nome": "Postura do Escorpião",
                   "texto": "Você recebe +2 de Evasão contra ataques feitos por uma criatura que tenha deixado Marcada para Morrer.",
-                  "automacao": "evasao-contextual-por-atacante",
+                  "automacao": {
+                    "classificacao": "evasao-contextual-por-atacante"
+                  },
                   "efeitoDerivado": {
                     "bonusEvasaoContraAlvoDeHabilidade": {
                       "valor": 2,
@@ -2719,13 +2731,17 @@
                   "nomeIngles": "True Strike",
                   "nome": "Golpe Certeiro",
                   "texto": "Uma vez por descanso longo, quando falhar em um ataque, você pode gastar 1 Esperança para transformá-lo em sucesso.",
-                  "automacao": "custo-e-uso-por-descanso"
+                  "automacao": {
+                    "classificacao": "custo-e-uso-por-descanso"
+                  }
                 },
                 {
                   "nomeIngles": "Backstab",
                   "nome": "Ataque pelas Costas",
                   "texto": "Sua característica Marcado para Morrer usa d8 em vez de d6.",
-                  "automacao": "altera-dado-de-classe"
+                  "automacao": {
+                    "classificacao": "altera-dado-de-classe"
+                  }
                 }
               ],
               "texto": "",
@@ -2773,7 +2789,9 @@
                   "nomeIngles": "Toxic Concoctions",
                   "nome": "Preparos Tóxicos",
                   "texto": "Marque 1 Estresse e role 1d4 fora do app para colocar uma quantidade de marcadores nesta carta igual ao resultado +1. Quando fizer um ataque bem-sucedido com arma, você pode gastar 1 marcador para afligir o alvo com um veneno. Pétala Fantasma deixa o alvo temporariamente Vulnerável; Esporo Tumular força o alvo a marcar também 1 Estresse; Erva-Sanguessuga acrescenta 1d6 de dano ao ataque. Limpe todos os marcadores não gastos ao fazer um descanso longo.",
-                  "automacao": "resultado-manual-contador-e-veneno-escolhido"
+                  "automacao": {
+                    "classificacao": "resultado-manual-contador-e-veneno-escolhido"
+                  }
                 }
               ],
               "texto": "",
@@ -2798,13 +2816,17 @@
                   "nomeIngles": "Poison Compendium",
                   "nome": "Compêndio de Venenos",
                   "texto": "Você também conhece estes venenos: Trepadeira da Meia-Noite faz o alvo sofrer desvantagem nas jogadas de ataque até marcar 1 Estresse para limpar a condição; Raiz de Górgona deixa o alvo temporariamente Restrito.",
-                  "automacao": "efeitos-contextuais-no-alvo"
+                  "automacao": {
+                    "classificacao": "efeitos-contextuais-no-alvo"
+                  }
                 },
                 {
                   "nomeIngles": "Twin Fang",
                   "nome": "Presas Gêmeas",
                   "texto": "Ao afligir com um veneno conhecido um alvo Marcado para Morrer, você pode gastar 1 marcador adicional para aplicar também o efeito de um segundo veneno conhecido.",
-                  "automacao": "gasto-adicional-de-contador"
+                  "automacao": {
+                    "classificacao": "gasto-adicional-de-contador"
+                  }
                 }
               ],
               "texto": "",
@@ -2829,13 +2851,17 @@
                   "nomeIngles": "Venomancer",
                   "nome": "Venomante",
                   "texto": "Você também conhece estes venenos: Semente da Ruína aplica −3 aos limiares de dano do alvo até o fim da cena, sem acumular; Folha do Medo acrescenta ao ataque dano igual ao resultado do seu Dado de Medo; Espinho Cadavérico impõe desvantagem nas jogadas de reação do alvo até o fim da cena.",
-                  "automacao": "efeitos-contextuais-com-dado-ja-rolado"
+                  "automacao": {
+                    "classificacao": "efeitos-contextuais-com-dado-ja-rolado"
+                  }
                 },
                 {
                   "nomeIngles": "Adder’s Blessing",
                   "nome": "Bênção da Víbora",
                   "texto": "Você é imune a venenos e outras toxinas.",
-                  "automacao": "imunidade-passiva"
+                  "automacao": {
+                    "classificacao": "imunidade-passiva"
+                  }
                 }
               ],
               "texto": "",
@@ -2920,13 +2946,17 @@
           "nomeIngles": "I Am the Weapon",
           "nome": "Eu Sou a Arma",
           "texto": "Seus ataques desarmados são tão fortes quanto qualquer lâmina. Enquanto você não tiver outra arma ativa, considera-se que está empunhando uma arma primária chamada Golpe do Brigão. Ela usa um traço à sua escolha, tem alcance Corpo a Corpo e causa d8+d6 de dano físico usando sua Proficiência; tanto o d8 quanto o d6 se multiplicam pela Proficiência. Enquanto essa arma estiver ativa, você recebe +1 de Evasão.",
-          "automacao": "arma-virtual-e-derivados"
+          "automacao": {
+            "classificacao": "arma-virtual-e-derivados"
+          }
         },
         {
           "nomeIngles": "Combo Strike",
           "nome": "Golpe em Combo",
           "texto": "Depois de rolar o dano de um ataque bem-sucedido com uma arma Corpo a Corpo, você pode marcar 1 Estresse para iniciar um Golpe em Combo. Role seu Dado de Combo fora do app e anote o resultado; continue rolando até o resultado mais recente ser menor que o anterior. Cause dano adicional igual à soma de todos os resultados. Esses resultados não podem ser modificados. Seu Dado de Combo começa como d4. Uma vez por patamar, você pode aumentá-lo em um passo como opção de avanço de nível.",
-          "automacao": "custo-e-progressao;rolagens-manuais"
+          "automacao": {
+            "classificacao": "custo-e-progressao;rolagens-manuais"
+          }
         }
       ],
       "perguntasDeFundo": [
@@ -2957,13 +2987,17 @@
                   "nomeIngles": "Rugged",
                   "nome": "Robusto",
                   "texto": "Receba permanentemente +3 no seu limiar de dano Severo.",
-                  "automacao": "limiar-permanente"
+                  "automacao": {
+                    "classificacao": "limiar-permanente"
+                  }
                 },
                 {
                   "nomeIngles": "Overwhelm",
                   "nome": "Avassalar",
                   "texto": "Quando tiver sucesso em um ataque contra um alvo, você pode gastar 1 Esperança para arremessá-lo para qualquer ponto em alcance Próximo ou forçá-lo a marcar 1 Estresse.",
-                  "automacao": "custo-proprio-e-escolha-no-alvo"
+                  "automacao": {
+                    "classificacao": "custo-proprio-e-escolha-no-alvo"
+                  }
                 }
               ],
               "texto": "",
@@ -2988,13 +3022,17 @@
                   "nomeIngles": "Surrounded",
                   "nome": "Cercado",
                   "texto": "Ao fazer um ataque com arma Corpo a Corpo, você pode gastar qualquer quantidade de Esperança para escolher a mesma quantidade de criaturas adicionais em alcance Corpo a Corpo como alvos.",
-                  "automacao": "custo-variavel-e-alvos-contextuais"
+                  "automacao": {
+                    "classificacao": "custo-variavel-e-alvos-contextuais"
+                  }
                 },
                 {
                   "nomeIngles": "Eye for an Eye",
                   "nome": "Olho por Olho",
                   "texto": "Uma vez por descanso, quando um adversário em alcance Corpo a Corpo fizer você marcar qualquer quantidade de Pontos de Vida, você pode marcar 1 Estresse para fazê-lo marcar a mesma quantidade de Pontos de Vida.",
-                  "automacao": "reacao-uma-vez-por-descanso"
+                  "automacao": {
+                    "classificacao": "reacao-uma-vez-por-descanso"
+                  }
                 }
               ],
               "texto": "",
@@ -3019,13 +3057,17 @@
                   "nomeIngles": "Pummeljoy",
                   "nome": "Gosto pela Pancadaria",
                   "texto": "Ao obter um sucesso crítico num ataque com arma Corpo a Corpo, ganhe 1 Esperança adicional, limpe 1 Estresse adicional e receba +1 de Proficiência nesse ataque.",
-                  "automacao": "bonus-contextual-em-critico"
+                  "automacao": {
+                    "classificacao": "bonus-contextual-em-critico"
+                  }
                 },
                 {
                   "nomeIngles": "Not Done Yet",
                   "nome": "Ainda Não Acabei",
                   "texto": "Quando sofrer dano Severo, você pode ganhar 1 Esperança ou limpar 1 Estresse.",
-                  "automacao": "reacao-ao-dano"
+                  "automacao": {
+                    "classificacao": "reacao-ao-dano"
+                  }
                 }
               ],
               "texto": "",
@@ -3073,7 +3115,9 @@
                   "nomeIngles": "Stance Fighter",
                   "nome": "Lutador de Posturas",
                   "texto": "Você canaliza sua determinação interior para assumir posturas marciais que concedem benefícios especiais em combate. Pegue a folha de Posturas Marciais e escolha duas posturas de Patamar 1. Sempre que subir de nível, escolha outra postura do seu patamar ou inferior.",
-                  "automacao": "subsistema-de-posturas-automatizado"
+                  "automacao": {
+                    "classificacao": "subsistema-de-posturas-automatizado"
+                  }
                 }
               ],
               "texto": "",
@@ -3098,7 +3142,9 @@
                   "nomeIngles": "Keen Defenses",
                   "nome": "Defesas Aguçadas",
                   "texto": "Quando for alvo de um ataque, você pode gastar 1 Foco para receber contra esse ataque um bônus de Evasão igual ao seu patamar.",
-                  "automacao": "reacao-com-custo-de-foco-automatizada",
+                  "automacao": {
+                    "classificacao": "reacao-com-custo-de-foco-automatizada"
+                  },
                   "uso": {
                     "custo": {
                       "foco": 1
@@ -3111,7 +3157,9 @@
                   "nomeIngles": "Focus Cannon",
                   "nome": "Canhão de Foco",
                   "texto": "Gaste 1 Foco para fazer uma jogada de Instinto contra um adversário em alcance Distante. Em caso de sucesso, cause d20+3 de dano mágico usando sua Proficiência.",
-                  "automacao": "custo-automatizado-resultado-da-mesa",
+                  "automacao": {
+                    "classificacao": "custo-automatizado-resultado-da-mesa"
+                  },
                   "uso": {
                     "custo": {
                       "foco": 1
@@ -3142,13 +3190,17 @@
                   "nomeIngles": "Limit Breaker",
                   "nome": "Romper Limites",
                   "texto": "Uma vez por descanso, você pode realizar um feito atlético inacreditável sem precisar fazer uma jogada, como correr sobre a água, saltar entre telhados distantes ou escalar um prédio. Quando fizer isso, ganhe 1 Esperança e limpe 1 Estresse.",
-                  "automacao": "uso-por-descanso-e-recursos"
+                  "automacao": {
+                    "classificacao": "uso-por-descanso-e-recursos"
+                  }
                 },
                 {
                   "nomeIngles": "Flow State",
                   "nome": "Estado de Fluxo",
                   "texto": "Você pode marcar 1 Estresse em vez de gastar 1 Foco para mudar de postura. Além disso, pode gastar 1 Foco em vez de marcar 1 Estresse para iniciar um Golpe em Combo.",
-                  "automacao": "substituicao-de-custos"
+                  "automacao": {
+                    "classificacao": "substituicao-de-custos"
+                  }
                 }
               ],
               "texto": "",
@@ -3230,13 +3282,17 @@
           "nomeIngles": "Patron’s Pact",
           "nome": "Pacto do Patrono",
           "texto": "Você se comprometeu com uma entidade sobrenatural — como um deus, fada ou demônio — em troca de poder. Escreva o nome dela na ficha e defina com o Mestre sua esfera de influência, como Natureza, Caos, Sabedoria, Travessura, Amor, Guerra, Justiça ou Morte. Antes de uma jogada de ação relacionada a essa esfera, você pode gastar 1 Favor para recorrer à ajuda do patrono: role o Dado do Patrono fora do app e some o resultado ao total. O Dado do Patrono começa como d6 e aumenta para d8 no 5º nível.",
-          "automacao": "custo-e-dado-por-nivel;rolagem-manual"
+          "automacao": {
+            "classificacao": "custo-e-dado-por-nivel;rolagem-manual"
+          }
         },
         {
           "nomeIngles": "Favor",
           "nome": "Favor",
           "texto": "Você começa com 3 Favores e pode manter no máximo 6. Durante um movimento de descanso, descreva como presta tributo ao patrono para ganhar uma quantidade de Favores igual ao seu traço de Conjuração. Além disso, quando tiver sucesso em uma jogada de ação com Esperança, pode ganhar 1 Favor em vez de ganhar 1 Esperança.",
-          "automacao": "recurso-de-classe-com-teto-6"
+          "automacao": {
+            "classificacao": "recurso-de-classe-com-teto-6"
+          }
         }
       ],
       "perguntasDeFundo": [
@@ -3267,13 +3323,17 @@
                   "nomeIngles": "Patron’s Mantle",
                   "nome": "Manto do Patrono",
                   "texto": "Gaste 1 Favor para revestir-se com um aspecto aterrorizante de seu patrono. O efeito dura até você sofrer dano Severo ou a cena terminar. Enquanto estiver ativo, receba nos limiares de dano um bônus igual ao seu patamar e tenha vantagem nas jogadas de ação para intimidar um alvo.",
-                  "automacao": "estado-ate-dano-severo-ou-fim-da-cena"
+                  "automacao": {
+                    "classificacao": "estado-ate-dano-severo-ou-fim-da-cena"
+                  }
                 },
                 {
                   "nomeIngles": "Deathless Embrace",
                   "nome": "Abraço Imortal",
                   "texto": "Uma vez por descanso, gaste qualquer quantidade de Favores e role fora do app a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, limpe 1 Ponto de Vida.",
-                  "automacao": "custo-variavel-e-resultados-manuais"
+                  "automacao": {
+                    "classificacao": "custo-variavel-e-resultados-manuais"
+                  }
                 }
               ],
               "texto": "",
@@ -3298,13 +3358,17 @@
                   "nomeIngles": "Harrowing Invocation",
                   "nome": "Invocação Atormentadora",
                   "texto": "Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para impor desvantagem à jogada. Se o adversário falhar, ele também deve marcar 1 Estresse.",
-                  "automacao": "reacao-pre-ataque-e-consequencia-informada"
+                  "automacao": {
+                    "classificacao": "reacao-pre-ataque-e-consequencia-informada"
+                  }
                 },
                 {
                   "nomeIngles": "Damage Sink",
                   "nome": "Absorção de Dano",
                   "texto": "Uma vez por descanso, você pode gastar 1 Favor para reduzir pela metade o dano recebido.",
-                  "automacao": "mitigacao-uma-vez-por-descanso"
+                  "automacao": {
+                    "classificacao": "mitigacao-uma-vez-por-descanso"
+                  }
                 }
               ],
               "texto": "",
@@ -3329,13 +3393,17 @@
                   "nomeIngles": "Dark Aegis",
                   "nome": "Égide Sombria",
                   "texto": "Uma vez por descanso longo, quando fosse sofrer dano, você pode gastar 1 Favor em vez de marcar Pontos de Vida.",
-                  "automacao": "substituicao-de-pv-uma-vez-por-descanso-longo"
+                  "automacao": {
+                    "classificacao": "substituicao-de-pv-uma-vez-por-descanso-longo"
+                  }
                 },
                 {
                   "nomeIngles": "Draining Bane",
                   "nome": "Flagelo Drenante",
                   "texto": "Quando um adversário atacar você ou um aliado em alcance Muito Próximo, você pode gastar 1 Favor para Drená-lo. Ele deve marcar 1 Estresse e você pode limpar 1 Estresse. Enquanto estiver Drenado, o alvo usa d12 em vez de d20 nas jogadas de ataque, inclusive para vantagem ou desvantagem, até falhar em uma jogada.",
-                  "automacao": "reacao-e-condicao-no-alvo"
+                  "automacao": {
+                    "classificacao": "reacao-e-condicao-no-alvo"
+                  }
                 }
               ],
               "texto": "",
@@ -3383,13 +3451,17 @@
                   "nomeIngles": "Patron’s Fury",
                   "nome": "Fúria do Patrono",
                   "texto": "Gaste 1 Favor para imbuir seus ataques com o poder do patrono até você causar dano Severo ou a cena terminar. Ao rolar dano enquanto o efeito estiver ativo, role também uma quantidade de Dados do Patrono igual ao seu patamar e some os resultados ao dano causado.",
-                  "automacao": "estado-e-dados-manuais-de-dano"
+                  "automacao": {
+                    "classificacao": "estado-e-dados-manuais-de-dano"
+                  }
                 },
                 {
                   "nomeIngles": "Deadly Vengeance",
                   "nome": "Vingança Mortal",
                   "texto": "Quando marcar qualquer quantidade de Pontos de Vida por causa de um ataque, você pode gastar 1 Favor para rolar a mesma quantidade de Dados do Patrono. Para cada resultado 4 ou maior, o atacante marca 1 Ponto de Vida.",
-                  "automacao": "reacao-com-resultados-manuais"
+                  "automacao": {
+                    "classificacao": "reacao-com-resultados-manuais"
+                  }
                 }
               ],
               "texto": "",
@@ -3414,13 +3486,17 @@
                   "nomeIngles": "Menacing Reach",
                   "nome": "Alcance Ameaçador",
                   "texto": "Gaste 1 Favor para aumentar o alcance da sua arma primária em um passo, como de Corpo a Corpo para Muito Próximo ou de Muito Próximo para Próximo, até o máximo de Longínquo. O efeito termina quando você fizer um ataque bem-sucedido com a arma.",
-                  "automacao": "estado-da-arma-ate-acerto"
+                  "automacao": {
+                    "classificacao": "estado-da-arma-ate-acerto"
+                  }
                 },
                 {
                   "nomeIngles": "Diminish My Foes",
                   "nome": "Debilitar Meus Inimigos",
                   "texto": "Ao obter sucesso com Esperança numa jogada de ação contra um alvo, você pode gastar qualquer quantidade de Favores para forçá-lo a marcar a mesma quantidade de Estresses.",
-                  "automacao": "custo-variavel-e-alvo"
+                  "automacao": {
+                    "classificacao": "custo-variavel-e-alvo"
+                  }
                 }
               ],
               "texto": "",
@@ -3445,13 +3521,17 @@
                   "nomeIngles": "Fearsome Attack",
                   "nome": "Ataque Aterrorizante",
                   "texto": "Gaste 1 Favor para rerrolar qualquer quantidade dos seus dados de dano. Você pode continuar gastando Favores para usar esta característica na mesma jogada de dano.",
-                  "automacao": "custo-por-rerrolagem-manual"
+                  "automacao": {
+                    "classificacao": "custo-por-rerrolagem-manual"
+                  }
                 },
                 {
                   "nomeIngles": "Otherworldly Ire",
                   "nome": "Ira Sobrenatural",
                   "texto": "Uma vez por descanso, quando sofrer dano, você pode gastar qualquer quantidade de Favores para rolar a mesma quantidade de Dados do Patrono e escolher em alcance Próximo uma quantidade de criaturas igual ao maior resultado. Cada alvo deve marcar 1 Ponto de Vida.",
-                  "automacao": "uso-por-descanso-com-resultados-manuais"
+                  "automacao": {
+                    "classificacao": "uso-por-descanso-com-resultados-manuais"
+                  }
                 }
               ],
               "texto": "",
@@ -3533,13 +3613,17 @@
           "nomeIngles": "Hex",
           "nome": "Maldição",
           "texto": "Marque 1 Estresse para Amaldiçoar temporariamente um alvo em alcance Distante. Enquanto estiver Amaldiçoado, o alvo sofre uma penalidade nas jogadas de dano e na Dificuldade igual ao seu patamar. O número máximo de criaturas que você pode manter Amaldiçoadas ao mesmo tempo é igual ao seu traço de Conjuração.",
-          "automacao": "custo-alvos-e-modificadores-contextuais"
+          "automacao": {
+            "classificacao": "custo-alvos-e-modificadores-contextuais"
+          }
         },
         {
           "nomeIngles": "Commune",
           "nome": "Comunhão",
           "texto": "Uma vez por descanso longo, durante um momento de calma, você pode comungar com um ancestral, divindade, espírito ou ser de outro mundo. Faça uma pergunta e role fora do app uma quantidade de d6 igual ao seu traço de Conjuração. Escolha um resultado: 1–3, você sente um sabor, cheiro ou sensação relevante; 4–5, ouve sons ou vê uma visão relevante; 6, vivencia mentalmente uma cena relevante como se estivesse presente.",
-          "automacao": "uso-por-descanso;rolagens-e-resolucao-narrativas-manuais"
+          "automacao": {
+            "classificacao": "uso-por-descanso;rolagens-e-resolucao-narrativas-manuais"
+          }
         }
       ],
       "perguntasDeFundo": [
@@ -3570,13 +3654,17 @@
                   "nomeIngles": "Herbal Remedies",
                   "nome": "Remédios Herbais",
                   "texto": "Quando você ou um aliado na cena limpar 1 ou mais Pontos de Vida ou Estresses usando um consumível, aumente em 1 a quantidade limpa.",
-                  "automacao": "bonus-passivo-em-consumivel"
+                  "automacao": {
+                    "classificacao": "bonus-passivo-em-consumivel"
+                  }
                 },
                 {
                   "nomeIngles": "Enchanted Talisman",
                   "nome": "Talismã Encantado",
                   "texto": "Uma vez por descanso, você pode imbuir um objeto pequeno com sua essência protetora. Gaste qualquer quantidade de Esperança para colocar a mesma quantidade de marcadores nesta carta. Quando a pessoa que carrega o talismã sofrer dano, gaste 1 marcador para reduzir em 1 a quantidade de Pontos de Vida que ela marca. Limpe todos os marcadores ao fazer um descanso.",
-                  "automacao": "contador-e-protecao-em-aliado"
+                  "automacao": {
+                    "classificacao": "contador-e-protecao-em-aliado"
+                  }
                 }
               ],
               "texto": "",
@@ -3601,13 +3689,17 @@
                   "nomeIngles": "Walk Between Worlds",
                   "nome": "Caminhar Entre Mundos",
                   "texto": "Durante um momento de calma, faça uma jogada de Conjuração com Dificuldade 13. Uma vez por descanso, em caso de sucesso, você pode marcar 1 Estresse para atravessar o véu da morte e conversar com espíritos próximos. Coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração e remova um sempre que um espírito responder a uma pergunta. Quando remover o último marcador ou a cena terminar, você retorna ao Reino Mortal no mesmo lugar de onde partiu.",
-                  "automacao": "apos-resultado-informado-contador-e-estado"
+                  "automacao": {
+                    "classificacao": "apos-resultado-informado-contador-e-estado"
+                  }
                 },
                 {
                   "nomeIngles": "Vexing Malison",
                   "nome": "Maldição Atormentadora",
                   "texto": "Você tem vantagem nos ataques contra criaturas Amaldiçoadas.",
-                  "automacao": "vantagem-contextual"
+                  "automacao": {
+                    "classificacao": "vantagem-contextual"
+                  }
                 }
               ],
               "texto": "",
@@ -3632,7 +3724,9 @@
                   "nomeIngles": "Circle of Power",
                   "nome": "Círculo de Poder",
                   "texto": "Uma vez por descanso, trace no chão um círculo que delimite uma área em alcance Muito Próximo ao seu redor e coloque nesta carta uma quantidade de marcadores igual ao seu traço de Conjuração. Dentro do círculo, você e seus aliados recebem +2 nos limiares de dano, nas jogadas de ataque e na Evasão. Remova 1 marcador sempre que você ou um aliado no círculo fizer uma jogada de ação ou evitar um ataque. O feitiço dura até o último marcador ser removido ou você sair do círculo.",
-                  "automacao": "area-contextual-com-contador"
+                  "automacao": {
+                    "classificacao": "area-contextual-com-contador"
+                  }
                 }
               ],
               "texto": "",
@@ -3680,7 +3774,9 @@
                   "nomeIngles": "Night’s Glamour",
                   "nome": "Encanto da Noite",
                   "texto": "Faça uma jogada de Conjuração com Dificuldade 13 para envolver-se numa aparência ilusória fascinante. Enquanto estiver sob o Encanto, você tem vantagem nas jogadas que aproveitem essa aparência e adversários em alcance Próximo precisam marcar 1 Estresse para atacar você. A menos que marque 1 Estresse para manter o Encanto, ele termina quando você marcar 1 Ponto de Vida ou causar dano.",
-                  "automacao": "estado-apos-resultado-e-custo-de-manutencao"
+                  "automacao": {
+                    "classificacao": "estado-apos-resultado-e-custo-de-manutencao"
+                  }
                 }
               ],
               "texto": "",
@@ -3705,13 +3801,17 @@
                   "nomeIngles": "Moonbeam",
                   "nome": "Raio Lunar",
                   "texto": "Uma vez por sessão, você pode conjurar uma coluna de luar que ilumina a área em alcance Próximo até o fim da cena. Sob esse luar, você e seus aliados recebem +1 nas jogadas de Conjuração e enxergam através de ilusões.",
-                  "automacao": "area-contextual-uma-vez-por-sessao"
+                  "automacao": {
+                    "classificacao": "area-contextual-uma-vez-por-sessao"
+                  }
                 },
                 {
                   "nomeIngles": "Ire of Pale Light",
                   "nome": "Ira da Luz Pálida",
                   "texto": "Quando uma criatura Amaldiçoada em alcance Longínquo falhar em um ataque, ela deve marcar 1 Estresse.",
-                  "automacao": "reacao-contextual-no-alvo"
+                  "automacao": {
+                    "classificacao": "reacao-contextual-no-alvo"
+                  }
                 }
               ],
               "texto": "",
@@ -3736,7 +3836,9 @@
                   "nomeIngles": "Lunar Phases",
                   "nome": "Fases Lunares",
                   "texto": "No início de cada sessão, role 1d6 fora do app e coloque-o nesta carta. Até o fim da sessão, 1 (Nova) permite gastar 1 Esperança para negar dano Menor; 2–3 (Crescente) concede +2 nas jogadas de dano; 4 (Cheia) concede +3 nos limiares de dano; 5–6 (Minguante) concede +1 de Evasão. Uma vez por descanso, você pode gastar 1 Esperança para aumentar o valor do dado em 1; ao aumentar um 6, ele se torna 1.",
-                  "automacao": "resultado-manual-estado-de-sessao-e-ajuste-por-descanso"
+                  "automacao": {
+                    "classificacao": "resultado-manual-estado-de-sessao-e-ajuste-por-descanso"
+                  }
                 }
               ],
               "texto": "",

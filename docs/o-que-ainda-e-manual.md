@@ -8,11 +8,42 @@ domínio, classes, subclasses, ancestralidades, comunidades, transformações,
 equipamento, consumíveis, saque e posturas — e li o que cada registro declara
 sobre si.
 
+> ⚠ **OS NÚMEROS DESTE DOCUMENTO VIRARAM UM COMANDO (24/10/2026).** A tabela
+> abaixo é de setembro e envelheceu calada: dizia 615 classificadas quando já
+> eram 995. Para a conta de agora, rode **`npm run censo`** — ela mede o
+> catálogo na hora e imprime a divisão por família.
+>
+> ⚠ **E a conta antiga era impossível de refazer**, porque "declaram alguma
+> parte manual" não dizia qual palavra contava: só "manual" dá 18%, somando
+> "assistido" e "parcial" dá 42%. As duas contas são defensáveis e medem coisas
+> diferentes — por isso o censo agora imprime uma linha por família, e quem o
+> citar cita a linha.
+
+**Medido em 24/10/2026** (`npm run censo`):
+
 | | |
 |---:|---|
-| **615** | características com classificação de automação |
-| **155** | declaram alguma parte manual (25%) |
-| **8** | eram o que valia olhar primeiro — **7 feitas**, 1 de pé |
+| **995** | características classificadas (eram 615 em setembro) |
+| **496 · 50%** | o app aplica sozinho |
+| **181 · 18%** | MANUAL — a mesa resolve |
+| **176 · 18%** | ASSISTIDO — o app faz a conta e pergunta o resultado do dado |
+| **56 · 6%** | PARCIAL — parte aplica, parte fica |
+| **44 · 4%** | CONTEXTUAL — depende de onde/quem |
+| **42 · 4%** | FICÇÃO — não há número para mover |
+| **8** | eram o que valia olhar primeiro — **as oito feitas** |
+
+✅ **E as quatro formas do campo `automacao` viraram duas (25/10/2026).** Eram 833
+objetos com `classificacao`, **162 strings soltas**, 24 objetos sem `classificacao`
+e 18 `null` — a mesma pergunta guardada de quatro jeitos, e foi o que tornou o
+censo antigo irrefazível. As 162 viraram objeto, `45_Transformacoes.gs` foi
+regerado, e **`npm run teste:automacao` impede a volta**: string é recusada, e os
+dois papéis do campo não podem se misturar.
+
+⚠ **O NOME ainda responde a duas perguntas, e isso fica declarado** (BACKLOG I8):
+em `molduras.json`, `automacao` é a automação que o **motor executa** (`escopo` e
+as chaves que as telas leem); no resto do catálogo é um **rótulo** que ninguém
+executa. Medido: o motor só lê `automacao` das molduras. Renomear atravessa trinta
+conferidores e dois geradores — é lote próprio.
 
 ---
 
@@ -64,9 +95,14 @@ sabe o número**.
 
 ## As oito que eu faria, em ordem — e o que aconteceu com cada uma
 
-> **Estado em 22/09/2026.** Sete das oito estão feitas. A oitava continua de pé,
-> e duas das sete estavam com o diagnóstico errado — o que está contado aqui
-> embaixo, porque errar calado é pior que errar.
+> **Estado em 24/10/2026: as oito estão feitas.** Duas das sete primeiras
+> estavam com o diagnóstico errado — contado aqui embaixo, porque errar calado é
+> pior que errar.
+>
+> ⚠ **E esta linha dizia "a oitava continua de pé" enquanto a seção 8, no mesmo
+> arquivo, dizia "feito".** A mesma pergunta respondida duas vezes, divergindo —
+> a forma de defeito que este projeto passa a vida caçando, desta vez num
+> documento. A tabela é que estava velha.
 
 | # | o que era | estado |
 |---:|---|---|
@@ -77,7 +113,7 @@ sabe o número**.
 | 5 | **Restauração** — a cura que vai para um aliado | ✅ feito, e abriu uma porta nova |
 | 6 | **Escorpião / Maldição Atormentadora** | ⚠️ metade feita — o diagnóstico estava errado |
 | 7 | **Cadáver** — a pergunta que falta no descanso | ⚠️ **já existia**; eu é que não tinha olhado |
-| 8 | **Os 24 consumíveis que terminam no adversário** | ⬜ continua de pé |
+| 8 | **Os consumíveis que terminam no adversário** | ✅ feito — e eram 14, não 24 |
 
 ### 4. Tocado pela Graça — feito
 
@@ -182,14 +218,22 @@ não fica só na ficha: aparece no painel do Mestre.
 
 ## E duas que talvez já estejam prontas e mal classificadas
 
-⚠ Vale conferir antes de qualquer trabalho — o catálogo pode estar
-desatualizado, como estava a classificação do Lutador de Posturas até hoje.
+✅ **CONFERIDAS em 24/10/2026 — e as duas classificações estavam CERTAS.** A
+suspeita é que estava velha.
 
-- **Efêmero** (transformação Fantasma): *"resistência a dano físico, dobro de
-  dano mágico"*. A janela de dano **já trata** resistência e vulnerabilidade
-  mágica do Fantasma; a classificação `…contextual` parece anterior a isso.
-- **Frenesi Uivante** (Lobisomem): o gatilho no último Estresse já está
-  modelado; só o dado continua da mesa, o que é o normal.
+- **Efêmero** (transformação Fantasma): a resistência a dano físico está no motor
+  (`4C_Ajustes.gs` devolve `resistencia: 'Fantasma · Efêmero'` no dano físico), e
+  a classificação `resistencia-vulnerabilidade-e-custo-contextual` diz
+  exatamente isso: a resistência aplica, e o que é **contextual** é o custo de 2
+  Estresses para atravessar um objeto — que depende de haver um objeto e de a
+  mesa querer atravessá-lo.
+- **Frenesi Uivante** (Lobisomem): `45_Transformacoes.gs` modela o gatilho do
+  último Estresse, marca o Estresse, sai da Forma de Lobo e devolve quantos d20
+  rolar (pelo patamar). A classificação
+  `gatilho-no-ultimo-estresse-e-rolagem-manual` é a descrição fiel disso.
+
+⚠ **A lição é sobre a suspeita, não sobre as duas:** "parece desatualizado" é
+palpite, e palpite neste projeto custa um lote. Conferir foram dois `grep`.
 
 ---
 
@@ -212,7 +256,7 @@ O censo sai de `automacao.classificacao` nos `data/*.json`. Qualquer um pode
 refazê-lo: é uma varredura dos arquivos, sem nada guardado — e é assim de
 propósito, para a lista não envelhecer escondida num documento.
 
-⚠ **Os números do topo são da varredura de setembro/2026 e não foram
-remedidos** depois deste lote. Sete características mudaram de classificação;
-a ordem de grandeza continua, o número exato não. Quem for refazer a conta,
-refaça a varredura — não confie na tabela.
+✅ **E agora a varredura é um comando: `npm run censo`** (`tools/censo-automacao.mjs`).
+Ele mede o catálogo na hora, imprime a divisão por família, por arquivo e as dez
+classificações mais usadas — e termina avisando que, se um documento trouxer
+outro número, o documento está velho. Era este arquivo.

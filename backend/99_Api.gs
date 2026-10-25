@@ -367,10 +367,27 @@ function oQueAMolduraMuda_(idOuNome) {
   if (typeof MOLDURAS !== 'undefined') {
     for (let i = 0; i < MOLDURAS.length; i++) {
       if (MOLDURAS[i].id !== id) continue;
-      if (MOLDURAS[i].substituiEquipamentoInicial) {
+      /*
+       * ⚠ ESTA PRÉVIA JÁ MENTIU, e foi assim que o defeito chegou à mesa.
+       *
+       * Ela dizia "a criação de ficha GANHA as tabelas desta campanha, além
+       * das do Capítulo 2" para TODA moldura com itens — e a criação não
+       * ganhava nada: ela só sabia substituir, e só o Festim substituía. A
+       * Mestra escolheu Placa-mãe, leu esta frase, abriu a ficha e não achou
+       * nada. Agora cada modo tem a sua frase, e as frases saem do mesmo campo
+       * que a criação obedece.
+       */
+      const modoDoEquipamento = ((MOLDURAS[i].equipamentoInicial || {}).modo) || 'nenhum';
+      if (modoDoEquipamento === 'substitui') {
         saida.push('A criação de ficha passa a oferecer SÓ as tabelas de equipamento desta campanha.');
-      } else if ((MOLDURAS[i].itens || []).length) {
-        saida.push('A criação de ficha ganha as tabelas de equipamento desta campanha, além das do Capítulo 2.');
+      } else if (modoDoEquipamento === 'acrescenta') {
+        saida.push('A criação de ficha ganha as opções desta campanha, ao lado das do Capítulo 2.');
+      } else if (modoDoEquipamento === 'arma-unica') {
+        saida.push('Esta campanha NÃO usa as tabelas de armas: todo personagem novo começa com a arma dela, ' +
+          'de duas mãos e sem secundária.');
+      } else if (modoDoEquipamento === 'saque') {
+        saida.push('Os itens próprios desta campanha são de enredo — você entrega em jogo, ' +
+          'e eles não aparecem na criação de ficha.');
       }
     }
   }
@@ -605,6 +622,32 @@ function executar_(p) {
 
       case 'criarPersonagem': {
         const jogador = exigirSessao_(p.token);
+        /*
+         * ⚠ A CAMPANHA PODE PROIBIR UMA ANCESTRALIDADE, E A RECUSA É DAQUI.
+         *
+         * A tela de criação já não oferece clank numa mesa de Placa-mãe — mas
+         * tela não é garantia, e este projeto tem a cicatriz de uma regra de
+         * moldura que morava só em `js/telas/criacao.js`: 66 itens de três
+         * campanhas ficaram invisíveis por meses porque a única cópia da regra
+         * estava do lado de lá.
+         *
+         * Recusa só no NASCIMENTO. Quem já é clank numa mesa que escolheu
+         * Placa-mãe depois continua salvando normalmente.
+         */
+        const proibida = origemProibidaDaMoldura_(p.ficha, mesaLer_().moldura);
+        if (proibida) {
+          /*
+           * ⚠ O EXTRA DIZ O TIPO, porque agora são três: ancestralidade (clank
+           * na Placa-mãe), comunidade (wanderborne na Jornada) e subclasse
+           * (Sindicato na Jornada). `ancestralidadeProibida` continua indo
+           * quando é ancestralidade, para não quebrar quem já lia esse campo.
+           */
+          const extra = { origemProibida: proibida.id, tipoProibido: proibida.tipo,
+            motivo: proibida.motivo };
+          if (proibida.tipo === 'ancestralidade') extra.ancestralidadeProibida = proibida.id;
+          throw erroApi_(ERRO.DADOS_INVALIDOS,
+            proibida.nome + ' não está disponível na campanha ' + proibida.moldura + '.', extra);
+        }
         return ok_({ personagem: criarPersonagem_(jogador, p.ficha) });
       }
 
@@ -1064,6 +1107,22 @@ function executar_(p) {
            */
           molduraEscolhida: (m.moldura && typeof MOLDURAS_CONTEUDO !== 'undefined')
             ? (MOLDURAS_CONTEUDO[m.moldura] || null) : null,
+          /*
+           * ⚠ E O APÊNDICE QUE ELA HERDA, pelo mesmo motivo de mandar só a
+           * escolhida: o Coração Sombrio de Andaluria usa as mecânicas de caça a
+           * monstros do SRD, que já estão no app. Copiá-las para dentro dele
+           * daria duas fontes à mesma regra; mandá-las resolvidas aqui deixa a
+           * lista num lugar só e o painel desenhando as duas.
+           */
+          apendicesDaMoldura: (typeof apendicesDaMoldura_ === 'function')
+            ? apendicesDaMoldura_(m.moldura) : [],
+          /*
+           * O caderno da campanha ESCOLHIDA, e só dela — mesmo motivo do
+           * conteúdo acima. As anotações das outras molduras continuam
+           * guardadas; mandar todas seria mandar o caderno inteiro a cada
+           * abertura do painel para mostrar uma página.
+           */
+          anotacoesDaCampanha: anotacoesDaCampanhaDaMesa_(m),
           medoSugeridoNoInicio: medoInicial_(fichas.length),
           // o bestiário: só os TIPOS e a conta do Guia de Batalha. As 129 fichas
           // vêm de data/adversarios.json, servido estático pelo GitHub Pages.
@@ -1216,6 +1275,37 @@ function executar_(p) {
       }
 
       /**
+       * ANOTAR NA CAMPANHA — o caderno do Mestre, guardado na mesa.
+       *
+       * ⚠ ISTO NÃO É REGRA, E A AÇÃO SE CHAMA "ANOTAR" POR ISSO. Nada que entra
+       * aqui muda ficha, Medo ou dano; o motor valida a FORMA e guarda. A
+       * primeira coisa que precisava disso foi a Leitura do Céu Noturno do
+       * Reinado do Weredragão: ela é feita UMA VEZ, na sessão zero, e vivia só
+       * na tela — recarregar apagava o que a mesa tinha decidido sobre a
+       * campanha inteira.
+       *
+       * ⚠ GUARDA POR ID DE MOLDURA. Era a pergunta que me fazia não guardar:
+       * "e quando a mesa troca de campanha?". Num mapa por moldura, nada se
+       * perde — reiniciar destrava a escolha e a anotação da antiga continua
+       * ali para quando ela voltar.
+       *
+       * ⚠ E É DO MESTRE. `exigirMestre_` e não `exigirSessao_`: a campanha é
+       * dele, e deixar jogador anotar faria duas pessoas escreverem no mesmo
+       * caderno sem saber.
+       */
+      case 'anotarCampanha': {
+        const mestre = exigirMestre_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const r = anotarCampanha_(m, p.chave, p.valor);
+          mesaGravar_(m);
+          registrarLog_(mestre, 'anotacao-de-campanha', r.moldura + ':' + r.chave);
+          return ok_({ moldura: r.moldura, chave: r.chave, apagada: r.apagada,
+                       anotacoes: anotacoesDaCampanhaDaMesa_(mesaLer_()) });
+        });
+      }
+
+      /**
        * REINICIAR A CAMPANHA — o único caminho para sair de uma moldura.
        *
        * ⚠ SAIR NÃO DESFAZ O QUE ACONTECEU NA MESA, e a resposta diz isso com
@@ -1337,6 +1427,15 @@ function executar_(p) {
           equipamento: escolhida
             ? EQUIPAMENTO_CAMPANHA.filter(function (e) { return escolhida.itens.indexOf(e.id) !== -1; })
             : [],
+          /*
+           * ⚠ AS PERGUNTAS DE CRIAÇÃO VÊM SEPARADAS, e não dentro da moldura.
+           * O catálogo de molduras não carrega `mecanicas` — elas moram em
+           * `MECANICAS_DE_MOLDURA` —, então a tela de criação não tinha como
+           * enxergar a pergunta do artefato de Castle High mesmo com ela
+           * declarada no dado. Mandar a lista pronta é o mesmo desenho do
+           * `equipamento` logo acima: o servidor resolve, a tela desenha.
+           */
+          perguntasDeHistoria: escolhida ? perguntasDeHistoriaDaMoldura_(escolhida.id) : [],
           aprimoramentos: p.id ? aprimoramentosDaFicha_(obterPersonagem_(jogador, p.id).ficha) : null
         });
       }

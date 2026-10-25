@@ -2,11 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { raizDoCorpus, corpusPresente, avisarSemCorpus } from './lib-corpus-srd2.mjs';
 
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const corpusRaiz = process.env.SRD2_CORPUS_DIR
-  ? path.resolve(process.env.SRD2_CORPUS_DIR)
-  : (fs.existsSync(path.resolve(raiz, '..', 'srd2-source')) ? path.resolve(raiz, '..', 'srd2-source') : path.resolve(raiz, 'srd2-source'));
+const corpusRaiz = raizDoCorpus(raiz);
+/* ⚠ Mesmo motivo da conferência de regras referenciadas: ver lib-corpus-srd2.mjs. */
+if (!corpusPresente(corpusRaiz)) { avisarSemCorpus('SRD2 campanhas', corpusRaiz); process.exit(0); }
 const corpus = path.join(corpusRaiz, 'objects', 'rules');
 const ler = (p) => JSON.parse(fs.readFileSync(path.join(raiz, p), 'utf8'));
 const dados = ler('data/campanhas-srd2.json');

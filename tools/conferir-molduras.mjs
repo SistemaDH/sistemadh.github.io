@@ -25,6 +25,7 @@
  * Uso: node tools/conferir-molduras.mjs
  */
 import path from 'node:path';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { criarAmbiente } from './apps-script-mock.mjs';
 
@@ -203,5 +204,133 @@ for (const id of casos) {
 }
 
 porMoldura('');
+
+/* ==========================================================================
+ *  9. O CONTEÚDO DE CADA CENÁRIO — e a diferença entre vazio e CERTO vazio.
+ *
+ * ⚠ ISTO NASCEU DE DUAS MEDIÇÕES QUE DERAM O MESMO NÚMERO POR MOTIVOS OPOSTOS.
+ *
+ * Em 10/2026 a varredura disse "origens vazia em 7 de 8". Era verdade, mas
+ * juntava coisas diferentes: cinco eram capítulos do livro que ninguém tinha
+ * lido ainda, uma é APÊNDICE DE MECÂNICAS do SRD (Caça a Monstros não tem
+ * origens porque a fonte não tem seção de origens — e nunca vai ter), e uma é
+ * de outro livro.
+ *
+ * Contadas juntas, a lacuna real fica escondida atrás do vazio legítimo. Então
+ * aqui a conta é por PROCEDÊNCIA: quem diz `naoEMoldura` está dispensado e tem
+ * de dizer por quê; todo o resto precisa ter as cinco seções do gabarito do
+ * livro. E `perguntasDeSessaoZero` é cobrada à parte, porque o Weredragão não
+ * tem essa seção no gabarito dele — e isso também está escrito.
+ * ======================================================================== */
+const CONTEUDO = JSON.parse(
+  readFileSync(path.join(RAIZ, 'data/molduras.json'), 'utf8')
+).molduras;
+
+for (const m of CONTEUDO) {
+  const rotulo = m.id;
+  if (m.naoEMoldura) {
+    conferir(rotulo, 'o vazio está explicado', () => {
+      exigir(String(m.naoEMoldura).trim().length > 40,
+        'declarou `naoEMoldura` sem dizer por quê — o motivo é o que distingue ' +
+        'lacuna de fonte que não tem a seção');
+      for (const campo of ['principiosDosJogadores', 'principiosDoMestre', 'perguntasDeSessaoZero']) {
+        igual((m[campo] || []).length, 0,
+          `declarou \`naoEMoldura\` e ainda trouxe ${campo} — decida qual das duas é verdade`);
+      }
+    });
+    continue;
+  }
+
+  conferir(rotulo, 'proposta, tom, temas e referências', () => {
+    exigir(String(m.proposta || '').length >= 200,
+      `a proposta tem ${String(m.proposta || '').length} caracteres. As do livro passam de 300; ` +
+      'as curtas eram blurb de equipamento copiado no lugar da proposta');
+    for (const campo of ['tom', 'temas', 'referencias']) {
+      exigir((m[campo] || []).length, `${campo} está vazio e o livro traz a seção`);
+    }
+  });
+
+  conferir(rotulo, 'as três seções de origens', () => {
+    const o = m.origens;
+    exigir(o && !Array.isArray(o),
+      'origens ainda está na forma antiga (lista). A versão 2 é um objeto com ' +
+      'comunidades, ancestralidades e classes');
+    exigir((o.comunidades || []).length, 'nenhuma comunidade — o livro dedica duas páginas a elas');
+    exigir((o.ancestralidades || []).length || (o.classes || []).length || o.nota,
+      'sem ancestralidades, sem classes e sem nota dizendo que a fonte não traz nenhuma');
+    for (const c of (o.comunidades || [])) {
+      exigir(c.nome, 'comunidade sem nome');
+      exigir(String(c.texto || '').length > 60, `comunidade "${c.nome}" sem texto de mesa`);
+      /*
+       * ⚠ "TODAS AS COMUNIDADES" É UMA ENTRADA LEGÍTIMA — e tem de se declarar.
+       * O Festim das Feras abre a seção com um parágrafo que vale para
+       * qualquer comunidade (todo personagem é de Olmeiros). Sem `todas: true`
+       * essa entrada é indistinguível de uma a que alguém esqueceu de pôr os
+       * ids, e é a próxima tela que paga: ela não saberia se deve casar com a
+       * comunidade da ficha ou mostrar sempre.
+       */
+      exigir((c.comunidades || []).length || c.todas === true,
+        `comunidade "${c.nome}" não diz a que ids ela corresponde nem se declara ` +
+        '`todas: true` — sem isso nenhuma tela consegue casar a seção com a ' +
+        'comunidade da ficha');
+    }
+  });
+
+  conferir(rotulo, 'os dois conjuntos de princípios', () => {
+    exigir((m.principiosDosJogadores || []).length,
+      'sem princípios dos jogadores. É o texto que o livro manda ler ANTES da criação');
+    exigir((m.principiosDoMestre || []).length, 'sem princípios do Mestre');
+    for (const p of [...(m.principiosDosJogadores || []), ...(m.principiosDoMestre || [])]) {
+      exigir(p.nome && String(p.texto || '').length > 60, `princípio "${p.nome}" sem texto`);
+    }
+  });
+
+  conferir(rotulo, 'procedência da página', () => {
+    exigir(String(m.paginasLivro || '').trim(), 'não diz de que página o conteúdo veio');
+    exigir(String(m.fonteDoTexto || '').length > 30, 'não diz de que fonte o conteúdo veio');
+  });
+}
+
+/*
+ * ⚠ AS PERGUNTAS DE SESSÃO ZERO SÃO COBRADAS À PARTE. O gabarito do Capítulo 5
+ * tem a seção; o do Hope & Fear não — lá o espaço é das transformações e da
+ * ficha de construção da vilã. Quem não tem a seção precisa dizer isso na nota
+ * das origens, senão a ausência volta a parecer esquecimento.
+ */
+for (const m of CONTEUDO) {
+  if (m.naoEMoldura) continue;
+  conferir(m.id, 'perguntas de sessão zero', () => {
+    if ((m.perguntasDeSessaoZero || []).length) return;
+    exigir(/não tem seção de perguntas de sessão zero/.test((m.origens || {}).nota || ''),
+      'sem perguntas de sessão zero e sem nota dizendo que a fonte não tem a seção');
+  });
+}
+
+/* ==========================================================================
+ *  10. ⚠ O TEXTO DA MECÂNICA É DESENHADO — ENTÃO ELE NÃO PODE DIZER QUE NÃO É.
+ *
+ * ISTO NASCEU DE UM ERRO MEU, E DOS PIORES. Ao registrar os procedimentos do
+ * Caça a Monstros eu escrevi, no texto de três mecânicas, "⚠ PONTO DE
+ * INTERESSE: nenhuma tela lê isto" — por raciocínio, sem medir. O painel
+ * desenha o `texto` de TODA mecânica de moldura desde que o bloco do cenário
+ * existe: as três estavam visíveis, e o aviso falso era desenhado junto com
+ * elas, na tela da Mestra.
+ *
+ * Um aviso errado na tela é pior que nenhum: ele manda a pessoa procurar um
+ * defeito que não existe, e desacredita os avisos verdadeiros do lado.
+ * ======================================================================== */
+for (const m of CONTEUDO) {
+  conferir(m.id, 'o texto da mecânica não desmente a própria tela', () => {
+    for (const mec of (m.mecanicas || [])) {
+      for (const linha of (mec.texto || [])) {
+        exigir(!/nenhuma tela|sem leitor|ningu[eé]m l[eê]/i.test(linha),
+          `a mecânica "${mec.id}" diz que nenhuma tela a lê — e o painel desenha ` +
+          'este texto. Se o que falta é outra coisa (guardar estado, acompanhar ' +
+          'fase), escreva isso.');
+      }
+    }
+  });
+}
+
 console.log(`\nMolduras: ${conferidos} conferências em ${casos.length} casos · ${erros} erros.`);
 if (erros) process.exit(1);

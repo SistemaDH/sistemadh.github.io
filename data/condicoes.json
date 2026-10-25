@@ -9,7 +9,10 @@
       "nomeIngles": "Hidden",
       "tipo": "primaria",
       "texto": "Enquanto estiver fora da vista de todos os inimigos e eles não souberem onde você está, você ganha a condição Oculto. Enquanto estiver Oculto, todas as jogadas contra você são feitas com desvantagem. Depois que um adversário se mover para um lugar de onde poderia ver você, que você entrar na linha de visão dele, ou que você fizer um ataque, você deixa de estar Oculto.",
-      "sinonimos": ["Escondido", "Hidden"],
+      "sinonimos": [
+        "Escondido",
+        "Hidden"
+      ],
       "acumulavel": false,
       "errata": "p.102 — a última frase foi reescrita para listar as três formas de perder a condição."
     },
@@ -19,7 +22,13 @@
       "nomeIngles": "Restrained",
       "tipo": "primaria",
       "texto": "Quando você adquire a condição Restrito, não pode se mover até que a condição seja removida, mas ainda pode realizar ações a partir da posição atual.",
-      "sinonimos": ["Restreinado", "Confinado", "Contido", "Imobilizado", "Restrained"],
+      "sinonimos": [
+        "Restreinado",
+        "Confinado",
+        "Contido",
+        "Imobilizado",
+        "Restrained"
+      ],
       "acumulavel": false,
       "observacao": "Cinco traduções diferentes para a MESMA condição foram encontradas: 'Restrito' (índice e cartas Livro de Norai / Mantenha a Posição), 'Restreinado' (subtítulo da p.102), 'Confinado' (abertura da p.102), 'Contido' (Guardião Imparável e moldura Colosso das Terras Secas) e 'Imobilizado' (cartas Vincular Sombras e Força da Natureza, e o Ato de Desaparecimento do Caminhante Noturno). Todas viram sinônimo de busca."
     },
@@ -29,7 +38,9 @@
       "nomeIngles": "Vulnerable",
       "tipo": "primaria",
       "texto": "Quando você ganha a condição Vulnerável, está em posição difícil na ficção: derrubado, lutando para manter o equilíbrio, pego de surpresa, magicamente enfraquecido ou o que fizer sentido na cena. Enquanto estiver Vulnerável, todas as jogadas que tiverem você como alvo são feitas com vantagem.",
-      "sinonimos": ["Vulnerable"],
+      "sinonimos": [
+        "Vulnerable"
+      ],
       "acumulavel": false
     },
     {
@@ -39,7 +50,10 @@
       "tipo": "especial",
       "origem": "Característica de classe do Ladino; cartas do Caminhante Noturno; carta de domínio Arcana.",
       "texto": "Sempre que estiver Oculto, você também está Camuflado. Além dos benefícios de Oculto, enquanto estiver Camuflado você permanece invisível se ficar parado quando um adversário se mover para onde normalmente o veria. Depois de fazer um ataque ou terminar um movimento dentro da linha de visão de um adversário, você deixa de estar Camuflado.",
-      "sinonimos": ["Encoberto", "Cloaked"],
+      "sinonimos": [
+        "Encoberto",
+        "Cloaked"
+      ],
       "acumulavel": false,
       "errata": "p.42 — a última frase da característica de classe foi reescrita.",
       "observacao": "As cartas do Caminhante Noturno (Passo Sombrio, Nuvem Sombria, Ato de Desaparecimento) usam 'Encoberto' para a mesma condição que o livro e a carta de Arcana chamam de 'Camuflado'. Canônico escolhido pela Vanessa: Camuflado."
@@ -51,7 +65,9 @@
       "tipo": "especial",
       "origem": "Carta de domínio Graça — Invisibilidade.",
       "texto": "Uma criatura Invisível não pode ser vista, exceto por meios mágicos, e as jogadas de ataque contra ela são feitas com desvantagem.",
-      "sinonimos": ["Invisible"],
+      "sinonimos": [
+        "Invisible"
+      ],
       "acumulavel": false
     },
     {
@@ -61,7 +77,10 @@
       "tipo": "especial",
       "origem": "Cartas de domínio Graça — Encantar e Enfeitiçar em Massa.",
       "texto": "A atenção do alvo fica fixa em você, reduzindo o campo de visão dele e abafando todos os sons exceto a sua voz.",
-      "sinonimos": ["Charmed", "Enfeitiçado"],
+      "sinonimos": [
+        "Charmed",
+        "Enfeitiçado"
+      ],
       "acumulavel": false
     },
     {
@@ -71,7 +90,9 @@
       "tipo": "especial",
       "origem": "Cartas de domínio Graça — Brilho Hipnótico; Esplendor — Luz Ofuscante.",
       "texto": "Enquanto estiver Atordoado, o alvo não pode usar reações nem realizar outras ações até que a condição seja removida.",
-      "sinonimos": ["Stunned"],
+      "sinonimos": [
+        "Stunned"
+      ],
       "acumulavel": false
     },
     {
@@ -81,7 +102,10 @@
       "tipo": "especial",
       "origem": "Carta de domínio Códice — Livro de Illiat.",
       "texto": "O alvo fica Adormecido até sofrer dano ou até o Mestre gastar um Medo no turno dele para limpar a condição.",
-      "sinonimos": ["Asleep", "Dormindo"],
+      "sinonimos": [
+        "Asleep",
+        "Dormindo"
+      ],
       "acumulavel": false
     },
     {
@@ -91,7 +115,9 @@
       "tipo": "especial",
       "origem": "Carta de domínio Meia-Noite — Silêncio.",
       "texto": "Enquanto Silenciado, o alvo não pode produzir som nem conjurar magias que exijam palavras faladas.",
-      "sinonimos": ["Silenced"],
+      "sinonimos": [
+        "Silenced"
+      ],
       "acumulavel": false
     },
     {
@@ -101,7 +127,11 @@
       "tipo": "especial",
       "origem": "Carta de domínio Meia-Noite — Terror Noturno.",
       "texto": "Enquanto estiverem Aterrorizados, os alvos ficam Vulneráveis.",
-      "sinonimos": ["Horrified", "Terrified", "Apavorado"],
+      "sinonimos": [
+        "Horrified",
+        "Terrified",
+        "Apavorado"
+      ],
       "acumulavel": false
     },
     {
@@ -111,7 +141,9 @@
       "tipo": "especial",
       "origem": "Carta de domínio Meia-Noite — Espectro da Escuridão.",
       "texto": "Enquanto estiver Espectral, você é imune a dano físico e pode flutuar e atravessar objetos sólidos.",
-      "sinonimos": ["Spectral"],
+      "sinonimos": [
+        "Spectral"
+      ],
       "acumulavel": false
     },
     {
@@ -121,7 +153,9 @@
       "tipo": "especial",
       "origem": "Carta de domínio Sábio — Projétil Corrosivo.",
       "texto": "Enquanto estiver Corroído, o alvo sofre penalidade na Dificuldade conforme descrito na carta que aplicou a condição.",
-      "sinonimos": ["Corroded"],
+      "sinonimos": [
+        "Corroded"
+      ],
       "acumulavel": true,
       "observacao": "É a única condição do sistema que se acumula por design: a penalidade cresce com o Estresse gasto."
     },
@@ -132,8 +166,28 @@
       "tipo": "especial",
       "origem": "Carta de domínio Arcana — Aperto de Cinzas; Fragmento de emberita (consumível); Incendiar do Lodo vermelho (bestiário).",
       "texto": "Marcador de fogo. A regra — quanto dói, quando dói e como apaga — é sempre a de QUEM APLICOU a condição: a carta, o item ou o adversário. Os três casos do app são diferentes de propósito: Aperto de Cinzas cobra 2d6 ao fim de cada ação; o Fragmento de emberita pede um d4 a cada jogada de ação (em 1 marca 1 Ponto de Vida, em 4 acaba); o Incendiar do Lodo vermelho cobra 1d4 por jogada e só apaga com uma jogada de Finesse (14).",
-      "sinonimos": ["On Fire", "Ablaze", "Flamejante", "Queimando"],
+      "sinonimos": [
+        "On Fire",
+        "Ablaze",
+        "Flamejante",
+        "Queimando"
+      ],
       "acumulavel": false
+    },
+    {
+      "id": "amaldicoado",
+      "nome": "Amaldiçoado",
+      "nomeIngles": "Cursed",
+      "tipo": "especial",
+      "origem": "Habilidade Amaldiçoar de adversário (livro p.236, Bruxa do Pântano); maldições da moldura Reinado do Weredragão — a Maldição do Weredraque (Sopro de Forlorne) e a Maldição Petrificante (Olhar Gélido). Itens que limpam: a Espada longa de Lady Lavender e o Zootrópio do Bacanal Radiante.",
+      "texto": "Marcador de maldição. A regra — o que ela faz e como sai — é sempre a de QUEM APLICOU: a habilidade, o item ou a moldura. O adversário que amaldiçoa diz o próprio efeito (\"marque 1 Estresse para forçar as jogadas com Esperança do alvo a serem jogadas com Medo\"), e essa é temporária. ⚠ Já a maldição de campanha NÃO sai com jogada de ação: só magia — feitiço, ritual, item mágico, lugar, ocorrência sobrenatural, poder superior, ou uma combinação disso (SRD 2.0; Hope & Fear p.141). Descobrir COMO encerrá-la costuma exigir pesquisa, e isso é missão, não botão.",
+      "sinonimos": [
+        "Cursed",
+        "Maldito",
+        "Maldição"
+      ],
+      "acumulavel": false,
+      "observacao": "⚠ Esta condição existe para a mesa poder MARCAR a maldição numa ficha. Limpar é decisão de mesa em todos os casos de campanha: o app não tem como saber se a magia que encerra a maldição foi encontrada."
     }
   ],
   "regras": {

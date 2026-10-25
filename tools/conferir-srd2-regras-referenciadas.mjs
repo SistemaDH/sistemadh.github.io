@@ -2,8 +2,16 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { raizDoCorpus, corpusPresente, avisarSemCorpus } from './lib-corpus-srd2.mjs';
 const raiz=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const corpus=process.env.SRD2_CORPUS_DIR?path.resolve(process.env.SRD2_CORPUS_DIR):(fs.existsSync(path.resolve(raiz,'..','srd2-source'))?path.resolve(raiz,'..','srd2-source'):path.resolve(raiz,'srd2-source'));
+const corpus=raizDoCorpus(raiz);
+/*
+ * ⚠ SEM CORPUS, PULA ALTO. Esta conferência compara o hash sha256 de cada
+ * fonte do SRD 2.0; sem o checkout fixado ela acusaria mais de quinhentos
+ * "fonte/hash inválido" que não são defeito — foi o que derrubou a suíte
+ * quando o contêiner foi reclamado. Ver tools/lib-corpus-srd2.mjs.
+ */
+if(!corpusPresente(corpus)){avisarSemCorpus('SRD2 regras referenciadas',corpus);process.exit(0)}
 const ler=p=>JSON.parse(fs.readFileSync(path.join(raiz,p),'utf8'));
 const inventario=ler('data/srd2-inventario.json'),auditoria=ler('data/srd2-regras-auditoria.json');
 const inv=new Map(inventario.colecoes.flatMap(c=>c.registros).map(r=>[r.id,r]));

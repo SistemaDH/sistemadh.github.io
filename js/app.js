@@ -5,15 +5,15 @@
  * conhece "tem sessão?" e "qual tela desenhar".
  */
 
-import { el, limpar } from './util.js?v=c6180d3193';
-import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js?v=c6180d3193';
-import { avisarErro, avisar } from './ui.js?v=c6180d3193';
-import { mensagemDoErro } from './api.js?v=c6180d3193';
-import { telaAbertura } from './telas/abertura.js?v=c6180d3193';
-import { telaRoster } from './telas/roster.js?v=c6180d3193';
-import { abrirAjustes } from './telas/ajustes.js?v=c6180d3193';
-import { botaoDeRegras } from './telas/regras.js?v=c6180d3193';
-import { icone } from './componentes/icone.js?v=c6180d3193';
+import { el, limpar } from './util.js?v=dd0875ae30';
+import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js?v=dd0875ae30';
+import { avisarErro, avisar } from './ui.js?v=dd0875ae30';
+import { mensagemDoErro } from './api.js?v=dd0875ae30';
+import { telaAbertura } from './telas/abertura.js?v=dd0875ae30';
+import { telaRoster } from './telas/roster.js?v=dd0875ae30';
+import { abrirAjustes } from './telas/ajustes.js?v=dd0875ae30';
+import { botaoDeRegras } from './telas/regras.js?v=dd0875ae30';
+import { icone } from './componentes/icone.js?v=dd0875ae30';
 
 const raiz = document.getElementById('app');
 
@@ -170,7 +170,7 @@ window.addEventListener('online', () => avisar('Conexão de volta.', 'sucesso'))
  * identidade de um módulo é a URL INTEIRA: `/js/estado.js` e
  * `/js/estado.js?v=abc` são dois módulos diferentes, com estados separados.
  *
- * As baterias de tela faziam `import('/js/estado.js?v=c6180d3193')` para trocar uma ação
+ * As baterias de tela faziam `import('/js/estado.js?v=dd0875ae30')` para trocar uma ação
  * por um dublê — e passaram a trocar a ação de uma SEGUNDA cópia do módulo,
  * que o app não usa. A tela chamava a ação de verdade, a rede respondia o que
  * responderia, e o teste falhava por timeout dizendo "o modal não abriu".

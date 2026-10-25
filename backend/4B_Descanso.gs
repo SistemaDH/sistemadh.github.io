@@ -342,6 +342,40 @@ function exigenciaDeDescansoDaMoldura_() {
 }
 
 /**
+ * O AVISO DE DESCANSO QUE A MOLDURA DA MESA PEDE — ou string vazia.
+ *
+ * ⚠ A MOLDURA PODE AMARRAR UM TIPO DE DESCANSO A UM LUGAR, e quem sabe onde a
+ * mesa está é a mesa. A Jornada até o Horizonte só deixa fazer descanso longo
+ * num santuário: a regra entra aqui como AVISO, com o texto vindo do dado, e a
+ * resposta de "onde estamos" vem do caderno da campanha — que é onde o Mestre
+ * marca, na ferramenta de mesa do painel.
+ *
+ * ⚠ E O AVISO SÓ SAI QUANDO FALTA. Se o Mestre já marcou o santuário, não há o
+ * que dizer: repetir a regra a cada descanso viraria ruído, e o ruído é o que
+ * faz a pessoa parar de ler os avisos de verdade.
+ */
+function avisoDeDescansoDaMoldura_(tipo) {
+  if (typeof mecanicasDaMolduraDaMesa_ !== 'function') return '';
+  const lista = mecanicasDaMolduraDaMesa_();
+  for (let i = 0; i < lista.length; i++) {
+    const regra = ((lista[i] || {}).automacao || {}).avisoDeDescanso;
+    if (!regra || String(regra.tipo || '') !== String(tipo)) continue;
+
+    const exige = regra.exigeAnotacao || null;
+    if (exige && exige.chave) {
+      let anotado = '';
+      if (typeof mesaLer_ === 'function' && typeof anotacoesDaCampanhaDaMesa_ === 'function') {
+        const anotacoes = anotacoesDaCampanhaDaMesa_(mesaLer_()) || {};
+        anotado = String(anotacoes[exige.chave] === undefined ? '' : anotacoes[exige.chave]);
+      }
+      if (anotado === String(exige.valor)) return '';
+    }
+    return String(regra.texto || '');
+  }
+  return '';
+}
+
+/**
  * O movimento de descanso que a moldura da mesa concede — ou null.
  *
  * Fora da moldura certa não existe movimento nenhum, e o descanso continua com
@@ -354,6 +388,39 @@ function movimentoDeDescansoDaMoldura_() {
     const mec = lista[i] || {};
     const regra = (mec.automacao || {}).movimentoDeDescanso;
     if (!regra || !Array.isArray(regra.tipos) || !regra.tipos.length) continue;
+
+    /*
+     * ⚠ NEM TODO MOVIMENTO DE MOLDURA PEDE UM DADO, e esta função só sabia
+     * fazer o que pede.
+     *
+     * Montar Guarda (Era da Umbra) guarda um Dado de Esperança para a mesa
+     * trocar pela jogada de escuridão. Mas Localizar Ecos de Alma (Jornada até
+     * o Horizonte, Hope & Fear p.176) não rola nada e não muda número nenhum: o
+     * personagem comunga com o Cálice e DESCOBRE A DIREÇÃO do santuário mais
+     * próximo que tem um Eco. O efeito é ficção — e o preço, que é real, é
+     * gastar um dos dois movimentos do descanso.
+     *
+     * Então o formato é decidido pelo DADO: se a moldura declara `dado`, é o
+     * movimento que pergunta um número; se não declara, é o que só custa a vaga
+     * e devolve o que a mesa tem de narrar. Antes, um movimento sem `dado`
+     * nascia pedindo um Dado de Esperança que a regra dele não tem.
+     */
+    if (!regra.dado) {
+      return {
+        id: 'moldura:' + String(regra.id || mec.id),
+        nome: mec.nome,
+        nomeJambo: '',
+        tipos: regra.tipos.slice(),
+        texto: (mec.texto || []).join(' '),
+        formula: 'Sem efeito em ficha — custa a vaga do movimento',
+        podeMirarAliado: false,
+        daMoldura: true,
+        perguntas: [],
+        efeito: { modo: 'ficcao-da-moldura', recurso: null,
+                  observacao: String(regra.observacao || '') }
+      };
+    }
+
     const dado = regra.dado || {};
     const lados = Math.max(2, Math.trunc(Number(dado.lados)) || 12);
     return {
@@ -1140,6 +1207,21 @@ function simularDescanso_(ficha, tipo, escolhas) {
       continue;
     }
 
+    /*
+     * ⚠ O MOVIMENTO DE FICÇÃO DA MOLDURA — ele NÃO toca na ficha, de propósito.
+     *
+     * Localizar Ecos de Alma diz ao personagem a DIREÇÃO do próximo Eco, e a
+     * direção é informação de mesa: o app não tem mapa, e inventar um número
+     * para ela seria inventar regra. O que o app faz é o que sabe fazer — gastar
+     * a vaga do movimento, como qualquer outro, e escrever o que acontece.
+     */
+    if (ef.modo === 'ficcao-da-moldura') {
+      feito.observacao = String(ef.observacao || '') ||
+        'O movimento acontece na ficção: o app gasta a vaga e não muda a ficha.';
+      feitos.push(feito);
+      continue;
+    }
+
     if (ef.modo === 'narrativo') {
       feito.observacao = escolha.projeto
         ? 'Projeto: ' + String(escolha.projeto).slice(0, 200)
@@ -1381,6 +1463,25 @@ function simularDescanso_(ficha, tipo, escolhas) {
   if (t.id === 'curto' && seguidosAntes >= DESCANSO.maxDescansosCurtosSeguidos) {
     avisos.push('O grupo já fez ' + seguidosAntes + ' descansos curtos seguidos. Pelo livro (p. 105), ' +
       'o próximo precisa ser longo — mas a contagem é do grupo, então quem decide é a mesa.');
+  }
+
+  /*
+   * ⚠ O DESCANSO QUE A CAMPANHA CONDICIONA A UM LUGAR — e ele AVISA, não recusa.
+   *
+   * Jornada até o Horizonte (Hope & Fear p.176): "o grupo só pode fazer descanso
+   * longo num santuário". É regra dura no livro — e o app só sabe onde a mesa
+   * está se o Mestre tiver marcado. Recusar por causa de uma marca esquecida
+   * travaria a mesa no meio da sessão por um defeito de preenchimento, e o lugar
+   * é ficção que só quem está lá conhece.
+   *
+   * Então é a MESMA forma do limite de três descansos curtos, que está logo
+   * acima e vale desde a Parte 9: o app diz a regra, diz o que falta, e quem
+   * decide é a mesa. A diferença entre as duas é só de onde vem o texto — esta
+   * vem da moldura, não de uma frase escrita aqui.
+   */
+  if (typeof avisoDeDescansoDaMoldura_ === 'function') {
+    const daMoldura = avisoDeDescansoDaMoldura_(t.id);
+    if (daMoldura) avisos.push(daMoldura);
   }
 
   /*

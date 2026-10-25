@@ -230,6 +230,8 @@ nenhuma; ficam aqui para não sumirem de novo.
 | ~~I4~~ | ~~"teste" sobrou~~ — **FECHADO.** Troca com concordância (*o teste* → *a jogada*), e **sem tocar** em `textoLivro` nem `substituicoes`: esses guardam a letra da Jambô de propósito, e é sobre eles que o glossário trabalha. | `pontas-h-e-i.md` §I4 |
 | I5 | **Módulo de multiclasse não tem PNG** — é um pedaço de papel do jogo físico, não existe carta no acervo. Se um dia a arte aparecer, o lugar dela já está pronto. *Não há o que fazer sem a arte.* | `pontos-de-interesse-avanco.md` §3 |
 | I6 | **O acervo de cartas é pré-errata** em dois pontos cosméticos: falta "temporária" na Muralha de Chamas (Livro de Grynn) e o número 055/270 no rodapé do Simiah. Nenhum muda mecânica. *Nada a fazer — é o baralho físico.* | `pontos-de-interesse-origens.md` §2.2 |
+| 🕐 I7 | **A travessia por hexágonos da Jornada até o Horizonte** — o mapa vem em duas páginas do apêndice e o app não tem mapa. 🕐 **FUTURO por decisão dela (25/10/2026): não vamos implementar agora.** A marca de lugar no caderno da campanha já é onde o hexágono penduraria. | `pontos-de-interesse-molduras.md` |
+| 🕐 I8 | **O campo `automacao` responde a DUAS perguntas com o mesmo nome** — no `molduras.json` é a automação que o motor executa (`escopo`, `substituiCaracteristicaDeClasse`); nos outros catálogos é um RÓTULO que ninguém executa. Medido: o motor só lê `automacao` das molduras. A FORMA foi uniformizada em 25/10; o NOME fica declarado. | `o-que-ainda-e-manual.md` |
 
 ## J. Nasceu dos verbetes
 

@@ -1745,3 +1745,1106 @@ Tocar em "Iniciar uma Jogada em Equipe" tem de abrir o seletor de par; depois
 de iniciar uma vez, o botão fica apagado com "usada nesta sessão". E na aba
 **Grupo** do painel, cada ficha tem de mostrar "N na mão · M no cofre" com o
 botão de folhear.
+
+---
+
+## Os cenários: um defeito meu, outro defeito meu, e um "defeito" que era silêncio
+
+Relato da mesa, 14/10/2026: *"o sistema de cenários está faltando coisas, além
+de que quando selecionadas as que mudam algo, não está realmente mudando, tipo
+ouro ou armas"*.
+
+Antes de mexer eu perguntei **como** ela tinha testado, e a resposta mudou o
+diagnóstico inteiro: ela olhou uma ficha **que já existia**.
+
+### O "defeito" que era o app certo e calado
+
+Medido nas oito molduras: **quatro delas não mudam NADA numa ficha que já
+existe.** Festim das Feras, Colosso das Terras Áridas, Caça a Monstros e Reino
+do Weredragão têm zero mecânica automatizada, zero moeda própria, zero rótulo
+de dano. A única coisa que fazem é trocar as tabelas da **criação** —
+equipamento inicial é, por definição, do nascimento da personagem.
+
+Então escolher uma delas e não ver nada mudar na ficha aberta é o
+comportamento **correto**. E em lugar nenhum o painel dizia isso.
+
+⚠ **Isso não é desculpa, é o defeito.** Quem escolhe uma campanha e volta para
+a ficha procurando a mudança conclui, com razão, que o app não aplicou — e aí
+para de confiar no resto, que funciona. O painel ganhou uma linha que diz, para
+a campanha escolhida, **o que muda agora e o que só muda em ficha nova**; e
+quando não muda nada em ficha viva, ela diz isso com destaque.
+
+A conta sai do que o servidor mandou (`mecanicas[].automacao` e
+`equipamentoInicial.modo`), não de uma lista escrita na tela — senão a frase
+sobreviveria à moldura que um dia ganhar mecânica.
+
+### O primeiro defeito de verdade: o caminho RÁPIDO pulava a regra
+
+A criação rápida saltava da herança direto para as cartas, pulando a etapa 5 —
+**a única que lê a moldura**. Em Festim das Feras a ficha nascia com a arma do
+Guia de Caráter, do Capítulo 2, que é exatamente o que aquela campanha proíbe
+("heróis do dia a dia sem acesso a armas comuns", livro p.272). O Guia é do
+livro base: ele não sabe que a mesa trocou de cenário.
+
+O conserto não é "nunca pular": é **pular conforme o que a moldura faz**.
+
+- `substitui` — para na etapa. A sugestão do Guia não existe nesta campanha, e
+  escolher no lugar de quem joga seria inventar uma decisão que o livro deixa
+  com a pessoa (36 itens em quatro tabelas).
+- `arma-unica` — segue pulando: não há o que escolher, a Placa-mãe dá a mesma
+  ikonis a todo mundo.
+- `acrescenta`, `saque`, `nenhum` — segue. A sugestão do Guia continua válida.
+
+⚠ **E eu quase deixei metade do conserto para trás.** O comentário que escrevi
+dizia que a etapa 5 "já grava a arma única sozinha" — e ela só grava **quando é
+desenhada**. Como no `arma-unica` o rápido continua pulando a etapa, a ikonis
+nunca entrava. A regra saiu do `desenhar` e virou `aplicarArmaUnicaDaMoldura`,
+chamada também quando o Guia preenche o equipamento.
+
+### O segundo defeito de verdade: o ouro estava escrito à mão
+
+Este é literalmente o "ouro não muda" do relato.
+
+A tela de criação montava a ficha inteira e mandava
+`ouro: { punhados: 1, bolsas: 0, cofres: 0 }` — **um literal**, sempre. O
+servidor sabe a regra toda (`CRIACAO.ouroInicial`, com a troca de moeda quando
+a campanha substitui o ouro), mas quem cria pela TELA não passa por
+`fichaRapida_`.
+
+Medido: ficha criada pela tela na Placa-mãe nascia com **1 punhado** em vez dos
+**5 quantum** do livro (p.301) — e a Mestra, que tinha acabado de ler no painel
+que "a Mochila passa a contar em quantum", não via nada acontecer.
+
+A moeda agora vem de `moedaDaMesa`, que o servidor calcula das mecânicas da
+moldura e manda na sessão — a mesma fonte que a Mochila usa para escrever
+"3 quantum". Escrever a conversão na tela de criação seria o terceiro leitor do
+mesmo número.
+
+### ⚠ Por que 72 conferências de moldura não pegaram nada disso
+
+`conferir-molduras.mjs` roda **72 conferências em 9 casos** e passou verde o
+tempo todo. Ele monta as fichas com `contexto.fichaRapida_()` — o auxiliar do
+**backend**. Ele nunca abre `js/telas/criacao.js`.
+
+E a regra de equipamento da moldura mora **inteira na tela**: qual tabela
+oferecer, qual arma impor, quanto ouro dar. O motor não tem opinião sobre isso.
+A parte testada e a parte quebrada não se encostavam.
+
+Daí a bateria nova, `teste:moldura-criacao`: ela abre o navegador, escolhe a
+campanha como o Mestre escolhe, percorre a criação como a pessoa percorre, e
+**lê a ficha gravada**. Os dois defeitos foram provados voltando um de cada vez.
+
+⚠ **E a prova precisou mudar de lugar no meio.** Eu tinha escrito a asserção
+procurando "ikonis" no texto da tela de revisão — e a revisão não cita arma
+nenhuma. Um teste que lê a tela errada diz "quebrou" quando o layout muda e
+"está bom" quando a regra quebra. A prova passou a ser a ficha na planilha.
+
+### O que fica para o próximo: o conteúdo
+
+A outra metade do relato é real e eu medi o tamanho. Só **O Surto Selvagem**
+está completo:
+
+| Seção | Vazia em |
+|---|---|
+| origens (quais ancestralidades/comunidades combinam) | 7 de 8 |
+| princípios dos jogadores | 7 de 8 |
+| princípios do Mestre | 7 de 8 |
+| perguntas de sessão zero | 6 de 8 |
+| tom · temas · referências | 4 de 8 |
+
+E quatro molduras (Festim, Colosso, Caça a Monstros, Weredragão) têm `proposta`
+de 60 a 160 caracteres — contra 300 a 460 nas que foram feitas. São cascas.
+
+⚠ **`origens` não é lido por ninguém**, nem no painel nem na criação: mesmo o
+único preenchido não aparece em lugar nenhum. E `principiosDosJogadores` e
+`principiosDoMestre` existem no dado e também não são desenhados — e princípio
+é justamente o que o livro manda ler na sessão zero.
+
+Fica para o lote seguinte, por decisão dela: primeiro o conserto, depois o
+conteúdo.
+
+### ⚠ E O PIOR ACHADO VEIO NA HORA DE EMPACOTAR: trabalho pronto e não entregue
+
+Ao montar a lista de arquivos para o commit, apareceram cinco que eu não tinha
+tocado neste lote — entre eles `backend/44_Equipamento.gs` e
+`backend/99_Api.gs`, que são do MOTOR. Fui conferir contra o `6df90df` que está
+em produção, e o que achei foi isto:
+
+**O conserto dos cinco modos de equipamento de moldura estava escrito, testado
+e NUNCA ENTREGUE.** Dormindo no meu contêiner, sem commit.
+
+Em produção, até agora, `MOLDURAS` ainda usa o booleano antigo,
+`substituiEquipamentoInicial` — que só sabe duas coisas: troca tudo, ou nada. E
+só o Festim respondia `true`. Ou seja: **os 66 itens de Caça a Monstros,
+Colosso das Terras Áridas e Placa-mãe estão no catálogo e nunca apareceram na
+tela de criação** — enquanto a janela de confirmação do Mestre prometia, por
+escrito, que a criação ganharia as tabelas daquela campanha.
+
+Há até um comentário meu no `99_Api.gs`, desta mesma leva, que começa com
+"⚠ ESTA PRÉVIA JÁ MENTIU, e foi assim que o defeito chegou à mesa" — descrevendo
+exatamente a queixa que a Vanessa trouxe. O conserto existia; eu é que não o
+coloquei no clone dela.
+
+⚠ **Isso é falha minha de entrega, não de código.** O meu histórico local é
+escrituração e as entregas são cópia de arquivo — e em algum lote eu escrevi
+sem copiar. O que me salvou foi a disciplina de olhar arquivo por arquivo antes
+de empacotar; se eu tivesse mandado a lista sem ler, teria entregue o conserto
+de hoje em cima de uma base que não tem a metade de baixo.
+
+**Suíte:** 1267 testes de backend (eram 1259), 0 falhas; bateria nova com 2
+casos; `teste:tudo` verde.
+
+⚠ **E POR ISSO O PRÓXIMO DEPLOY NÃO É REPIN.** `44_Equipamento.gs` e
+`99_Api.gs` mudam — o primeiro troca o booleano pelos cinco modos declarados
+com a citação da fonte, o segundo faz a prévia do Mestre dizer a verdade sobre
+cada modo.
+
+---
+
+## 14/10/2026 — O conteúdo dos cenários, e um campo que respondia duas perguntas
+
+A outra metade do relato. Ela disse duas coisas: que os cenários não mudavam
+nada (consertado no lote anterior) e que **estavam faltando coisas**. Esta
+segunda parte era verdade, e maior do que a medição sugeria.
+
+### As "quatro cascas" não eram quatro
+
+A varredura de 14/10 dizia que quatro molduras eram cascas, com uma frase de
+proposta de 60 a 160 caracteres. Fui ler os capítulos: **Festim das Feras tem
+dez páginas e Colosso das Terras Áridas tem vinte.** Não são cascas — são
+capítulos completos que nunca foram lidos. E a frase curta registrada como
+`proposta` nas duas era **blurb de equipamento copiado no lugar da proposta**.
+
+Lido e resumido para seis molduras (as do livro), com a página anotada em cada:
+proposta de verdade, tom, temas, referências, as três seções de origens
+(comunidades, ancestralidades e classes, com as perguntas de sessão zero de
+cada comunidade), os dois conjuntos de princípios e as perguntas gerais.
+
+⚠ **O Surto Selvagem, a moldura "completa", também não estava completa.** O
+resumo dela tinha duas entradas corridas e perdia **a seção CLASSES inteira** —
+quatro blocos do livro que nunca chegaram ao app.
+
+### ⚠ A causa-raiz das páginas erradas: UM CAMPO, DUAS PERGUNTAS
+
+Conferindo página por página contra o PDF, duas molduras estavam com a citação
+errada: Placa-mãe dizia 290–303 e são **290–307**; Colosso dizia 316–325 e são
+**308–327**. A 316 não é um erro de digitação — é a página das **tabelas de
+equipamento** do Colosso.
+
+E aí apareceu o porquê. `paginasLivro`, em `data/equipamentos.json`, respondia a
+**duas perguntas diferentes com o mesmo nome**: nas cinco molduras que têm itens
+próprios ele dizia a página das TABELAS (275–277 no Festim, 316–318 no Colosso,
+302–304 na Placa-mãe); nas três que não têm itens ele dizia a página do
+CAPÍTULO. E o gerador **preferia esse campo** ao do conteúdo. Alguém — eu —
+copiou a página do equipamento para o campo do capítulo, e nada reclamou.
+
+É a mesma classe de defeito de sempre: **a mesma pergunta respondida em dois
+lugares**. Só que desta vez eram duas perguntas compartilhando um nome, o que é
+pior, porque os dois valores estavam certos cada um no seu lugar.
+
+Três guardas no gerador, cada uma provada falhando antes de eu considerar o
+conserto pronto:
+
+1. recusa se `paginasLivro` voltar a aparecer em `data/equipamentos.json` —
+   ali o campo agora é `paginasDoEquipamento`, e a página do capítulo vem só do
+   conteúdo;
+2. recusa se o **nome** da moldura discordar entre os dois arquivos;
+3. recusa se um **item** repetir o nome da moldura-mãe.
+
+A terceira apareceu pelo caminho: os **102 itens de campanha** carregavam um
+campo `moldura` que **ninguém lia** — o gerador sempre derivou esse valor do
+nome da moldura-mãe — e eles **já discordavam**: os sete itens da Placa-mãe
+diziam "Placa-mãe (Motherboard)" enquanto a moldura dizia "Placa-mãe". Dado
+morto que a próxima pessoa acreditaria. Os 102 campos saíram.
+
+### ⚠ Reinado do Weredragão: eu tinha escrito a fonte errada
+
+Três erros numa entrada só:
+
+- `fonteDoTexto` dizia **"Daggerheart SRD 2.0"**. Não é. O SRD apenas a CITA —
+  "see the Reign of the Weredragon Villain Builder sheet in Hope & Fear". A
+  fonte é o **Capítulo 4 do Hope & Fear, p.128–143**.
+- `nomeIngles` dizia **"Realm"** of the Weredragon. É **"Reign"** — reinado, não
+  reino. O nome em português herdou o erro: virou **Reinado do Weredragão**.
+- O `visaoGeral` a tratava como um punhado de itens. É moldura completa.
+
+⚠ O texto dela é **tradução minha**: não há edição em português desta moldura
+nas fontes do projeto, e o campo de fonte diz isso com essas palavras. E ela
+**não tem seção de perguntas de sessão zero** — o gabarito do Hope & Fear põe
+TRANSFORMAÇÕES no lugar.
+
+### ⚠ Vazio legítimo deixou de dar o mesmo número que lacuna
+
+**Caça a Monstros não é cenário de campanha.** É apêndice de **mecânicas** do
+SRD 2.0 (p.201–202): "You can use the following mechanics for monster hunting
+campaigns". Não tem proposta, nem tom, nem temas, nem origens, nem princípios,
+nem perguntas de sessão zero — **e nunca vai ter**.
+
+Contada junto com as outras, ela inflava a lacuna: "origens vazia em 7 de 8"
+juntava cinco capítulos não lidos com um apêndice que não tem a seção. Agora a
+conferência é por **procedência**: quem declara `naoEMoldura` está dispensado
+**e tem de dizer por quê, por escrito**; todo o resto precisa das cinco seções.
+
+O que o apêndice tem de verdade e o app não tinha entrou como mecânica: **A
+Caçada** (cinco batidas), **Fazer um Monstro** (quatro perguntas) e as **Pistas
+Liminares**.
+
+### E o texto passou a ter leitor
+
+Era o pior da medição anterior: `origens` e os dois `principios` existiam no
+dado e **nenhuma tela os lia**. Mesmo a moldura preenchida estava invisível.
+
+Agora são dobras no painel, dentro do cartão do cenário, **fechadas**: só as
+origens do Colosso são seis comunidades, quatro ancestralidades e quatro
+classes, e abertas de uma vez elas empurram o Medo e as contagens — o que a
+Mestra toca a cada cena — para fora da tela do celular.
+
+⚠ **A comunidade aparece com os DOIS nomes**: o da carta ("Seaborne"), que é
+como a ficha chama, e o do livro ("Marítima"), que é como a prosa do Capítulo 5
+chama. Sem os dois lado a lado, quem lê o painel na sessão zero não consegue
+casar a seção com a comunidade escrita na ficha do jogador — e foi por isso que
+a forma antiga, dois parágrafos corridos, não serviria nem se fosse lida.
+
+### ⚠ Três achados de regra que ninguém tinha visto
+
+- **Placa-mãe PROÍBE clanks** (p.294): todo ser robótico autônomo ali é um
+  remanescente, e nenhum tem senciência. É regra de **criação de ficha**.
+  Registrada e exibida no painel — **e a criação ainda não a aplica.**
+- **Placa-mãe SUBSTITUI o Treinamento em Combate do guerreiro** por Treinamento
+  Ikonis (p.295). Não modelado.
+- **Reinado do Weredragão** tem duas maldições e as **cinco Revelações da
+  Astromante** como mecânica central. Nada disso está no app.
+
+E mais um, de catálogo: **o Hope & Fear tem quatro cenários de campanha** —
+Castle High, Reign of the Weredragon, Dark Heart of Andaluria e Journey to
+Horizon — e o app conhece um.
+
+### Provas
+
+`teste:molduras` passou de **72 para 108** conferências. `teste:layout-mestre-
+mobile` ganhou o estado **B15 `mestre-cenario-conteudo`** nos três viewports, e
+⚠ **a conta dele é lida de `data/molduras.json`**, não escrita no teste: exigir
+"8 comunidades" à mão faria a medição sobreviver a uma extração que perdesse
+metade do capítulo. Tirar as duas linhas do desenho faz os três viewports
+falharem com "a dobra não foi desenhada"; voltar a proposta curta do Colosso,
+esvaziar os princípios dele ou devolver `origens` à forma de lista faz três
+conferências falharem com o motivo escrito.
+
+**Suíte:** 1267 testes de backend, 0 falhas; 108 conferências de moldura; 27
+telas na baseline do Mestre; `teste:tudo` verde.
+
+---
+
+## 14/10/2026 (3) — As regras que estavam escritas e não valiam
+
+Os três achados do lote anterior tinham a mesma forma: a regra estava no livro,
+eu tinha registrado no dado, e **nenhum código lia**. Dois foram fechados
+inteiros.
+
+**Placa-mãe proíbe clanks** (p.294) — a regra passou a existir em três leitores a
+partir de uma definição só. O cartão continua na grade, bloqueado, com o motivo
+escrito: sumir com ele faria quem conta 24 ancestralidades achar 23 e não saber
+se é defeito ou se é a campanha. A herança mista levou a mesma tranca, porque ela
+guarda IDS e proibir só pelo nome deixaria entrar "goblin-clank" — foi assim que
+a arma única escapou no lote 1. E a recusa vale só para ficha nova: uma mesa pode
+escolher Placa-mãe com clanks já em jogo, e emparedá-los seria pior que a falta.
+
+**Placa-mãe troca a habilidade do guerreiro** (p.295) — e esta era a pior das
+três, porque não era só a ficha mostrando errado: **o servidor continuava
+aplicando** a metade da habilidade que é regra. O guerreiro seguia ignorando o
+tipo de empunhadura, e a ikonis é de duas mãos — exatamente a exceção que mudava
+a conta. A troca entra no fim de `caracteristicasDaClasse_`, que é o único
+leitor: por ela passam a lista que a ficha desenha e o `fichaTemEfeito_` que
+decide o efeito. Em qualquer outro ponto eu consertaria uma e deixaria a outra
+mentindo.
+
+**A condição Amaldiçoado** — o motivo que eu mesmo tinha escrito nos dois itens
+do Weredragão dizia que "a família 'Maldito' ainda não existe como condição no
+app". Agora existe, e não é tradução minha: a habilidade Amaldiçoar de adversário
+(p.236) já usa o termo. O item ganhou lembrete, não botão — `limpaCondicao` é
+lido só para carta de domínio, e num item seria dado morto.
+
+⚠ **Duas armadilhas de guarda, e a mesma duas vezes.** Escrevi uma varredura que
+proíbe o id da moldura escrito à mão, e ela acusou o COMENTÁRIO que explica por
+que o id não está escrito à mão. Aconteceu duas vezes no mesmo lote. As duas
+passaram a tirar comentários antes de medir.
+
+⚠ **E um acento grave quebrou um gerador.** O corpo de
+`caracteristicasDaClasse_` é emitido de dentro de um template literal; um acento
+grave no comentário fecha a string. Está escrito no HANDOFF desde sempre e eu caí
+de novo.
+
+Fica aberto, declarado: as cinco Revelações da Astromante (36 linhas de tabela em
+inglês), os três cenários do Hope & Fear nunca importados, e os três
+procedimentos do Caça a Monstros sem leitor.
+
+**Suíte:** 1275 testes de backend (eram 1267), 0 falhas; `teste:tudo` verde.
+
+⚠ **E o conserto da tela estava sem prova.** Os dois achados fechados ganharam
+oito conferências no motor e nenhuma na grade de criação — a mesma forma do
+defeito que deu origem àquela bateria. O motor recusar é garantia, mas ela
+aparece como erro vermelho depois de a pessoa escolher tudo: quem monta uma
+clank em quinze toques e descobre no salvamento perdeu a criação inteira.
+`teste:moldura-criacao` ganhou o terceiro caso, exigindo o cartão PRESENTE e
+bloqueado, com a página no motivo, e a herança mista trancada junto.
+
+⚠ **E esse teste quase mediu a coisa errada**: procurava `/^Clank/` no texto do
+cartão, e o botão da carta põe o glifo `🂠` na frente do nome — o caso dizia "o
+cartão SUMIU" com tudo no lugar. Agora lê `.nome-carta` e, ao falhar, imprime os
+nomes que achou, para a próxima pessoa distinguir "sumiu" de "não soube
+procurar".
+
+---
+
+## 15/10/2026 — A mecânica central do Weredragão, e um aviso meu que era falso
+
+### A Leitura do Céu Noturno
+
+Era o maior ponto aberto do lote anterior. A moldura tinha entrado no app como
+"dois itens de saque", e a mecânica que organiza a campanha inteira — onde ir,
+quem ajuda, o que carregar, onde a história acaba — ficou fora.
+
+A tabela está no dado inteira: seis faces, cinco colunas, o efeito de cada
+revelação escrito na coluna. O painel pergunta a face que saiu em cada uma.
+
+⚠ **O app não rola.** É a única mecânica do app em que o livro faz os JOGADORES
+rolarem juntos, e por isso mesmo era a mais tentadora para um botão. A bateria de
+layout recusa botão de rolar no bloco, e o teste de backend recusa `Math.random`
+dentro da função — as duas pontas, porque "só ficha, sem dados" é decisão da mesa
+e não preferência de implementação.
+
+⚠ **Os nove itens do Capítulo 2 vão por ID do catálogo**, não por nome
+traduzido. Eu ia escrever "Planador", "Armadura de Brasa", "Revólver Magus" à
+mão; são todos itens que já existem com nome em português, e um nome repetido é
+mais um lugar para discordar do catálogo.
+
+### ⚠ E isso descobriu uma frase que o painel vinha dizendo errada
+
+Ao ligar a tabela, a conferência quebrou: o Weredragão saiu da lista das molduras
+que "não mudam ficha". Fui ver por quê e achei coisa pior e mais antiga: **o
+Cinco Estandartes em Chamas já era anunciado como "1 mecânica que o app aplica
+nas fichas que já existem"** — e essa mecânica é a tabela de relações políticas
+das cinco nações, que é pura CONSULTA do Mestre.
+
+Ou seja: desde que aquela moldura entrou, o painel prometia a quem a escolhesse
+exatamente a mudança que a Vanessa foi procurar e não achou. A queixa que abriu
+este trabalho inteiro estava se repetindo numa moldura onde ninguém olhou.
+
+`automacao.escopo` resolve, com três leitores obedecendo a mesma declaração: o
+gerador recusa automação sem escopo, `mecanicasDaMolduraDaMesa_` devolve só as de
+ficha, e o painel conta só as de ficha no "muda agora". São **cinco** as molduras
+que não mudam nada em ficha viva — eu tinha medido quatro.
+
+### ⚠ E um ponto de interesse MEU que era falso
+
+No lote anterior eu registrei, no texto de três mecânicas do Caça a Monstros,
+"⚠ PONTO DE INTERESSE: nenhuma tela lê isto". Escrevi por raciocínio, sem medir —
+no mesmo lote cuja lição era exatamente o contrário.
+
+O painel desenha o `texto` de toda mecânica de moldura desde que o bloco do
+cenário existe. As três estavam visíveis, **e o aviso falso era desenhado junto,
+na tela dela**. Um aviso errado na tela é pior que nenhum: manda procurar um
+defeito que não existe e desacredita os avisos verdadeiros do lado.
+
+Conferência nova, provada falhando: o texto de uma mecânica não pode dizer que
+nenhuma tela o lê. E os três textos passaram a dizer o que falta de verdade —
+acompanhar a batida da Caçada, guardar as respostas de cada monstro, manter a
+pilha de pistas reveladas. Que é a mesma peça, três vezes: **estado de campanha**,
+e ela não existe.
+
+**Suíte:** 1278 testes de backend (eram 1275), 116 conferências de moldura, 30
+telas na baseline do Mestre.
+
+---
+
+## 15/10/2026 (2) — O estado de campanha, e uma mutação que passou verde
+
+A peça que eu tinha declarado aberta no lote anterior: um lugar para guardar o
+que a campanha decidiu. Entrou com **um** leitor de propósito — a Leitura do Céu
+Noturno, que era o caso que doía: feita uma vez na sessão zero, decide a campanha
+inteira, e vivia num `Map` do navegador. Recarregar apagava tudo.
+
+⚠ **O que me fazia não guardar era uma pergunta, não falta de código:** e quando
+a mesa troca de campanha? Guardado num campo só, reiniciar jogaria fora a leitura
+inteira — e aí guardar seria pior que não guardar. A resposta foi um mapa **por id
+de moldura**: nada se perde, e a anotação da campanha antiga continua ali para
+quando ela voltar. É o que o livro prevê (p.140), e é o que destravou o resto.
+
+⚠ **E é anotação, não regra.** O motor valida a forma e NÃO interpreta o
+conteúdo. Se ele começasse a entender "a leitura caiu na face 3", a anotação
+viraria mecânica pela porta de trás — o Mestre digita e o app aplica algo. Quem
+dá sentido ao que está escrito é a tela, e ela desenha a partir da tabela do
+livro.
+
+### ⚠ Uma mutação passou verde, e isso valeu uma conferência nova
+
+Depois de escrever os testes eu quebrei o motor de propósito — cada gravação
+começando de um bloco vazio — e **a bateria inteira continuou verde**. O motivo:
+todos os casos escreviam UMA chave e conferiam ELA. A leitura tem cinco colunas
+no mesmo caderno, e a batida da Caçada e as pistas vão para o mesmo lugar: perder
+as irmãs apagaria quatro revelações a cada escolha.
+
+Conferência nova escreve as cinco colunas e apaga uma. Com ela, a mutação falha.
+É a terceira vez neste projeto que uma guarda só me convenceu depois de eu
+quebrar o código de propósito — e a terceira vez que ela estava frouxa.
+
+### ⚠ E a prova de persistência não podia ser um recarregar
+
+Tentei `page.reload()`. Depois do reload o painel desta bateria volta **sem a
+seção de ajustes** — a mesa do servidor de teste não tem ficha nem sessão aberta
+—, então o estado media uma tela onde nem havia o que ler e dizia "não guardou".
+A prova certa é sair da campanha e voltar **pela tela**: passa pelo caminho que a
+Mestra percorre e prova as duas coisas de uma vez, que a anotação persiste e que
+trocar de moldura não a apaga.
+
+**Suíte:** 1286 testes de backend (eram 1278), 30 telas na baseline do Mestre.
+
+---
+
+## 21/10/2026 — Os dois leitores que faltavam, e a suíte que não rodava na máquina dela
+
+### ⚠ O contêiner foi reclamado, e a disciplina de entrega pagou a conta
+
+Seis dias depois do lote anterior, voltei e a pasta de trabalho não existia mais
+— com os 54 commits de escrituração local dentro. **Nada do trabalho se perdeu**,
+porque cada lote foi ENTREGUE no clone dela e conferido byte a byte na hora. O
+hook reclamou de commit não enviado a cada lote; o que salvou foi exatamente a
+outra metade da disciplina, a que ninguém reclamava.
+
+Reconstruí: clone do GitHub no último publicado, mais os arquivos do clone dela
+por cima, escolhidos por data de modificação. E o git confirmou a conta sozinho —
+**49 arquivos** diferem do publicado, que são os cinco lotes, nem um a mais nem a
+menos. Medição, não confiança.
+
+### ✅ A trilha da Caçada e a pilha de Pistas Liminares
+
+Os dois leitores que eu havia declarado abertos. ⚠ Na Caçada, tocar na batida
+marcada DESMARCA, e qualquer uma pode ser marcada a qualquer momento: o livro
+permite desviar da estrutura com essas palavras, e uma trilha de mão única seria
+o app inventando uma ordem que a fonte não tem. ⚠ Nas Pistas, revelar NÃO apaga —
+o texto diz que a pista "solidifica" e passa a ser parte do mundo.
+
+### ⚠ E aí veio o achado do lote: a suíte não rodava na máquina dela
+
+Rodei `teste:tudo` no ambiente reconstruído e ela quebrou com **mais de
+quinhentas linhas de "fonte/hash inválido"**. Nenhuma era defeito.
+
+Cinco ferramentas conferem o catálogo contra um corpus JSON-LD do SRD 2.0 que
+**nunca esteve no repositório nem no clone dela** — ele vivia numa pasta irmã do
+meu contêiner, sem estar escrito em documento nenhum. Ou seja: o verde da suíte
+dependia de uma pasta que existia num único lugar, e **na máquina dela a suíte
+nunca passou inteira**. Nem ela nem eu sabíamos, porque quem rodava era sempre
+eu, no único lugar onde o corpus estava.
+
+A escolha está escrita no `lib-corpus-srd2.mjs`: **pular alto, não falhar nem
+calar.** Falhar deixa a suíte inútil onde o corpus não existe; pular calado é
+pior, porque alguém lê "0 erros" e acredita que o catálogo foi conferido contra a
+fonte. Sem corpus, a ferramenta diz ⚠ PULADO, imprime onde procurou, diz como
+ligar e avisa que o verde não cobre aquilo. Com corpus, confere hash por hash
+como antes — provei com um corpus falso: volta a acusar e sai com código 1.
+
+### ⚠ Três armadilhas de teste, todas minhas
+
+**A janela da guarda.** Escrevi `semCorretor(campo)` cinco linhas abaixo do
+`type: 'text'` e a conferência pegou: ela varre ±4 linhas, e o que estava fora da
+janela estava fora da regra. O campo de pista nasceria exposto ao corretor do
+celular, num texto que é nome inventado de lugar e de criatura.
+
+**"De vez em quando".** O caso novo passava num viewport e falhava noutro. Não
+era timing: a mesa é a MESMA nos três, o caderno persiste de propósito, e o
+segundo viewport encontrava a batida já marcada pelo primeiro — meu toque
+desmarcava. O erro era verdadeiro; a suposição errada era minha.
+
+**Um `arg` para duas perguntas.** O gesto de revelar precisava do texto da pista;
+a condição, do número de reveladas. Passei só o número, o `find` comparou o valor
+do campo com `1`, nunca clicou, e o teste acusou "o gesto não teve efeito" num
+botão que funcionava. Só um probe no navegador, clicando à mão, mostrou que o
+defeito era do teste — e não do que ele media.
+
+**Suíte:** 1286 testes de backend, 116 conferências de moldura, 33 telas na
+baseline do Mestre (eram 30).
+
+---
+
+## 21/10/2026 (2) — O gesto de escolher, escrito doze vezes e errado em duas
+
+### ⚠ A bateria que já estava vermelha no publicado
+
+`teste:layout-conjuracao-mobile` morria de **timeout de 30 segundos** no cartão
+de subclasse, com o navegador dizendo que o gatilho de verbete "uma vez por
+descanso" recebia o toque no lugar do alvo.
+
+Antes de consertar, medi se era meu: `git worktree` no último commit publicado
+(`2a1712b`), e **a falha se repete idêntica lá**. Pré-existente, não deste
+trabalho — a suíte no publicado não estava verde, e ninguém sabia porque quem
+rodava a bateria era sempre eu, e quando eu rodei, rodei inteira.
+
+### O que a medição disse — e por que não mexi na tela
+
+Sonda no navegador, cartão "Músico Errante", viewport de 360px: **73% da área do
+cartão escolhe, a faixa de baixo escolhe, o centro geométrico não.** O centro cai
+em cima da palavra glosada.
+
+Isso **não é defeito**: o cartão inteiro virou alvo com o nome, os verbetes e os
+campos por cima, de propósito e documentado. O defeito era a mira do teste. Está
+registrado como ponto de interesse em `docs/pontos-de-interesse-criacao.md`,
+porque **mudar a interface é decisão dela**, não minha — e eu não mudo tela por
+causa de um teste.
+
+### ⚠ O achado de verdade: a mesma resposta escrita doze vezes
+
+O gesto certo já existia, com a medição anotada no comentário: tocar na faixa de
+BAIXO do cartão, não no centro. E existia **doze vezes** — `escolherNoCartao`
+estava copiado byte a byte em doze arquivos de `tools/` (confirmado por md5).
+
+E nas duas chamadas que mais importam — o passo de classe e o de subclasse — os
+treze arquivos **clicavam no centro mesmo assim**. O arquivo que mais explica por
+que não se clica no centro era um dos que clicava no centro.
+
+Agora o gesto tem **um leitor**: `escolherNoCartao` mora em
+`tools/ajuda-bateria-ficha.mjs` e as onze cópias locais foram apagadas.
+
+### ⚠ E o gesto passou a medir antes de tocar
+
+Mira sozinha não basta, porque o centro troca de dono a cada quebra de linha: um
+cartão que passa hoje reprova quando alguém acrescenta uma palavra ao texto.
+Então antes de tocar ele **pergunta ao navegador quem recebe o toque**; se a mira
+estiver coberta, varre o cartão por um ponto que escolhe e **diz qual elemento
+estava na frente**.
+
+Provado por mutação: forçando a mira para o centro, a bateria imprime
+`⚠ a mira de baixo estava coberta por "verbete__gatilho" — escolhido em 60,194` e
+**escolhe de todo jeito**. Onde antes havia 30 segundos de silêncio e um timeout,
+agora há uma linha com o nome de quem cobriu.
+
+---
+
+## 22/10/2026 — Castle High, e a mentira que estava uma camada abaixo
+
+### ✅ O segundo cenário do Hope & Fear
+
+Dos quatro cenários do Capítulo 4, o app conhecia um. Agora conhece dois.
+**Castle High** (p.116–127, complexidade •) entrou inteira: escola de magia numa
+ilha flutuante, oito desaparecidos no ano passado, Riley Averill sumida na quinta
+noite da recepção. Proposta, tom, temas, referências, visão geral, observações de
+origem, seis princípios dos jogadores, cinco do Mestre, sete perguntas de sessão
+zero e seis mecânicas — tudo em tradução nossa, porque **não existe edição da
+Jambô deste capítulo**.
+
+⚠ O nome ficou em inglês: "Castle High" é nome próprio de colégio. Traduzir seria
+batizar de novo.
+
+### ✅ Dois leitores novos, e os dois nasceram genéricos
+
+**A escolha da mesa** (`escolhaDaMesa`): uma de N opções, guardada no caderno da
+campanha. Estreou com as quatro torres, que é a escolha que o livro manda os
+JOGADORES fazerem juntos porque ela define o estilo da campanha inteira. Já nasceu
+genérica de propósito — o próximo cenário com uma escolha dessas não deve virar
+uma segunda cópia da função.
+
+**A tabela rolada** (`tabelaRolada`): a tabela do livro, numerada pelo DADO e sem
+guardar nada. Estreou com as vinte perguntas sobre Riley. ⚠ Numerada pelo dado, e
+não pela posição na lista: a linha 17 é "role 17", e o dia em que o livro trouxer
+uma tabela que começa em 2 a numeração por posição mentiria.
+
+⚠ **A Lock Tower aparece e não é botão.** Está selada no livro. É a mesma decisão
+do cartão de clank: sumir com ela faria quem conta quatro torres achar três.
+
+### ⚠ O ACHADO: o painel mentia uma camada abaixo de onde eu tinha consertado
+
+No lote de 15/10 eu consertei a contagem do alto da campanha, que anunciava tabela
+de consulta como "mecânica que o app aplica nas fichas". Ligando as torres, achei
+que **o cartão de cada mecânica continuava estampando "✓ O app aplica esta
+mecânica"** para a Leitura do Céu Noturno, para a trilha da Caçada e para as
+Pistas Liminares — que o app desenha e guarda, e que não tocam ficha nenhuma.
+
+A mesma mentira, uma camada abaixo, e nenhuma conferência olhava para ela. Agora
+a promessa tem **um leitor só**, lendo o mesmo `escopo` que a contagem lê, com
+três estados: aplica, traz a ferramenta, ou é da mesa. E a palavra mudou: "tabela
+de consulta" descrevia errado duas das três coisas que existem do lado da mesa —
+agora é **ferramenta de mesa**.
+
+### ⚠ E um defeito meu no teste, achado por ele mesmo
+
+A conferência de "nenhum botão de rolar" reprovou o cartão da torre **Bower** —
+porque o texto dela diz que os estudantes usam a liberdade "para ENROLAR e ir a
+festas", e `/rolar/` acha "rolar" dentro de "enrolar". Só descobri porque fiz a
+mensagem IMPRIMIR o texto do botão acusado. As duas conferências do arquivo
+passaram a usar borda de palavra.
+
+### As provas
+
+`teste:molduras` passou de 116 para 130 conferências (o conferidor cobra o
+conteúdo de cada moldura, então um cenário novo se cobra sozinho).
+**1290 testes de backend**, com quatro casos novos só de Castle High.
+`teste:layout-mestre-mobile`: **36 telas** (eram 33), com o estado B18 nos três
+viewports — marcar a torre, o gancho só na marcada, a Lock impedida, as vinte
+linhas de Riley numeradas, e a torre sobrevivendo a sair da campanha e voltar.
+
+⚠ **E três guardas antigas me obrigaram a declarar coisa por coisa**, como foram
+feitas para fazer: a lista das molduras que não mudam ficha (passou de cinco para
+seis), a lista das ferramentas de mesa (quatro para seis, uma a uma) e a contagem
+de molduras do catálogo (oito para nove).
+
+Mutação, provada: tirando as duas linhas que desenham os leitores novos, os três
+viewports falham com "as torres não foram desenhadas" e a suíte sai com 1.
+
+### ⚠ ABERTO, e com uma descoberta dentro
+
+Faltam **Dark Heart of Andaluria** (p.144) e **Journey to Horizon** (p.158).
+
+E, lendo o primeiro para planejar: as mecânicas de campanha dele — arsenal de
+caça, A Caçada, Fazer um Monstro, Pistas Liminares e as transformações de maldição
+— **são as mesmas que o app já tem** no apêndice "Caça a Monstros" do SRD 2.0, com
+as 36 entradas do arsenal batendo uma por uma. Quando aquele cenário entrar, ele
+tem de **herdar** o apêndice, e não copiá-lo: copiar seria dar duas fontes à mesma
+regra, que é a forma exata do defeito que este trabalho vem consertando desde o
+primeiro lote.
+
+---
+
+## 22/10/2026 (2) — Andaluria, e a primeira moldura que HERDA em vez de copiar
+
+### ✅ O terceiro cenário do Hope & Fear
+
+**O Coração Sombrio de Andaluria** (p.144–157, complexidade •••): caça a monstros
+gótica numa terra de vinhedos onde as noites estão ficando longas demais. Entrou
+com tudo — as distinções inteiras (o Verão das Sombras, a Espada Sombral, a
+herança demoníaca sob a Serracorte, o povo caio, fé e folclore, Jesaña e o
+Conselho dos Cinco com os cinco ofícios, o segredo da Condessa, o incidente
+inicial), seis comunidades, três ancestralidades, quatro classes, cinco
+princípios dos jogadores, seis do Mestre e seis perguntas de sessão zero.
+
+### ⚠ O ACHADO: as mecânicas dele já estavam no app
+
+Arsenal de caça, A Caçada, Fazer um Monstro, Pistas Liminares, transformações de
+maldição — **são as mesmas** do apêndice "Caça a Monstros" do SRD 2.0 que o app
+tinha inteiro. As 36 entradas do arsenal batem **uma por uma**.
+
+Copiar daria duas fontes para a mesma regra. Então a moldura **herda**, nas duas
+pontas: o **gerador** resolve a lista de equipamento a partir do dono (o catálogo
+continua com uma cópia das 36, não 72), e o **motor** resolve as mecânicas
+(`apendicesDaMoldura_`), mandando nome, página e fonte do apêndice junto.
+
+⚠ **E o painel diz de onde vem.** Sem o cabeçalho, a trilha da Caçada apareceria
+dentro de Andaluria sem jeito de saber que é o procedimento do SRD — e pareceria
+conteúdo copiado para dentro daquele cenário.
+
+⚠ **As herdadas são desenhadas pelo MESMO cartão das próprias.** O `map` anônimo
+virou `cartaoDaMecanica`: dois desenhos fariam a mesma trilha ter duas aparências
+dependendo de por qual moldura você chegou nela.
+
+### ⚠ E A FRASE DO PAINEL MENTIA — COM A FRASE CERTA NO MESMO ARQUIVO
+
+"Ela só **TROCA** o equipamento inicial de quem for criado a partir de agora",
+dizia o aviso do alto, para qualquer modo. Três campanhas são `acrescenta`, que
+põe as opções **ao lado** das tabelas do Capítulo 2.
+
+E a frase certa, por modo, já estava no mesmo arquivo — no seletor de moldura, com
+o comentário "dizer 'substitui' para quem acrescenta foi exatamente o que fez a
+mesa procurar um efeito que não existia". **A lição estava escrita e valia num
+lugar só.** Agora as duas saem de `fraseDoModoDeEquipamento`, com conferência
+cobrando que a frase exista uma vez e que a criação cubra os mesmos modos.
+
+### As provas
+
+**1295 testes de backend** (cinco casos novos: a herança do arsenal, a herança das
+mecânicas, a guarda do apêndice sem automação de ficha, o conteúdo próprio e o
+mapa de modos).
+`teste:molduras`: **144 conferências** em 11 casos.
+`teste:layout-mestre-mobile`: **39 telas**, com o estado B19 nos três viewports —
+o cabeçalho da herança, as cinco batidas herdadas, a pilha de pistas, a frase
+"ao lado das do Capítulo 2", a conta das duas ferramentas de mesa e ⚠ **a prova de
+que o caderno é por moldura**: marcar a Chegada dentro de Andaluria não mexe na
+batida marcada dentro do apêndice.
+
+As três recusas novas do gerador, cada uma provada falhando: herdeira com itens
+próprios, dono inexistente e modos divergentes.
+
+---
+
+## 22/10/2026 (3) — A Jornada até o Horizonte, e os quatro cenários fechados
+
+### ✅ O quarto e último cenário do Hope & Fear
+
+**Jornada até o Horizonte** (p.158–180, complexidade ••••) — a travessia de um
+continente quebrado para ressuscitar uma deusa. Com ela, **o app conhece os quatro
+cenários do Capítulo 4**, que era o maior ponto que ficou aberto neste trabalho:
+começou com um (Reinado do Weredragão) e fecha com quatro.
+
+Entrou com a visão geral inteira (Aurelia e os Amantes, a Queda das Estrelas, a
+Longa Tristeza, a Nova Valloren, os santuários, os Ecos de Alma, o Cálice de Luz e
+o incidente inicial), as comunidades comentadas, quatro notas de ancestralidade,
+sete de classe, três princípios dos jogadores, cinco do Mestre, cinco perguntas de
+sessão zero e oito mecânicas — todas em tradução nossa.
+
+### ⚠ O ACHADO: a tranca de origem só sabia recusar ancestralidade
+
+Esta moldura proíbe **duas coisas que não são ancestralidade**: a comunidade
+**wanderborne** (p.160) e a subclasse **Sindicato** do ladino (p.162) — nos dois
+casos porque mil anos de santuário selado não deixam ninguém crescer na estrada
+nem manter rede de contatos por um continente.
+
+E a tranca que existia desde a Placa-mãe sabia recusar **só ancestralidade**. As
+outras duas portas estavam abertas: a grade ofereceria wanderborne, a lista
+ofereceria o Sindicato, e o motor aceitaria as duas fichas.
+
+Agora os três tipos passam pelo mesmo leitor nas duas pontas — `origemImpedida`
+na criação e `origemProibidaDaMoldura_` no motor, que devolve o TIPO. ⚠ E a
+subclasse é resolvida pelo **normalizador**, não por comparação de nome: nome é
+justamente o que muda quando alguém reimporta o livro.
+
+⚠ **O cartão de subclasse impedido precisou de CSS próprio.** `esta-impedido` só
+tinha regra para a grade: no cartão de subclasse a classe entrava e não fazia nada
+— cara de escolhível, alvo desabilitado por baixo. O "toque que não responde e não
+se explica", que é o defeito que aquela regra existe para evitar.
+
+⚠ **E uma guarda antiga cresceu.** A conferência "para que serve esta moldura?"
+aceitava duas respostas (muda equipamento na criação, ou traz ferramenta de mesa).
+A Jornada não faz nenhuma das duas: ela PROÍBE. Proibir é a terceira forma de
+fazer diferença, e faltava na conta.
+
+### As provas
+
+**1300 testes de backend** (cinco casos novos: a comunidade recusada, a subclasse
+recusada pelo id, a Placa-mãe continuando igual, as três recusas pelo motor e a
+tela com um leitor só).
+`teste:molduras`: **158 conferências** em 12 casos.
+`teste:moldura-criacao`: **4 casos** — o novo exige wanderborne e o Sindicato
+PRESENTES, bloqueados, com o motivo, e a outra subclasse do ladino livre.
+
+Mutação, provada duas vezes: tirando o `impedido: comunidadeImpedida` da grade, o
+caso falha; trocando `subclasseImpedida(s)` por `null`, falha também — e a suíte
+sai com 1 nas duas.
+
+### ⚠ O que fica aberto, declarado no dado e no painel
+
+A Jornada é a moldura mais complexa do livro, e boa parte dela é procedimento de
+Mestre com mapa de papel: a travessia por hexágonos (o app não tem mapa), o
+descanso que só é longo num santuário (o app não sabe se a mesa está num), o
+movimento Localizar Ecos de Alma (a lista de movimentos ainda não aceita um vindo
+da moldura), o lugar para marcar os dez Ecos e a Trilha da Ruína com caixas
+aninhadas. ✓ Já dá para usar hoje: a Contagem de Vigor, que é uma contagem de
+longo prazo de valor 6 por personagem, e o avanço pelos Ecos, que é o nível
+anunciado da mesa com o Eco como gatilho.
+
+---
+
+## 22/10/2026 (4) — Os dois leitores da Jornada, e um buraco no motor de descanso
+
+### ✅ Três coisas abertas que eram a mesma peça
+
+O lote anterior declarou aberto, na Jornada até o Horizonte: o descanso que só é
+longo num santuário, o movimento Localizar Ecos de Alma, e saber onde a mesa está.
+As três eram **a mesma peça** — o lugar — e fecharam juntas.
+
+**Onde a mesa está** entrou como ferramenta de mesa usando a **escolha da mesa**
+que nasceu com as torres de Castle High: duas opções, guardadas no caderno da
+campanha. Zero código novo de tela — o leitor genérico serviu, que era o motivo de
+ele ter nascido genérico.
+
+**O descanso longo avisa** enquanto o Mestre não marcar o santuário, com o texto
+vindo do dado, e o aviso **sai de cena** quando ele marca. ⚠ Avisa, não recusa: o
+app só sabe onde a mesa está se alguém marcou, e recusar por marca esquecida
+travaria a mesa no meio da sessão. É a mesma forma do limite de três descansos
+curtos, que avisa desde a Parte 9.
+
+### ⚠ O ACHADO: o motor de descanso só sabia fazer UM movimento de moldura
+
+O resolvedor de movimento de moldura montava **sempre** a pergunta do Dado de
+Esperança e o efeito da guarda — porque o único que existia era o Montar Guarda da
+Era da Umbra. Um movimento de moldura **sem dado** nascia pedindo um número que a
+regra dele não tem.
+
+Localizar Ecos de Alma não rola nada: o personagem comunga com o Cálice e o Mestre
+diz a direção do próximo Eco. Agora o formato é decidido pelo DADO — com `dado`, o
+movimento que pergunta; sem, o que só custa a vaga e devolve o que a mesa narra. E
+há conferência exigindo que o Montar Guarda continue pedindo o dado dele.
+
+⚠ **Nossa leitura, declarada:** o livro não diz se o movimento é do curto ou do
+longo. Como no ermo só cabe curto e é lá que achar o Eco importa, ele entra nos
+dois.
+
+### As provas
+
+**1303 testes de backend**, com três casos novos: o movimento só existe na Jornada
+e nos dois descansos sem pedir dado (e o Montar Guarda continua pedindo), ele gasta
+a vaga e não mexe em PV nem Estresse (três movimentos no mesmo descanso são
+recusados), e o aviso do santuário aparece sem a marca, desaparece com ela e nunca
+aparece no descanso curto.
+
+⚠ E duas guardas antigas mudaram de lado de propósito: a Jornada **saiu** da lista
+das molduras que não mudam ficha viva — é a primeira do Hope & Fear a mudar — e a
+lista de ferramentas de mesa ganhou a marca de lugar.
+
+---
+
+## 24/10/2026 — A Trilha da Ruína, os nove Ecos, e um teto que media a coisa errada
+
+### ✅ As duas peças que faltavam na Jornada
+
+Ficaram abertas no lote passado por falta de FORMA, não de dado. Agora as duas
+estão no painel, e vieram da folha do apêndice do livro — lida na página, não no
+texto extraído: `pdftotext` embaralha a folha inteira, misturando os quatro
+patamares, e reconstruir o aninhamento por ordem de texto seria inventar. A folha
+foi renderizada e LIDA como imagem, caixa por caixa.
+
+**A Trilha da Ruína** é uma árvore, não uma fila: quatro patamares, **68 caixas**,
+cada caixa de cima abrindo as de baixo. Duas travas, as duas com o motivo escrito
+na tela:
+
+- a filha só abre depois da mãe — é a regra do livro, com essas palavras;
+- caixa de patamar acima do grupo fica travada, porque o livro manda marcar "uma
+  do patamar do grupo ou abaixo". O patamar vem do **nível anunciado** da mesa,
+  que é o único lugar onde o app sabe em que patamar o grupo está.
+
+⚠ **Desmarcar a mãe desmarca as filhas junto.** Sem isso sobraria filha marcada
+sob mãe vazia — um estado que o livro não tem.
+
+⚠ **O Medo do patamar 4 não é aplicado sozinho.** A regra é determinística ("ganhe
+Medo igual ao número de caixas marcadas neste patamar"), mas o Medo é da mesa e já
+tem dono na tela: o painel faz a conta e deixa o toque com a Mestra. Aplicar
+calado mexeria no Medo por causa de um clique numa lista.
+
+**Os nove Ecos de Alma** têm vaga para o santuário e marca para o Cálice. ⚠ São
+NOVE, não dez: o grupo começa com o Eco que Saraya pôs no Cálice, e dar dez vagas
+faria o Mestre procurar santuário para um Eco que já está na mão. O nível é
+**comparado, não aplicado**: o painel conta os Ecos, compara com o nível anunciado
+e avisa quando discordam.
+
+### ⚠ O ACHADO: o caderno não cabia a maior campanha do livro
+
+O caderno de campanha aceitava **40 chaves por campanha**. A Trilha da Ruína tem
+**68 caixas** — mais as dezoito dos Ecos e a marca de lugar. Ou seja: a campanha
+mais completa do livro **não cabia no caderno**, e quem ia descobrir isso era a
+Mestra no meio da sessão, com uma recusa mandando "apague alguma antes".
+
+O teto media a coisa errada. Uma caixa marcada custa onze bytes; uma anotação de
+400 caracteres custa quarenta vezes mais. Então o teto de chaves subiu para 120 e
+entrou um teto de **BYTES** do caderno inteiro, que é o que de fato protege a linha
+da mesa — ela é lida inteira a cada abertura do painel.
+
+### ⚠ E a conta do patamar ia virar a terceira cópia
+
+`patamarDoNivel` existia duas vezes: `patamarDoNivel_` no servidor e uma cópia
+dentro do catálogo da ficha. O painel precisava dela para a trava de patamar —
+copiar quatro linhas daria a terceira. Ela subiu para `js/dados.js`, que as duas
+telas já importam, e o catálogo passou a chamar essa.
+
+### As provas
+
+**1307 testes de backend** (eram 1303), **45 telas** na baseline do Mestre (eram
+39). Cada trava provada quebrando de propósito:
+
+- desligar a tranca da mãe → "a filha não está impedida com a mãe desmarcada",
+  "continua sendo botão — dá para marcar fora de ordem" e "desmarcar a mãe não
+  levou a filha junto", nos três viewports;
+- desligar a tranca do patamar → "uma caixa de patamar 4 está marcável com a mesa
+  no nível 1", nos três viewports;
+- o caso que escreve as 68 caixas uma a uma falha se alguém baixar o teto de volta.
+
+⚠ **E um teste meu reprovou o outro.** O caso do teto de tamanho encheu o caderno
+com duzentas anotações gordas e o caso seguinte falhou por falta de espaço — a
+bateria usa UMA mesa, e o caderno persiste de propósito. O caso agora limpa a
+sujeira que faz.
+
+⚠ **Errata conferida antes de implementar:** a errata do Hope & Fear (25/08/2026)
+não toca nada da Jornada até o Horizonte.
+
+---
+
+## 24/10/2026 (2) — O censo que virava mentira sozinho
+
+### ⚠ O documento avisava, no rodapé, que os próprios números estavam velhos
+
+`docs/o-que-ainda-e-manual.md` nasceu de uma varredura à mão em setembro e
+trazia "615 características, 155 manuais (25%)". O rodapé dele dizia, com todas as
+letras, que os números não tinham sido remedidos — o que **transfere o problema
+para quem lê** em vez de resolvê-lo. Fui conferir: já eram **995** classificadas.
+
+### ⚠ E a conta antiga era IRREFAZÍVEL, por causa de uma palavra
+
+"Declaram alguma parte manual" não dizia qual palavra contava. Contando só
+`manual` dá **18%**; somando `assistido` e `parcial` dá **42%**. As duas contas
+são defensáveis — e medem coisas diferentes: *manual* é o que a mesa resolve,
+*assistido* é o que o app já calcula e só pergunta o resultado do dado.
+
+Por isso `npm run censo` (`tools/censo-automacao.mjs`) não imprime "o número":
+imprime **uma linha por família**, com a palavra que a define. Hoje: 50% o app
+aplica sozinho, 18% manual, 18% assistido, 6% parcial, 4% contextual, 4% ficção.
+
+### ⚠ O campo `automacao` tem QUATRO FORMAS no catálogo
+
+833 objetos com `classificacao`, 162 **strings soltas**, 24 objetos sem
+`classificacao` (a automação de verdade, a que o motor lê) e 18 `null`. É a mesma
+pergunta guardada de quatro jeitos — e foi isso que tornou o censo antigo
+irrefazível, porque cada varredura escolhia um subconjunto diferente sem saber.
+
+Fica como **ponto de interesse declarado**, não como conserto apressado: nenhum
+motor lê `classificacao` para decidir comportamento, então normalizar é mecânico,
+mas passa por `.gs` gerados que embutem o catálogo.
+
+### ⚠ E o documento se contradizia na mesma página
+
+A tabela das oito dizia "a oitava continua de pé"; a seção 8, no mesmo arquivo,
+dizia "feito, e eram 14, não 24". A mesma pergunta respondida duas vezes,
+divergindo — a forma de defeito que este projeto passa a vida caçando, desta vez
+num documento. A tabela é que estava velha.
+
+### ✅ E as duas classificações "suspeitas" estavam CERTAS
+
+O documento mandava conferir Efêmero e Frenesi Uivante antes de qualquer
+trabalho, suspeitando de classificação velha. Conferido: a resistência do Efêmero
+**está** no motor (`4C_Ajustes.gs` devolve `resistencia: 'Fantasma · Efêmero'`), e
+o que a classificação chama de contextual é o custo de 2 Estresses para
+atravessar — que depende de haver objeto. O Frenesi tem gatilho modelado e dado
+da mesa, que é o que a classificação diz.
+
+⚠ **A lição é sobre a suspeita:** "parece desatualizado" é palpite, e palpite
+neste projeto custa um lote. Conferir foram dois `grep`.
+
+---
+
+## 25/10/2026 — Uma forma só para o rótulo de automação, e a guarda que a segura
+
+### 🕐 A travessia por hexágonos: FUTURO, por decisão dela
+
+Ela decidiu: **não vamos implementar o mapa agora**. Fica registrado como trabalho
+futuro em `pontos-de-interesse-molduras.md` e no BACKLOG (I7) — não como pendência.
+Para quem pegar um dia: a marca de lugar no caderno da campanha já é onde o
+hexágono penduraria, e o mapa continua sendo de papel.
+
+### ✅ As 162 strings viraram objeto
+
+O lote anterior mediu que o campo `automacao` tinha **quatro formas**: 833 objetos
+com `classificacao`, 162 **strings soltas**, 24 objetos sem `classificacao` e 18
+`null`. As 162 strings estavam em oito arquivos — classes, ancestralidades,
+comunidades, subclasses novas e transformações — e eram o que tornava o censo
+irrefazível: cada varredura escolhia um subconjunto sem saber.
+
+A conversão foi **textual, linha a linha**, e não um `json.dump` do arquivo
+inteiro: re-serializar um catálogo hand-maintained reformata milhares de linhas e
+esconde a mudança de verdade no meio do ruído. Cada arquivo foi relido como JSON
+antes de ser gravado.
+
+⚠ **E isso mexeu num arquivo do motor:** `45_Transformacoes.gs` embute o
+catálogo, então foi regerado — o conferidor de gerados pegou isso na hora.
+
+### ⚠ Os DOIS PAPÉIS do campo, agora separados por uma guarda
+
+`tools/conferir-automacao.mjs` (`npm run teste:automacao`, dentro do `teste:tudo`)
+sustenta o que a normalização conquistou:
+
+- `automacao` string é recusada — o rótulo mora num objeto;
+- em `molduras.json` a automação precisa de `escopo` e **não pode** ter
+  `classificacao`;
+- fora das molduras, precisa de `classificacao` e **não pode** ter `escopo`;
+- `null` continua sendo declaração legítima ("não há o que automatizar");
+- ⚠ os `*-auditoria.json` ficam de fora **por exceção declarada**: eles não são
+  catálogo, são relatório sobre o catálogo, e lá `automacao` é uma terceira coisa.
+
+Provada nos dois sentidos: devolvendo uma string (acusa o arquivo, o caminho e o
+valor) e pondo `classificacao` dentro de uma automação de moldura (acusa "são os
+dois papéis no mesmo campo"). Nos dois casos, saída 1.
+
+⚠ **O NOME continua respondendo a duas perguntas**, e isso fica declarado (I8 no
+BACKLOG): a forma está uniforme, mas `automacao` ainda é "o que o motor executa"
+nas molduras e "o quanto o app aplica" no resto. Renomear atravessa trinta
+ferramentas de conferência e dois geradores — é lote próprio, e não na véspera de
+um deploy que já sobe a função.
+
+---
+
+## 25/10/2026 (2) — O artefato de Castle High vira pergunta, e um escopo novo nasce de uma frase que ia mentir
+
+### ✅ A criação PERGUNTA, e a ficha guarda
+
+Era o ponto de interesse mais antigo de Castle High: todo estudante tem um
+artefato de fragmento celeste, o livro traz duas perguntas sobre ele, e o app não
+tinha onde pôr a resposta — ela existia só como combinação falada, e sumia na
+sessão seguinte.
+
+Agora a etapa de histórico mostra três perguntas (⚠ **duas são do livro; a
+primeira, "qual é o seu artefato", é nossa** — o livro dá a lista como inspiração
+e nunca chega a perguntar), e a resposta vai para `historia.campanha` na ficha,
+com a seção **"Desta campanha"** na aba História.
+
+⚠ **A RESPOSTA CARREGA A PERGUNTA JUNTO**, como o histórico e as conexões já
+fazem. Guardado só o texto, uma troca de campanha deixaria "uma bengala que zumbe"
+na ficha sem ninguém saber a que aquilo respondia.
+
+### ⚠ UM ESCOPO NOVO, porque 'ficha' ia mentir
+
+Declarada como `escopo: 'ficha'`, a mecânica faria o painel dizer "1 mecânica que
+o app aplica nas fichas que já existem" — e ela não toca em ninguém que já está em
+jogo. É a mesma mentira que o Cinco Estandartes contou por meses.
+
+Então são **três escopos**: `ficha` (aplica em quem já joga), `mesa` (ferramenta do
+Mestre) e `criacao` (muda o que a criação pergunta). O gerador recusa quem não
+declarar, o motor não devolve as de criação na lista das que mexem em ficha viva, e
+o painel põe a pergunta na frase das **fichas NOVAS**, junto com o equipamento
+inicial.
+
+### ⚠ O ACHADO VEIO DO TESTE DE CONTROLE, não de mim
+
+O caso que prova o lado negativo — "a campanha que não pergunta não ganha a etapa"
+— não conseguia chegar na etapa de histórico. Eu ia consertar o teste. O que ele
+estava dizendo é que **o caminho RÁPIDO pula o histórico** (porque o Guia de
+Caráter preenche tudo), e com a etapa pulada a pergunta do artefato nunca
+apareceria para quem cria pelo rápido — que é o caminho que a maioria usa.
+
+É a MESMA forma do defeito do equipamento do Festim das Feras, achada pelo mesmo
+caminho: o Guia é do livro base e não sabe que a mesa escolheu outro cenário.
+Agora `rapidoPrecisaDaHistoria()` segura a etapa quando a campanha pergunta —
+provado quebrando: sem ele, o caso falha dizendo por onde passou.
+
+### ⚠ E DUAS ARMADILHAS DE TESTE, as duas minhas
+
+**Perguntei ao painel o que o painel não tem.** O caso conferia a resposta em
+`painelDoMestre`, que manda um RESUMO do personagem, sem `historia` — e falhava
+dizendo "nenhuma ficha guardou" com a ficha tendo guardado. A prova certa é abrir
+a ficha pela aba História: prova que gravou E que aparece.
+
+**`value` + evento à mão não preenche campo que escuta `input`.** A resposta
+ficava na tela e não no rascunho. Agora o caso digita pelo teclado, como um dedo.
+
+⚠ **E as abas da ficha são `role="tab"`**, não botões comuns — `getByRole('button')`
+não as acha.
+
+---
+
+## 25/10/2026 (3) — As duas maldições, e a fronteira do que o app NÃO faz
+
+### ✅ O último ponto de interesse aberto no dado
+
+O apêndice de Caça a Monstros traz as três transformações de maldição — que o app
+já tinha — e as **duas características de adversário que as infligem**: a Maldição
+do Vampiro e a Maldição do Lobo. Essas duas estavam declaradas como não modeladas.
+
+Agora estão no painel, com o texto em português, pronto para copiar na ficha do
+adversário no editor da mesa. E a **Maldição do Lobo cria a Contagem de
+Licantropia (6)** de longo prazo num toque.
+
+⚠ **O APP NÃO TRANSFORMA NINGUÉM, e essa é a fronteira.** As duas rolam dados
+(d8 pelo patamar, d20 pelo patamar), comparam com o limiar do alvo e terminam numa
+transformação na ficha de quem joga. O app não rola, e ganhar uma transformação é
+escolha que passa pela ficha do jogador. O que faltava era mais simples e mais
+útil: ter o texto à mão em vez de abrir o SRD em inglês no meio da cena, e não
+montar a contagem na unha toda vez.
+
+⚠ **A contagem nasce pelo MESMO caminho da mão** (`criarContagem`, a ação do botão
+"Nova contagem"). Um atalho que a montasse por dentro criaria duas contagens
+diferentes com o mesmo nome, e um dia elas discordariam.
+
+⚠ **E o botão some quando a contagem já existe**, com o aviso no lugar. Provado
+quebrando: sem a guarda, a bateria acusa "sobrou 1 botão de criar depois de a
+contagem existir" — e com a mesa compartilhada pelos três viewports isso seria
+duas Contagens de Licantropia, sem ninguém saber qual vale.
+
+### ⚠ E uma conta escrita à mão envelheceu na hora
+
+O estado de Andaluria cobrava "2 ferramentas de mesa do Mestre" — o número das
+herdadas, escrito à mão. Com as maldições viradas ferramenta, a Caça a Monstros
+passou a ter três, e **o estado de Andaluria falhou por causa de uma mudança na
+Caça a Monstros**, apontando para a tela errada. Agora a conta é LIDA de
+`data/molduras.json`, como as outras desta bateria.

@@ -9,23 +9,8 @@ import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
 import zlib from 'node:zlib';
 import { criarServidor } from './servidor-teste.mjs';
+import { escolherNoCartao } from './ajuda-bateria-ficha.mjs';
 
-/*
- * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
- *
- * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
- * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
- * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
- * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
- * nome em 8 dos 39 cartões da grade.
- *
- * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
- * a medição prova estar sempre livre.
- */
-async function escolherNoCartao(alvo) {
-  const caixa = await alvo.boundingBox();
-  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
-}
 
 
 /**
@@ -187,11 +172,11 @@ try {
 
     // Etapa 1 — classe (o botão "Escolher" já avança sozinho)
     await pagina.waitForSelector('.lista-escolha__item .cartao__alvo');
-    await pagina.locator('.lista-escolha__item .cartao__alvo').first().click();
+    await escolherNoCartao(pagina.locator('.lista-escolha__item .cartao__alvo').first());
     await pagina.locator('.criacao__rodape .btn--principal').click();
     // Etapa 1b — subclasse
     await pagina.waitForSelector('.lista-escolha__item .cartao__alvo');
-    await pagina.locator('.lista-escolha__item .cartao__alvo').first().click();
+    await escolherNoCartao(pagina.locator('.lista-escolha__item .cartao__alvo').first());
     await pagina.locator('.criacao__rodape .btn--principal').click();
     // Etapa 2 — herança
     await pagina.waitForSelector('.grade-opcoes__item');
@@ -1837,9 +1822,9 @@ try {
 
     // Duas escolhas baratas: Evasão e Estresse.
     const evasao = pagina.locator('.avanco__opcao', { hasText: 'Evasão +1' });
-    await evasao.locator('.cartao__alvo').click();
+    await escolherNoCartao(evasao.locator('.cartao__alvo'));
     const estresse = pagina.locator('.avanco__opcao', { hasText: 'Estresse +1' });
-    await estresse.locator('.cartao__alvo').click();
+    await escolherNoCartao(estresse.locator('.cartao__alvo'));
 
     await pagina.getByRole('button', { name: 'Continuar' }).click();
     await pagina.waitForSelector('.avanco__limites');

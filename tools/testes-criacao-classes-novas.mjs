@@ -21,7 +21,7 @@ import { chromium } from 'playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { criarServidor } from './servidor-teste.mjs';
-import { criarPlacar } from './ajuda-bateria-ficha.mjs';
+import { criarPlacar, escolherNoCartao } from './ajuda-bateria-ficha.mjs';
 
 const PASTA = 'artifacts/criacao-classes-novas';
 await mkdir(PASTA, { recursive: true });
@@ -59,7 +59,7 @@ async function abrirCriacao(rotulo) {
 
 const avancar = (page) => page.locator('.criacao__rodape .btn--principal').click();
 const escolherClasse = (page, nome) =>
-  page.locator('.lista-escolha__item', { hasText: nome }).first().locator('.cartao__alvo').click();
+  escolherNoCartao(page.locator('.lista-escolha__item', { hasText: nome }).first().locator('.cartao__alvo'));
 
 const estado = (page) => page.evaluate(() => {
   const corpo = document.querySelector('.criacao__corpo');

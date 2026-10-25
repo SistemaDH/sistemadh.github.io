@@ -15,17 +15,17 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=c6180d3193';
-import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=c6180d3193';
-import { acoes, obterEstado } from '../estado.js?v=c6180d3193';
-import { mensagemDoErro } from '../api.js?v=c6180d3193';
-import * as dados from '../dados.js?v=c6180d3193';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=dd0875ae30';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=dd0875ae30';
+import { acoes, obterEstado } from '../estado.js?v=dd0875ae30';
+import { mensagemDoErro } from '../api.js?v=dd0875ae30';
+import * as dados from '../dados.js?v=dd0875ae30';
 import {
   nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
-} from '../componentes/carta.js?v=c6180d3193';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=c6180d3193';
-import { textoAnotado, prepararVerbetes } from '../verbete.js?v=c6180d3193';
+} from '../componentes/carta.js?v=dd0875ae30';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=dd0875ae30';
+import { textoAnotado, prepararVerbetes } from '../verbete.js?v=dd0875ae30';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -121,6 +121,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
   }
 
   const IDX_HERANCA = 3;
+  const IDX_EQUIPAMENTO = 5;
   const IDX_REVISAO = 9;
 
   function ir(destino) {
@@ -149,17 +150,107 @@ export async function abrirCriacao({ aoCriar } = {}) {
     return rascunho.modo === 'rapida' && !!guiaDaClasse();
   }
 
+  /**
+   * ⚠ O RÁPIDO NÃO PODE PULAR O EQUIPAMENTO QUANDO A CAMPANHA MANDA OUTRA COISA.
+   *
+   * Este foi um defeito VIVO, relatado da mesa: escolher o Festim das Feras e
+   * criar pelo caminho rápido fazia a ficha nascer com a arma do Guia de
+   * Caráter — do Capítulo 2 —, que é exatamente o que aquela campanha proíbe
+   * ("heróis do dia a dia sem acesso a armas comuns", livro p.272). O Guia de
+   * Caráter é do LIVRO BASE: ele não sabe que a mesa trocou de cenário.
+   *
+   * A etapa 5 é a única que lê a moldura. Pulá-la é pular a regra inteira.
+   *
+   * Mas não é sempre: o que decide é O QUE A MOLDURA FAZ.
+   *
+   *  • `substitui` — o rápido PARA na etapa. A sugestão do Guia não existe
+   *    nesta campanha, e escolher no lugar de quem joga seria inventar uma
+   *    decisão que o livro deixa com a pessoa (são 36 itens em quatro tabelas).
+   *  • `arma-unica` — o rápido SEGUE. Não há o que escolher: a Placa-mãe dá a
+   *    mesma ikonis a todo mundo, e `passoEquipamento` já a grava sozinho.
+   *    Parar aqui seria mostrar uma tela sem nenhuma escolha dentro.
+   *  • `acrescenta`, `saque`, `nenhum` — o rápido SEGUE. A sugestão do Guia
+   *    continua válida; o que a campanha traz é opcional ou é de enredo.
+   */
+  function rapidoPrecisaDoEquipamento() {
+    const modo = ((catalogo.moldura || {}).equipamentoInicial || {}).modo || 'nenhum';
+    return modo === 'substitui';
+  }
+
+  /**
+   * ⚠ E O RÁPIDO TAMBÉM NÃO PODE PULAR A HISTÓRIA QUANDO A CAMPANHA PERGUNTA.
+   *
+   * É a MESMA forma do defeito do equipamento, achada pelo mesmo caminho: o
+   * caminho rápido pula a etapa de histórico porque o Guia de Caráter já
+   * preencheu tudo — e o Guia é do livro base, que não sabe que a mesa escolheu
+   * Castle High. Com a etapa pulada, a pergunta do artefato de fragmento
+   * celeste nunca apareceria para quem cria pelo rápido, que é o caminho que a
+   * maioria usa.
+   *
+   * Quem me mostrou isso foi o caso de CONTROLE da bateria de criação, que não
+   * conseguia chegar na etapa — não fui eu que previ.
+   */
+  function rapidoPrecisaDaHistoria() {
+    return perguntasDaCampanha().length > 0;
+  }
+
+  /**
+   * A ANCESTRALIDADE QUE A CAMPANHA PROÍBE — ou `null`.
+   *
+   * ⚠ ESTAVA NO LIVRO E O APP IGNORAVA. Placa-mãe é o único cenário do Capítulo
+   * 5 que proíbe uma ancestralidade: "Clanks não estão disponíveis neste
+   * cenário. Todos os seres robóticos autônomos são remanescentes e nenhum
+   * deles tem senciência" (livro p.294). A grade oferecia clank do mesmo jeito.
+   *
+   * ⚠ A LISTA VEM DO SERVIDOR, não de um `if` com o id da moldura. O motor
+   * manda `origensProibidas` dentro da moldura da mesa, e ele RECUSA a criação
+   * também — esta função é conveniência, não garantia. Foi a lição dos 66
+   * itens: regra de moldura que mora só na tela é regra que um dia some.
+   */
+  function proibicaoDeOrigem() {
+    return ((catalogo.moldura || {}).origensProibidas) || null;
+  }
+
+  /**
+   * O motivo, se esta origem estiver proibida pela campanha — ou `null`.
+   *
+   * ⚠ ERAM SÓ ANCESTRALIDADES, E O LIVRO PROÍBE MAIS QUE ISSO. A Jornada até o
+   * Horizonte proíbe a comunidade WANDERBORNE (Hope & Fear p.160) e a subclasse
+   * SINDICATO (p.162): mil anos de santuário selado não deixam ninguém crescer
+   * na estrada nem manter rede de contatos por um continente. A grade sabia
+   * bloquear uma porta e as outras duas estavam abertas.
+   *
+   * Os três tipos passam por aqui para o motivo ser escrito do mesmo jeito nos
+   * três lugares — e porque a lista continua vindo do SERVIDOR, não de um `if`
+   * com o id da moldura.
+   */
+  function origemImpedida(tipo, item) {
+    const p = proibicaoDeOrigem();
+    const ids = (p && p[tipo]) || [];
+    if (!ids.length || ids.indexOf(item.id) === -1) return null;
+    return p.motivo || `${item.nome} não está disponível nesta campanha.`;
+  }
+
+  const ancestralidadeImpedida = (a) => origemImpedida('ancestralidades', a);
+  const comunidadeImpedida = (c) => origemImpedida('comunidades', c);
+  const subclasseImpedida = (s) => origemImpedida('subclasses', s);
+
+  const IDX_HISTORIA = 8;
+
   function proximoPasso() {
     if (!rapidoPreencheSozinho()) return passoAtual + 1;
-    if (passoAtual === IDX_HERANCA) return 6;   // -> cartas
-    if (passoAtual === 7) return IDX_REVISAO;   // experiências -> revisão
+    if (passoAtual === IDX_HERANCA) return rapidoPrecisaDoEquipamento() ? IDX_EQUIPAMENTO : 6;
+    if (passoAtual === IDX_EQUIPAMENTO) return 6;   // equipamento -> cartas
+    /* experiências -> história, só quando a campanha tem o que perguntar */
+    if (passoAtual === 7) return rapidoPrecisaDaHistoria() ? IDX_HISTORIA : IDX_REVISAO;
     return passoAtual + 1;
   }
 
   function passoAnterior() {
     if (!rapidoPreencheSozinho()) return passoAtual - 1;
-    if (passoAtual === 6) return IDX_HERANCA;
-    if (passoAtual === IDX_REVISAO) return 7;
+    if (passoAtual === 6) return rapidoPrecisaDoEquipamento() ? IDX_EQUIPAMENTO : IDX_HERANCA;
+    if (passoAtual === IDX_EQUIPAMENTO) return IDX_HERANCA;
+    if (passoAtual === IDX_REVISAO) return rapidoPrecisaDaHistoria() ? IDX_HISTORIA : 7;
     return passoAtual - 1;
   }
 
@@ -415,6 +506,18 @@ export async function abrirCriacao({ aoCriar } = {}) {
       secundaria: (guia.armaSecundaria && guia.armaSecundaria.id) || null,
       armadura: (guia.armadura && guia.armadura.id) || null
     };
+    /*
+     * ⚠ E A CAMPANHA MANDA DEPOIS DO GUIA, SEMPRE.
+     *
+     * O Guia de Caráter é do livro base e não sabe que a mesa trocou de
+     * cenário. Na Placa-mãe não existe tabela de armas — todo personagem usa a
+     * ikonis (p.301) —, e sem esta linha a ficha nascia com o florete do Guia.
+     *
+     * ⚠ Isto PRECISA morar aqui e não só no desenho da etapa 5: o caminho
+     * rápido não desenha a etapa 5, e era exatamente por isso que a regra não
+     * chegava na ficha.
+     */
+    aplicarArmaUnicaDaMoldura();
     if (rascunho.modo === 'rapida') {
       TRACOS_ORDEM.forEach((t) => { rascunho.tracos[t] = guia.tracosSugeridos[t]; });
       const pares = (guia.inventario && guia.inventario.escolherEntre) || [];
@@ -564,7 +667,15 @@ export async function abrirCriacao({ aoCriar } = {}) {
           const fundacao = (s.cartas || {}).fundacao || {};
           const escolhaCriacao = escolhaObrigatoriaDaSubclasse(s);
           const comecaEm = Math.max(0, cartasDaEtapa.findIndex((x) => x.sub.id === s.id));
-          lista.append(el('div', { class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}` }, [
+          /*
+           * ⚠ A CAMPANHA PODE PROIBIR UMA SUBCLASSE, e a Jornada até o Horizonte
+           * proíbe o Sindicato do ladino (Hope & Fear p.162). O cartão FICA na
+           * lista, bloqueado e com o motivo escrito — é a mesma decisão do cartão
+           * de clank na Placa-mãe: sumir com ele faria quem conta duas subclasses
+           * achar uma e não saber se o app perdeu uma ou se é a campanha.
+           */
+          const impedida = subclasseImpedida(s);
+          lista.append(el('div', { class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''} ${impedida ? 'esta-impedido' : ''}`.trim() }, [
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(s.nome, () => ({
                 itens: baralhoDaEtapa,
@@ -609,17 +720,30 @@ export async function abrirCriacao({ aoCriar } = {}) {
              * cartão. Quem segura o "Continuar" enquanto ela estiver vazia é
              * o `problema()` deste passo, que já fazia isso.
              */
+            impedida ? el('p', { class: 'criacao__impedido', texto: impedida }) : null,
             alvoDoCartao({
               rotulo: `Escolher ${s.nome}`,
               escolhido: escolhida,
-              aoEscolher: () => escolherSubclasse(s)
+              desabilitado: Boolean(impedida),
+              aoEscolher: () => { if (!impedida) escolherSubclasse(s); }
             })
-          ]));
+          ].filter(Boolean)));
         });
         pai.append(lista);
       },
       problema() {
         if (!rascunho.subclasse) return 'Escolha uma subclasse.';
+        /*
+         * ⚠ E A SUBCLASSE ESCOLHIDA NÃO PODE SER UMA QUE A CAMPANHA PROÍBE. Sem
+         * esta linha, quem já tinha o Sindicato marcado no rascunho (porque
+         * escolheu antes de o Mestre trocar a campanha) passaria por esta tela e
+         * só descobriria no salvamento, com a criação inteira feita.
+         */
+        const classeAgora = catalogo.classes.find((c) => c.id === rascunho.classe);
+        const subAgora = classeAgora
+          && classeAgora.subclasses.find((x) => x.id === rascunho.subclasse);
+        const barrada = subAgora && subclasseImpedida(subAgora);
+        if (barrada) return barrada;
         const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
         const sub = classe && classe.subclasses.find((s) => s.id === rascunho.subclasse);
         const def = escolhaObrigatoriaDaSubclasse(sub);
@@ -669,6 +793,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
             escolhido: (a) => rascunho.ancestralidade === a.id,
             paraCarta: (a) => daAncestralidade(a),
             detalhe: (a) => a.caracteristicas.map((f) => f.nome).join(' · '),
+            impedido: ancestralidadeImpedida,
             aoEscolher: (a) => {
               rascunho.ancestralidade = a.id;
               rascunho.caracteristicasEscolhidas = a.caracteristicas.map((f) => f.nome);
@@ -716,6 +841,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
           escolhido: (c) => rascunho.comunidade === c.id,
           paraCarta: (c) => daComunidade(c),
           detalhe: (c) => c.caracteristica.nome,
+          /* ⚠ a campanha pode proibir uma comunidade — a Jornada proíbe wanderborne */
+          impedido: comunidadeImpedida,
           aoEscolher: (c) => { rascunho.comunidade = c.id; desenhar(); }
         }));
       },
@@ -762,36 +889,51 @@ export async function abrirCriacao({ aoCriar } = {}) {
          */
         const usada = a.caracteristicas.some((f) =>
           rascunho.caracteristicasEscolhidas.includes(f.nome));
+        /*
+         * ⚠ A MISTA É A SEGUNDA PORTA, E ELA PRECISA DA MESMA TRANCA. Proibir
+         * clank na grade normal e deixar a característica dele escolhível aqui
+         * daria a ficha proibida por outro caminho — foi exatamente assim que a
+         * arma única da moldura escapou: a regra valia num caminho e não no
+         * outro.
+         */
+        const impedidaPelaCampanha = ancestralidadeImpedida(a);
 
         grade.append(el('div', {
-          class: `cartao grade-opcoes__item ${usada ? 'esta-escolhido' : ''}`
+          class: `cartao grade-opcoes__item ${usada ? 'esta-escolhido' : ''} ` +
+            `${impedidaPelaCampanha ? 'esta-impedido' : ''}`.trim()
         }, [
           nomeQueAbreCarta(a.nome, () => ({ itens: baralho, indice: posicao }), {}, { glosaFora: true }),
+          impedidaPelaCampanha
+            ? el('p', { class: 'criacao__impedido', texto: impedidaPelaCampanha })
+            : null,
           ...a.caracteristicas
             .slice()
             .sort((x, y) => x.ordem - y.ordem)
-            .map((f) => botaoDeCaracteristica(a, f))
-        ]));
+            .map((f) => botaoDeCaracteristica(a, f, impedidaPelaCampanha))
+        ].filter(Boolean)));
       });
       return grade;
     }
 
     /** Uma característica como escolha: "1ª · Pele Grossa". */
-    function botaoDeCaracteristica(ancestralidade, f) {
+    function botaoDeCaracteristica(ancestralidade, f, impedidaPelaCampanha) {
       const ordem = f.ordem;
       const escolhidaAqui = rascunho.caracteristicasEscolhidas[ordem - 1] === f.nome;
       const outra = rascunho.caracteristicasEscolhidas[ordem === 1 ? 1 : 0] || null;
       const ancestralDaOutra = outra ? ancestralDaCaracteristica(outra) : null;
-      const impedida = ancestralDaOutra === ancestralidade.id && !escolhidaAqui;
+      const impedida = (ancestralDaOutra === ancestralidade.id && !escolhidaAqui)
+        || Boolean(impedidaPelaCampanha);
 
       return el('button', {
         type: 'button',
         class: `btn btn--pequeno criacao__caracteristica ${escolhidaAqui ? 'btn--principal' : 'btn--fantasma'}`,
         disabled: impedida,
         'aria-pressed': escolhidaAqui ? 'true' : 'false',
-        title: impedida
-          ? 'As duas características precisam vir de ancestralidades diferentes.'
-          : f.texto,
+        title: impedidaPelaCampanha
+          ? impedidaPelaCampanha
+          : (impedida
+            ? 'As duas características precisam vir de ancestralidades diferentes.'
+            : f.texto),
         onClick: () => {
           rascunho.caracteristicasEscolhidas[ordem - 1] = escolhidaAqui ? null : f.nome;
           rascunho.caracteristicasEscolhidas = rascunho.caracteristicasEscolhidas.filter(Boolean);
@@ -829,11 +971,22 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *
    * `carta` (uma carta só) continua aceito para quem não tem lista.
    */
-  function gradeDeOpcoes(itens, { escolhido, carta, paraCarta, detalhe, aoEscolher }) {
+  function gradeDeOpcoes(itens, { escolhido, carta, paraCarta, detalhe, aoEscolher, impedido }) {
     const grade = el('div', { class: 'grade-opcoes' });
     const baralho = typeof paraCarta === 'function' ? itens.map(paraCarta) : null;
     itens.forEach((item, posicao) => {
       const esta = escolhido(item);
+      /*
+       * ⚠ A OPÇÃO QUE A CAMPANHA PROÍBE CONTINUA NA GRADE, BLOQUEADA E COM O
+       * MOTIVO ESCRITO.
+       *
+       * Sumir com ela seria mais fácil e pior: quem conhece Daggerheart conta
+       * 24 ancestralidades, acha 23 e não sabe se o app perdeu uma, se é
+       * defeito, ou se a campanha tirou. O cartão fica, com a carta ainda
+       * abrindo pelo nome — ler sobre clanks continua permitido; nascer clank
+       * no Vale dos Ecos é que não.
+       */
+      const razao = typeof impedido === 'function' ? impedido(item) : null;
       const abrirDaquiAte = baralho
         ? () => ({
           itens: baralho,
@@ -841,14 +994,24 @@ export async function abrirCriacao({ aoCriar } = {}) {
           // ⚠ o índice vem do VISOR, não deste cartão: quem folheou está
           // olhando outra opção, e escolher a do cartão de origem seria
           // escolher o que a pessoa não está vendo.
-          aoEscolher: (_escolhida, indice) => aoEscolher(itens[indice])
+          aoEscolher: (_escolhida, indice) => {
+            const alvo = itens[indice];
+            if (typeof impedido === 'function' && impedido(alvo)) return;
+            aoEscolher(alvo);
+          }
         })
         : () => carta(item);
-      grade.append(el('div', { class: `cartao cartao--alvo grade-opcoes__item ${esta ? 'esta-escolhido' : ''}` }, [
+      grade.append(el('div', {
+        class: `cartao ${razao ? '' : 'cartao--alvo'} grade-opcoes__item ` +
+          `${esta ? 'esta-escolhido' : ''} ${razao ? 'esta-impedido' : ''}`.trim()
+      }, [
         nomeQueAbreCarta(item.nome, abrirDaquiAte, {}, { glosaFora: true }),
         el('p', { class: 'texto-sm texto-suave' }, textoAnotado(detalhe(item))),
+        razao ? el('p', { class: 'criacao__impedido', texto: razao }) : null,
         esta ? seloEscolhido() : null,
-        alvoDoCartao({ rotulo: `Escolher ${item.nome}`, escolhido: esta, aoEscolher: () => aoEscolher(item) })
+        razao
+          ? null
+          : alvoDoCartao({ rotulo: `Escolher ${item.nome}`, escolhido: esta, aoEscolher: () => aoEscolher(item) })
       ].filter(Boolean)));
     });
     return grade;
@@ -1002,54 +1165,164 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapa 5 — equipamento
    * ======================================================================= */
 
+  /**
+   * ⚠ O OURO INICIAL ESTAVA ESCRITO AQUI, COM UM `1` NA MÃO.
+   *
+   * Este foi o segundo defeito do relato da mesa — o do "ouro não muda". O
+   * servidor sabe a regra inteira: `fichaRapida_` lê `CRIACAO.ouroInicial` e,
+   * quando a campanha troca a moeda, grava na unidade dela (Placa-mãe: "todos
+   * os personagens começam com 5 quantum", livro p.301). Mas quem cria pela
+   * TELA não passa por `fichaRapida_`: a tela monta a ficha inteira e mandava
+   * `{ punhados: 1 }` literal, sempre.
+   *
+   * Resultado medido: ficha criada pela tela na Placa-mãe nascia com 1 punhado
+   * em vez de 5 quantum — e a Mestra, que tinha acabado de ler no painel que
+   * "a Mochila passa a contar em quantum", não via nada acontecer.
+   *
+   * ⚠ A MOEDA NÃO É LIDA DE UMA LISTA AQUI. Ela vem de `moedaDaMesa`, que o
+   * servidor calcula das mecânicas da moldura e manda na sessão — a mesma
+   * fonte que a Mochila da ficha usa para escrever "3 quantum". Escrever a
+   * conversão nesta tela seria o terceiro leitor do mesmo número.
+   */
+  function ouroInicialDaCampanha() {
+    const moeda = obterEstado().moedaDaMesa;
+    if (moeda && Number.isFinite(Number(moeda.inicialNaCriacao))) {
+      return { punhados: 0, bolsas: 0, cofres: 0, moedas: Math.max(0, Math.trunc(Number(moeda.inicialNaCriacao))) };
+    }
+    return { punhados: 1, bolsas: 0, cofres: 0 };
+  }
+
+  /**
+   * A ARMA QUE A CAMPANHA IMPÕE — Placa-mãe, e quem vier depois.
+   *
+   * O livro (p.301) é literal: "Personagens NÃO TÊM ACESSO à seleção normal de
+   * armas principais e secundárias neste cenário. Em vez disso, cada um deles
+   * têm uma arma personalizada chamada ikonis", sempre de duas mãos, ocupando
+   * o espaço de arma principal. Não há escolha — há imposição.
+   *
+   * Devolve a arma aplicada, ou null quando a moldura não impõe nenhuma.
+   */
+  function aplicarArmaUnicaDaMoldura() {
+    const ei = (catalogo.moldura || {}).equipamentoInicial || {};
+    if (ei.modo !== 'arma-unica' || !ei.armaFixa) return null;
+    const arma = (catalogo.equipamentoDaMoldura || []).find((e) => e.id === ei.armaFixa) || null;
+    if (!arma) return null;
+    if (rascunho.equipamento.primaria !== arma.id) {
+      rascunho.equipamento.primaria = arma.id;
+      rascunho.equipamento.secundaria = null;
+    }
+    return arma;
+  }
+
   function passoEquipamento() {
     return {
       etiqueta: 'Etapa 5',
       titulo: 'Equipamento inicial',
       ajuda: 'Uma arma primária de duas mãos, ou uma primária de uma mão mais uma secundária. Mais uma armadura. Tudo de nível 1.',
       desenhar(pai) {
-        // Com uma moldura que TROCA as tabelas iniciais, o equipamento sai dela.
-        const troca = catalogo.moldura && catalogo.moldura.substituiEquipamentoInicial;
-        const daMoldura = (cat) => catalogo.equipamentoDaMoldura
-          .filter((e) => e.cat === cat && (e.tier || 1) === 1)
+        /*
+         * ⚠ A MOLDURA DIZ O QUE FAZ, E SÃO CINCO COISAS DIFERENTES.
+         *
+         * Até 10/2026 esta tela perguntava um booleano: "substitui as tabelas
+         * iniciais?". Só o Festim respondia sim, e por isso **66 itens de
+         * quatro molduras estavam no catálogo sem nunca aparecer na tela** —
+         * enquanto a janela de confirmação do Mestre prometia, por escrito,
+         * que "a criação de ficha ganha as tabelas desta campanha".
+         *
+         * Agora cada moldura declara o modo em `data/equipamentos.json`, com a
+         * citação da fonte ao lado. Ver `equipamentoInicial` lá.
+         */
+        const modoDaMoldura = ((catalogo.moldura || {}).equipamentoInicial || {}).modo || 'nenhum';
+        const daMoldura = (cat, soTier1) => catalogo.equipamentoDaMoldura
+          .filter((e) => e.cat === cat && (!soTier1 || (e.tier || 1) === 1))
           .map((e) => ({
             id: e.id, nome: e.nome, categoria: e.cat, tier: e.tier || 1,
             atributo: e.atributo, alcance: e.alcance, dano: e.dano, maos: e.maos,
             limiares: e.limiares, pontuacaoArmadura: e.pontuacao,
-            caracteristica: e.carac ? { nome: e.carac } : null
+            caracteristica: e.carac ? { nome: e.carac } : null,
+            daMoldura: true
           }));
+        const doLivro = {
+          primaria: catalogo.equipamentos.armas.filter((a) => a.categoria === 'primaria' && a.tier === 1),
+          secundaria: catalogo.equipamentos.armas.filter((a) => a.categoria === 'secundaria' && a.tier === 1),
+          armadura: catalogo.equipamentos.armaduras.filter((a) => a.tier === 1)
+        };
 
-        const primarias = troca
-          ? daMoldura('primaria')
-          : catalogo.equipamentos.armas.filter((a) => a.categoria === 'primaria' && a.tier === 1);
-        const secundarias = troca
-          ? daMoldura('secundaria')
-          : catalogo.equipamentos.armas.filter((a) => a.categoria === 'secundaria' && a.tier === 1);
-        const armaduras = troca
-          ? daMoldura('armadura')
-          : catalogo.equipamentos.armaduras.filter((a) => a.tier === 1);
+        /*
+         * ⚠ `acrescenta` FILTRA POR PATAMAR 1 AQUI, e isso é da TELA, não da
+         * regra. O arsenal de caça e as armas das Terras Áridas vêm nos quatro
+         * patamares — é equipamento de campanha inteira, não de criação. Quem
+         * está criando uma ficha de nível 1 escolhe entre os de 1º patamar,
+         * como faz com as tabelas do Capítulo 2.
+         */
+        const juntar = (cat) => doLivro[cat].concat(daMoldura(cat, true));
+        const modo = {
+          substitui: (cat) => daMoldura(cat, true),
+          acrescenta: juntar,
+          'arma-unica': (cat) => (cat === 'armadura' ? doLivro.armadura : []),
+          saque: (cat) => doLivro[cat],
+          nenhum: (cat) => doLivro[cat]
+        }[modoDaMoldura] || ((cat) => doLivro[cat]);
 
-        if (troca) {
+        const primarias = modo('primaria');
+        const secundarias = modo('secundaria');
+        const armaduras = modo('armadura');
+
+        /*
+         * A ARMA ÚNICA — Placa-mãe. O livro (p.301) é literal: "Personagens
+         * NÃO TÊM ACESSO à seleção normal de armas principais e secundárias
+         * neste cenário. Em vez disso, cada um deles têm uma arma
+         * personalizada chamada ikonis", que é "sempre de duas mãos" e ocupa
+         * "o espaço de arma principal". Não há o que escolher: a tela grava a
+         * arma e diz por quê.
+         */
+        // Um leitor só para a regra: ver `aplicarArmaUnicaDaMoldura`, que o
+        // caminho rápido também chama — ele não desenha esta etapa.
+        const armaUnica = aplicarArmaUnicaDaMoldura();
+
+        if (modoDaMoldura !== 'nenhum') {
           pai.append(el('div', { class: 'criacao__moldura' }, [
             el('h3', { class: 'criacao__molduraNome', texto: catalogo.moldura.nome }),
-            el('p', { class: 'texto-sm' }, textoAnotado(catalogo.moldura.regra || ''))
+            el('p', { class: 'texto-sm' }, textoAnotado(catalogo.moldura.regra || '')),
+            el('p', { class: 'texto-xs texto-fraco', texto: {
+              substitui: 'O equipamento inicial sai SÓ das tabelas desta campanha.',
+              acrescenta: 'As opções desta campanha entram ao lado das tabelas do Capítulo 2 — vêm marcadas.',
+              'arma-unica': 'Esta campanha não tem tabela de armas: todo personagem começa com a arma dela.',
+              saque: 'Os itens desta campanha são de enredo — o Mestre entrega em jogo, não na criação.'
+            }[modoDaMoldura] || '' })
           ]));
         }
 
-        const primaria = primarias.find((a) => a.id === rascunho.equipamento.primaria) || null;
-        const duasMaos = primaria && /duas/i.test(primaria.maos || '');
+        const primaria = armaUnica
+          || primarias.find((a) => a.id === rascunho.equipamento.primaria) || null;
+        const duasMaos = armaUnica || (primaria && /duas/i.test(primaria.maos || ''));
 
-        pai.append(
-          el('h2', { class: 'criacao__secao', texto: 'Arma primária' }),
-          seletorDeEquipamento(primarias, rascunho.equipamento.primaria, (a) => {
+        pai.append(el('h2', { class: 'criacao__secao', texto: 'Arma primária' }));
+        if (armaUnica) {
+          // Nada a escolher: a tela mostra a arma e o motivo, e o rascunho já
+          // foi gravado acima.
+          pai.append(el('div', { class: 'cartao criacao__armaUnica' }, [
+            el('strong', { texto: armaUnica.nome }),
+            el('p', { class: 'texto-sm texto-suave', texto:
+              `${armaUnica.atributo || ''} · ${armaUnica.alcance || ''} · ${armaUnica.dano || ''} · Duas mãos`
+                .replace(/^( · )+/, '') }),
+            el('p', { class: 'texto-xs texto-fraco', texto:
+              'Esta campanha não dá acesso às tabelas normais de armas — todo personagem começa com esta.' })
+          ]));
+        } else {
+          pai.append(seletorDeEquipamento(primarias, rascunho.equipamento.primaria, (a) => {
             rascunho.equipamento.primaria = a.id;
             if (/duas/i.test(a.maos || '')) rascunho.equipamento.secundaria = null;
             desenhar();
-          }, (a) => `${a.atributo} · ${a.alcance} · ${a.dano} · ${a.maos}`)
-        );
+          }, (a) => `${a.atributo} · ${a.alcance} · ${a.dano} · ${a.maos}` +
+                    (a.daMoldura ? ' · desta campanha' : '')));
+        }
 
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Arma secundária' }));
-        if (duasMaos) {
+        if (armaUnica) {
+          pai.append(el('p', { class: 'texto-sm texto-suave', texto:
+            `A ${armaUnica.nome} é sempre de duas mãos, então não há secundária nesta campanha.` }));
+        } else if (duasMaos) {
           pai.append(el('p', { class: 'texto-sm texto-suave', texto:
             `"${primaria.nome}" é de duas mãos, então não sobra mão para uma secundária.` }));
         } else {
@@ -1057,7 +1330,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
             [{ id: null, nome: 'Nenhuma', maos: '', dano: '' }].concat(secundarias),
             rascunho.equipamento.secundaria,
             (a) => { rascunho.equipamento.secundaria = a.id; desenhar(); },
-            (a) => (a.id ? `${a.atributo} · ${a.alcance} · ${a.dano}` : 'Só a arma primária.')
+            (a) => (a.id
+              ? `${a.atributo} · ${a.alcance} · ${a.dano}` + (a.daMoldura ? ' · desta campanha' : '')
+              : 'Só a arma primária.')
           ));
         }
 
@@ -1066,13 +1341,27 @@ export async function abrirCriacao({ aoCriar } = {}) {
           seletorDeEquipamento(armaduras, rascunho.equipamento.armadura, (a) => {
             rascunho.equipamento.armadura = a.id; desenhar();
           }, (a) => `Limiares base ${a.limiares} · pontuação ${a.pontuacaoArmadura}` +
-                    (a.caracteristica ? ` · ${a.caracteristica.nome}` : ''))
+                    (a.caracteristica ? ` · ${a.caracteristica.nome}` : '') +
+                    (a.daMoldura ? ' · desta campanha' : ''))
         );
 
         /* --- inventário --- */
+        /*
+         * A moldura pode somar item ao inventário de todo personagem. Em
+         * Placa-mãe é a corda de rede com gancho — "todo PJ adiciona ao
+         * inventário na criação", e sem isto ela ficava no catálogo sem dono.
+         */
+        const doInventarioDaMoldura = ((catalogo.moldura || {}).equipamentoInicial || {}).itensNoInventario || [];
+        const itensDaMoldura = doInventarioDaMoldura
+          .map((id) => catalogo.equipamentoDaMoldura.find((e) => e.id === id))
+          .filter(Boolean);
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Inventário' }));
         pai.append(el('ul', { class: 'lista-simples' },
-          catalogo.criacao.inventarioPadrao.map((i) => el('li', { texto: i.nome }))));
+          catalogo.criacao.inventarioPadrao.map((i) => el('li', { texto: i.nome }))
+            .concat(itensDaMoldura.map((i) => el('li', {}, [
+              el('span', { texto: i.nome }),
+              el('span', { class: 'texto-xs texto-fraco', texto: ' · desta campanha' })
+            ])))));
 
         pai.append(el('h3', { class: 'criacao__subsecao', texto: catalogo.criacao.escolhaDePocao.pergunta }));
         const chipsPocao = el('div', { class: 'chips' });
@@ -1401,6 +1690,32 @@ export async function abrirCriacao({ aoCriar } = {}) {
    *  Etapas 6 e 9 — história (tudo opcional)
    * ======================================================================= */
 
+  /**
+   * AS PERGUNTAS QUE A CAMPANHA FAZ — ou lista vazia.
+   *
+   * ⚠ ISTO NÃO É PERGUNTA DE CLASSE NEM DE CONEXÃO, e por isso tem bloco
+   * próprio: Castle High manda todo estudante ter um artefato de fragmento
+   * celeste, e o livro traz duas perguntas sobre ele. Sem lugar para a resposta,
+   * o artefato existia só como combinação falada na mesa — e sumia na sessão
+   * seguinte.
+   *
+   * ⚠ A RESPOSTA CARREGA A PERGUNTA JUNTO (`{pergunta, resposta}`), como o
+   * histórico e as conexões já fazem. Guardar só o texto deixaria, numa troca de
+   * campanha, uma resposta órfã sem ninguém saber a que ela respondia.
+   */
+  function perguntasDaCampanha() {
+    /*
+     * ⚠ VEM PRONTO DO SERVIDOR. O catálogo de molduras que a tela recebe NÃO
+     * carrega as mecânicas (elas moram noutro mapa no motor), então procurar
+     * aqui dentro de `catalogo.moldura.mecanicas` achava sempre vazio — com a
+     * pergunta declarada no dado e ninguém vendo. É a mesma forma do
+     * `equipamentoDaMoldura`: o servidor resolve, a tela desenha.
+     */
+    return (catalogo.perguntasDaMoldura || [])
+      .filter((x) => x && x.bloco && Array.isArray(x.bloco.perguntas) && x.bloco.perguntas.length)
+      .map((x) => ({ mecanica: { id: x.id, nome: x.nome }, bloco: x.bloco }));
+  }
+
   function passoHistoria() {
     return {
       etiqueta: 'Etapas 6 e 9',
@@ -1450,6 +1765,29 @@ export async function abrirCriacao({ aoCriar } = {}) {
           ]));
         });
         }
+
+        /*
+         * ⚠ O BLOCO DA CAMPANHA VEM PRIMEIRO, de propósito: ele é o que a mesa
+         * desta campanha combinou que todo personagem tem. As perguntas da
+         * classe valem para qualquer mesa; esta só existe aqui.
+         */
+        perguntasDaCampanha().forEach(({ mecanica, bloco }) => {
+          pai.append(el('h2', { class: 'criacao__secao',
+            texto: bloco.titulo || 'O que esta campanha pergunta' }));
+          pai.append(el('p', { class: 'texto-sm texto-suave',
+            texto: `${mecanica.nome}. ${bloco.nota || ''}`.trim() }));
+          bloco.perguntas.forEach((q) => {
+            const chave = `${mecanica.id}:${q.id}`;
+            pai.append(el('div', { class: 'cartao' }, [
+              el('p', { class: 'criacao__pergunta', texto: q.pergunta }),
+              (q.inspiracao || []).length
+                ? el('p', { class: 'texto-xs texto-fraco',
+                    texto: `Do livro, como inspiração: ${(q.inspiracao || []).join('; ')}.` })
+                : null,
+              campoArea(rascunho.campanha[chave] || '', (v) => { rascunho.campanha[chave] = v; })
+            ].filter(Boolean)));
+          });
+        });
 
         pai.append(el('h2', { class: 'criacao__secao', texto: 'Perguntas de histórico' }));
         perguntas.fundo.forEach((texto, i) => {
@@ -1673,6 +2011,22 @@ export async function abrirCriacao({ aoCriar } = {}) {
           'Sem efeito mecânico específico catalogado no app.'
       })));
 
+    /*
+     * ⚠ O ITEM QUE A CAMPANHA DÁ A TODO MUNDO — e que precisa ser GRAVADO, não
+     * só mostrado.
+     *
+     * A etapa 5 lista a corda de rede com gancho da Placa-mãe ("todo PJ
+     * adiciona ao inventário na criação do personagem", livro p.302). Mostrar
+     * sem gravar faria a ficha nascer sem ela, e a lista da etapa viraria uma
+     * promessa que a Mochila não cumpre.
+     */
+    ((((catalogo.moldura || {}).equipamentoInicial || {}).itensNoInventario) || [])
+      .map((id) => (catalogo.equipamentoDaMoldura || []).find((e) => e.id === id))
+      .filter(Boolean)
+      .forEach((item) => inventarioInicial.push(registroInicial(item.nome, {
+        nota: `Item inicial de ${catalogo.moldura.nome}: todo personagem desta campanha começa com ele.`
+      })));
+
     const heranca = rascunho.usarMista
       ? (rascunho.nomeAncestralidadeMista.trim()
         || rascunho.ancestralidadeMista.map((id) => (catalogo.ancestralidades.find((a) => a.id === id) || {}).nome).filter(Boolean).join('-'))
@@ -1708,7 +2062,7 @@ export async function abrirCriacao({ aoCriar } = {}) {
       caracteristicas,
       equipamento: { ...rascunho.equipamento },
       inventario: inventarioInicial,
-      ouro: { punhados: 1, bolsas: 0, cofres: 0 },
+      ouro: ouroInicialDaCampanha(),
       cartas: { ativas: rascunho.cartas.slice(), cofre: [] },
       experiencias: rascunho.experiencias.map((e, i) => ({ nome: (e || '').trim(), bonus: rascunhoTemCaracteristica('Projeto Intencional') && rascunho.projetoIntencional === i ? 3 : 2 })).filter((e) => e.nome),
       condicoes: [],
@@ -1725,7 +2079,18 @@ export async function abrirCriacao({ aoCriar } = {}) {
           .filter((x) => x.resposta),
         conexoes: perguntasGravadas.conexoes.map((texto, i) => ({ pergunta: texto, resposta: rascunho.conexoes[i] || '' }))
           .filter((x) => x.resposta),
-        descricaoFisica: { ...rascunho.descricaoFisica }
+        descricaoFisica: { ...rascunho.descricaoFisica },
+        /*
+         * ⚠ GRAVA DA MESMA FONTE QUE DESENHOU, e só o que foi respondido. A
+         * pergunta vai junto da resposta porque a campanha pode mudar depois —
+         * e aí o texto sem a pergunta não diria mais nada.
+         */
+        campanha: perguntasDaCampanha().reduce((lista, { mecanica, bloco }) =>
+          lista.concat(bloco.perguntas.map((q) => ({
+            chave: `${mecanica.id}:${q.id}`,
+            pergunta: q.pergunta,
+            resposta: rascunho.campanha[`${mecanica.id}:${q.id}`] || ''
+          })).filter((x) => x.resposta)), [])
       },
       anotacoes: '',
       meta: { criadaPor: rascunho.modo }
@@ -1765,7 +2130,9 @@ function rascunhoVazio() {
     projetoIntencional: null,
     descricaoFisica: {},
     fundo: [],
-    conexoes: []
+    conexoes: [],
+    /* respostas das perguntas da campanha, por `mecanica:pergunta` */
+    campanha: {}
   };
 }
 
@@ -1812,7 +2179,8 @@ async function carregarCatalogo() {
     tracos,
     guias: guias.guias,
     moldura: (moldura && moldura.moldura) || null,
-    equipamentoDaMoldura: (moldura && moldura.equipamento) || []
+    equipamentoDaMoldura: (moldura && moldura.equipamento) || [],
+    perguntasDaMoldura: (moldura && moldura.perguntasDeHistoria) || []
   };
 }
 

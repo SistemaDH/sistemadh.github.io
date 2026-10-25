@@ -180,3 +180,21 @@ export function derivados({ classe, armadura, nivel = 1 }) {
     limiarGrave
   };
 }
+
+/**
+ * O PATAMAR DO NÍVEL (1, 2-4, 5-7, 8-10) — a mesma conta do servidor.
+ *
+ * ⚠ ELA MORAVA SÓ DENTRO DO CATÁLOGO DA FICHA, e o painel do Mestre precisou
+ * dela para a Trilha da Ruína (que só deixa marcar caixa do patamar do grupo ou
+ * abaixo). Copiar quatro linhas teria dado a TERCEIRA cópia da mesma conta —
+ * `patamarDoNivel_` no servidor, o catálogo aqui, e mais uma no painel. Então
+ * ela subiu para cá, que é o módulo que as duas telas já importam, e o catálogo
+ * da ficha passou a chamar esta.
+ */
+export function patamarDoNivel(nivel) {
+  const n = Number(nivel) || 1;
+  if (n >= 8) return 4;
+  if (n >= 5) return 3;
+  if (n >= 2) return 2;
+  return 1;
+}

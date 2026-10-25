@@ -39,6 +39,7 @@ const CONDICOES = {
   "espectral": { nome: "Espectral", nomeIngles: "Spectral", tipo: "especial", acumulavel: false, texto: "Enquanto estiver Espectral, você é imune a dano físico e pode flutuar e atravessar objetos sólidos." },
   "corroido": { nome: "Corroído", nomeIngles: "Corroded", tipo: "especial", acumulavel: true, texto: "Enquanto estiver Corroído, o alvo sofre penalidade na Dificuldade conforme descrito na carta que aplicou a condição." },
   "em-chamas": { nome: "Em Chamas", nomeIngles: "On Fire / Ablaze", tipo: "especial", acumulavel: false, texto: "Marcador de fogo. A regra — quanto dói, quando dói e como apaga — é sempre a de QUEM APLICOU a condição: a carta, o item ou o adversário. Os três casos do app são diferentes de propósito: Aperto de Cinzas cobra 2d6 ao fim de cada ação; o Fragmento de emberita pede um d4 a cada jogada de ação (em 1 marca 1 Ponto de Vida, em 4 acaba); o Incendiar do Lodo vermelho cobra 1d4 por jogada e só apaga com uma jogada de Finesse (14)." },
+  "amaldicoado": { nome: "Amaldiçoado", nomeIngles: "Cursed", tipo: "especial", acumulavel: false, texto: "Marcador de maldição. A regra — o que ela faz e como sai — é sempre a de QUEM APLICOU: a habilidade, o item ou a moldura. O adversário que amaldiçoa diz o próprio efeito (\"marque 1 Estresse para forçar as jogadas com Esperança do alvo a serem jogadas com Medo\"), e essa é temporária. ⚠ Já a maldição de campanha NÃO sai com jogada de ação: só magia — feitiço, ritual, item mágico, lugar, ocorrência sobrenatural, poder superior, ou uma combinação disso (SRD 2.0; Hope & Fear p.141). Descobrir COMO encerrá-la costuma exigir pesquisa, e isso é missão, não botão." },
 };
 
 /** Todo nome já visto no livro, nas cartas e no inglês. */
@@ -56,6 +57,7 @@ const CONDICAO_ALIASES = {
   "espectral": ["Espectral","Incorpóreo","Spectral"],
   "corroido": ["Corroded","Corroído"],
   "em-chamas": ["Ablaze","Em Chamas","Flamejante","On Fire","On Fire / Ablaze","Queimando"],
+  "amaldicoado": ["Amaldiçoado","Cursed","Maldição","Maldito"],
 };
 
 /** Resolve qualquer grafia (inclusive plural e feminino) para o id canônico. */

@@ -21,13 +21,17 @@
           "nomeIngles": "Gifted",
           "nome": "Dotado",
           "texto": "Você recebe +1 em jogadas de ação, reação e dano.",
-          "automacao": "bonus-global-em-jogadas"
+          "automacao": {
+            "classificacao": "bonus-global-em-jogadas"
+          }
         },
         {
           "nomeIngles": "Weight of Divinity",
           "nome": "Peso da Divindade",
           "texto": "Quando falhar em uma jogada, você deve marcar 1 Estresse ou o Mestre ganha 1 Medo.",
-          "automacao": "escolha-obrigatoria-apos-falha"
+          "automacao": {
+            "classificacao": "escolha-obrigatoria-apos-falha"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Semideus.png",
@@ -72,13 +76,17 @@
           "nomeIngles": "Unfinished Business",
           "nome": "Assunto Inacabado",
           "texto": "Defina com o Mestre qual propósito ou desejo mantém você preso ao Reino Mortal. Quando cumpri-lo, você atravessa o véu da morte.",
-          "automacao": "objetivo-narrativo-e-encerramento-manual"
+          "automacao": {
+            "classificacao": "objetivo-narrativo-e-encerramento-manual"
+          }
         },
         {
           "nomeIngles": "Ephemeral",
           "nome": "Efêmero",
           "texto": "Seu corpo oscila entre o corpóreo e o incorpóreo. Você tem resistência a dano físico, sofre o dobro de dano mágico e pode marcar 2 Estresses para atravessar momentaneamente um objeto sólido.",
-          "automacao": "resistencia-vulnerabilidade-e-custo-contextual"
+          "automacao": {
+            "classificacao": "resistencia-vulnerabilidade-e-custo-contextual"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Fantasma.png",
@@ -123,13 +131,17 @@
           "nomeIngles": "Corpse",
           "nome": "Cadáver",
           "texto": "Durante um descanso, você só pode limpar Pontos de Vida se tiver acesso aos restos mortais de uma criatura falecida recentemente. Descreva como usa esses materiais para conservar seu cadáver.",
-          "automacao": "restricao-de-cura-contextual"
+          "automacao": {
+            "classificacao": "restricao-de-cura-contextual"
+          }
         },
         {
           "nomeIngles": "Won’t Stay Dead",
           "nome": "Não Fica Morto",
           "texto": "Quando escolher o movimento de morte Arriscar Tudo e falhar, você pode marcar permanentemente 1 Ponto de Vida para ter sucesso em vez disso. Quando fizer isso, ainda use o valor do Dado de Esperança para limpar Pontos de Vida e Estresses. Ao marcar permanentemente seu último Ponto de Vida, você atravessa o véu da morte.",
-          "automacao": "efeito-permanente-apos-falha-no-movimento-de-morte"
+          "automacao": {
+            "classificacao": "efeito-permanente-apos-falha-no-movimento-de-morte"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Reanimado.png",
@@ -174,13 +186,17 @@
           "nomeIngles": "Change Shape",
           "nome": "Mudar de Forma",
           "texto": "Durante um descanso, você pode usar um movimento de descanso para trocar sua ancestralidade atual por outra. Ao fazer isso, descreva como sua aparência muda.",
-          "automacao": "troca-de-ancestralidade-durante-descanso"
+          "automacao": {
+            "classificacao": "troca-de-ancestralidade-durante-descanso"
+          }
         },
         {
           "nomeIngles": "Only Skin Deep",
           "nome": "Só na Aparência",
           "texto": "Você recebe o benefício de apenas uma característica da ancestralidade escolhida, selecionada quando escolhe essa ancestralidade. Pode usar um movimento de descanso para selecionar outra característica dessa ancestralidade.",
-          "automacao": "selecao-de-uma-caracteristica-ancestral"
+          "automacao": {
+            "classificacao": "selecao-de-uma-caracteristica-ancestral"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Metamorfo.png",
@@ -225,13 +241,17 @@
           "nomeIngles": "Fangs",
           "nome": "Presas",
           "texto": "Faça um ataque usando um traço à sua escolha para morder um alvo em alcance Corpo a Corpo. Em caso de sucesso, cause d6 de dano físico usando sua Proficiência.",
-          "automacao": "arma-natural-com-traco-escolhido"
+          "automacao": {
+            "classificacao": "arma-natural-com-traco-escolhido"
+          }
         },
         {
           "nomeIngles": "Feed",
           "nome": "Alimentar-se",
           "texto": "Após um ataque bem-sucedido com Presas contra uma criatura que possa sangrar, você pode marcar 1 Estresse para se alimentar. Coloque nesta carta uma quantidade de marcadores igual aos Pontos de Vida que o alvo marcar. Você pode manter no máximo 6 marcadores. Antes de fazer uma jogada de ação, pode gastar 1 marcador para transformar seu Dado de Medo em um d20. Ao fazer um descanso longo, remova 1 marcador. Enquanto não houver marcadores nesta carta, você faz jogadas de ação e reação com desvantagem.",
-          "automacao": "contador-com-teto-custo-e-modificador-de-dado"
+          "automacao": {
+            "classificacao": "contador-com-teto-custo-e-modificador-de-dado"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Vampiro.png",
@@ -276,14 +296,18 @@
           "nomeIngles": "Wolf Form",
           "nome": "Forma de Lobo",
           "texto": "Quando marcar 1 ou mais Pontos de Vida, você pode marcar 1 Estresse para entrar na Forma de Lobo. Nessa forma, recebe um bônus de 1d10 nas jogadas de ataque e dano. Quando fizer uma jogada com Esperança enquanto estiver na Forma de Lobo, deve marcar 1 Estresse. A forma dura até você entrar em Frenesi Uivante ou fazer um descanso.",
-          "automacao": "estado-com-bonus-e-custo-apos-jogada-com-esperanca",
+          "automacao": {
+            "classificacao": "estado-com-bonus-e-custo-apos-jogada-com-esperanca"
+          },
           "errata": "hope-and-fear-aplicada"
         },
         {
           "nomeIngles": "Howling Rampage",
           "nome": "Frenesi Uivante",
           "texto": "Quando marcar seu último Estresse enquanto estiver na Forma de Lobo, você entra em frenesi. Role fora do app uma quantidade de d20 igual ao seu patamar e cause dano físico igual à soma dos resultados a todas as criaturas em alcance Muito Próximo; depois, saia da Forma de Lobo.",
-          "automacao": "gatilho-no-ultimo-estresse-e-rolagem-manual"
+          "automacao": {
+            "classificacao": "gatilho-no-ultimo-estresse-e-rolagem-manual"
+          }
         }
       ],
       "imagem": "assets/cartas/transformacoes/Lobisomem.png",

@@ -38,6 +38,11 @@ const ACOES = new Set([
   // Banquetes: interruptor de mesa. Sem a ação aqui, o Mestre marcaria a
   // caixa nos Ajustes e a mesa continuaria sem cozinhar.
   "definirBanquetes",
+  // A anotação de campanha: o caderno do Mestre, guardado por id de moldura.
+  // A Leitura do Céu Noturno do Weredragão é o primeiro leitor, e sem a ação
+  // aqui a tela guardaria a escolha, mandaria para o servidor e receberia 404
+  // mudo — a leitura da sessão zero voltaria a se perder no recarregar.
+  "anotarCampanha",
   "abrirSessao","encerrarSessaoDaMesa","voltarParaAPrimeiraSessao","encerrarCenaDaMesa",
   "encontro","definirEncontro","acrescentarAoEncontro","ajustarAdversario",
   "porEmFoco","limparFoco","usarHabilidade","removerDoEncontro","limparEncontro",

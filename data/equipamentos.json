@@ -16550,14 +16550,20 @@
     {
       "id": "caca-a-monstros",
       "nome": "Caça a Monstros",
-      "paginasLivro": [],
-      "substituiEquipamentoInicial": false,
+      "paginasDoEquipamento": [
+        201,
+        202
+      ],
       "regra": "Equipamento opcional da mecânica suplementar de caça a monstros do SRD 2.0.",
+      "equipamentoInicial": {
+        "modo": "acrescenta",
+        "fonte": "Daggerheart SRD 2.0, MONSTER HUNTING EQUIPMENT: \"You can make the following weapons and items available to your players.\"",
+        "porque": "É mecânica SUPLEMENTAR: o arsenal de caça entra ao lado das tabelas do Capítulo 2, não no lugar delas. E vem nos quatro patamares, então não é só da criação — acompanha o personagem a vida toda."
+      },
       "fonteDoTexto": "Daggerheart SRD 2.0, p. 201",
       "itens": [
         {
           "id": "campanha-caca-a-monstros-coffinwood-armor-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 1,
           "nome": "Armadura de madeira de caixão",
@@ -16579,7 +16585,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-coffinwood-armor-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 2,
           "nome": "Armadura de madeira de caixão",
@@ -16601,7 +16606,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-coffinwood-armor-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 3,
           "nome": "Armadura de madeira de caixão",
@@ -16623,7 +16627,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-coffinwood-armor-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 4,
           "nome": "Armadura de madeira de caixão",
@@ -16645,7 +16648,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-leather-longcoat-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 1,
           "nome": "Casaco comprido de couro",
@@ -16669,7 +16671,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-leather-longcoat-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 2,
           "nome": "Casaco comprido de couro",
@@ -16693,7 +16694,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-leather-longcoat-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 3,
           "nome": "Casaco comprido de couro",
@@ -16717,7 +16717,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-leather-longcoat-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 4,
           "nome": "Casaco comprido de couro",
@@ -16741,7 +16740,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-silverweave-armor-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 1,
           "nome": "Armadura de trama prateada",
@@ -16765,7 +16763,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-silverweave-armor-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 2,
           "nome": "Armadura de trama prateada",
@@ -16789,7 +16786,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-silverweave-armor-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 3,
           "nome": "Armadura de trama prateada",
@@ -16813,7 +16809,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-silverweave-armor-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "armadura",
           "tier": 4,
           "nome": "Armadura de trama prateada",
@@ -16837,7 +16832,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-blessed-brass-knuckles-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -16852,7 +16846,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-blessed-brass-knuckles-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 2,
@@ -16867,7 +16860,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-blessed-brass-knuckles-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 3,
@@ -16882,7 +16874,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-blessed-brass-knuckles-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 4,
@@ -16897,7 +16888,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-chain-whip-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -16923,7 +16913,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-chain-whip-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 2,
@@ -16949,7 +16938,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-chain-whip-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 3,
@@ -16975,7 +16963,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-chain-whip-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 4,
@@ -17001,7 +16988,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-hallowed-shield-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17034,7 +17020,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-hallowed-shield-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Mágica",
           "tier": 2,
@@ -17067,7 +17052,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-hallowed-shield-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Mágica",
           "tier": 3,
@@ -17100,7 +17084,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-hallowed-shield-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Mágica",
           "tier": 4,
@@ -17133,7 +17116,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-holy-shotgun-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17159,7 +17141,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-holy-shotgun-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 2,
@@ -17185,7 +17166,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-holy-shotgun-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 3,
@@ -17211,7 +17191,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-holy-shotgun-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 4,
@@ -17237,7 +17216,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-repeating-crossbow-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17270,7 +17248,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-repeating-crossbow-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 2,
@@ -17303,7 +17280,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-repeating-crossbow-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 3,
@@ -17336,7 +17312,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-repeating-crossbow-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 4,
@@ -17369,7 +17344,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-wooden-stake-t1",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -17398,7 +17372,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-wooden-stake-t2",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 2,
@@ -17427,7 +17400,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-wooden-stake-t3",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 3,
@@ -17456,7 +17428,6 @@
         },
         {
           "id": "campanha-caca-a-monstros-wooden-stake-t4",
-          "moldura": "Caça a Monstros",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 4,
@@ -17489,18 +17460,21 @@
       "id": "festim-das-feras",
       "nome": "Festim das Feras",
       "nomeAntigo": "Festa da Besta (Beast Feast)",
-      "paginasLivro": [
+      "paginasDoEquipamento": [
         275,
         276,
         277
       ],
-      "substituiEquipamentoInicial": true,
       "regra": "Como heróis do dia a dia sem acesso a armas comuns, em vez de usar as tabelas de equipamento do Capítulo 2, personagens devem escolher o equipamento inicial de 1º patamar nas tabelas a seguir.",
+      "equipamentoInicial": {
+        "modo": "substitui",
+        "fonte": "Daggerheart: Esperança e Medo (Jambô), p.270–279: \"em vez de usar as tabelas de equipamento do Capítulo 2\".",
+        "porque": "Heróis do dia a dia, sem acesso a armas comuns: a frigideira e a assadeira ESTÃO no lugar da espada e do peitoral, não ao lado."
+      },
       "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), pp. 275-277",
       "itens": [
         {
           "id": "campanha-festim-das-feras-ancinho-afiado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17514,7 +17488,6 @@
         },
         {
           "id": "campanha-festim-das-feras-aticador-de-fogo",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17529,7 +17502,6 @@
         },
         {
           "id": "campanha-festim-das-feras-bordao-de-caminhada",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17544,7 +17516,6 @@
         },
         {
           "id": "campanha-festim-das-feras-cutelo",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17561,7 +17532,6 @@
         },
         {
           "id": "campanha-festim-das-feras-estilingue",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17575,7 +17545,6 @@
         },
         {
           "id": "campanha-festim-das-feras-faca-de-cozinha",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17589,7 +17558,6 @@
         },
         {
           "id": "campanha-festim-das-feras-foice-de-cabo-comprido",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17603,7 +17571,6 @@
         },
         {
           "id": "campanha-festim-das-feras-foice-de-mao",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17631,7 +17598,6 @@
         },
         {
           "id": "campanha-festim-das-feras-forcado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17645,7 +17611,6 @@
         },
         {
           "id": "campanha-festim-das-feras-frigideira-de-ferro",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17659,7 +17624,6 @@
         },
         {
           "id": "campanha-festim-das-feras-lanca-fogos-de-artificio",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17682,7 +17646,6 @@
         },
         {
           "id": "campanha-festim-das-feras-machado-de-acougueiro",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17702,7 +17665,6 @@
         },
         {
           "id": "campanha-festim-das-feras-marreta",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17723,7 +17685,6 @@
         },
         {
           "id": "campanha-festim-das-feras-rolo-de-massa",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17737,7 +17698,6 @@
         },
         {
           "id": "campanha-festim-das-feras-vara-de-pesca",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -17751,7 +17711,6 @@
         },
         {
           "id": "campanha-festim-das-feras-acendedor-de-forja-encantado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17766,7 +17725,6 @@
         },
         {
           "id": "campanha-festim-das-feras-bumerangue-encantado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17780,7 +17738,6 @@
         },
         {
           "id": "campanha-festim-das-feras-cajado-cintilante",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17798,7 +17755,6 @@
         },
         {
           "id": "campanha-festim-das-feras-esfregao-encantado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17812,7 +17768,6 @@
         },
         {
           "id": "campanha-festim-das-feras-martelo-encantado",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17826,7 +17781,6 @@
         },
         {
           "id": "campanha-festim-das-feras-pipa-encantada",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17857,7 +17811,6 @@
         },
         {
           "id": "campanha-festim-das-feras-pocoes-explosivas",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17871,7 +17824,6 @@
         },
         {
           "id": "campanha-festim-das-feras-tesoura-encantada",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17885,7 +17837,6 @@
         },
         {
           "id": "campanha-festim-das-feras-varinha-batedeira",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17900,7 +17851,6 @@
         },
         {
           "id": "campanha-festim-das-feras-vassoura-encantada",
-          "moldura": "Festim das Feras",
           "categoria": "primaria",
           "tabela": "Mágica",
           "tier": 1,
@@ -17914,7 +17864,6 @@
         },
         {
           "id": "campanha-festim-das-feras-cabo-de-reboque",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -17937,7 +17886,6 @@
         },
         {
           "id": "campanha-festim-das-feras-chicote-de-festival",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -17966,7 +17914,6 @@
         },
         {
           "id": "campanha-festim-das-feras-escudo-de-tampa-de-barril",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -17987,7 +17934,6 @@
         },
         {
           "id": "campanha-festim-das-feras-escudo-de-tampo-de-mesa",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18009,7 +17955,6 @@
         },
         {
           "id": "campanha-festim-das-feras-faca-de-descascar-frutas",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18030,7 +17975,6 @@
         },
         {
           "id": "campanha-festim-das-feras-forcado-grande",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18051,7 +17995,6 @@
         },
         {
           "id": "campanha-festim-das-feras-lanca-sinalizadores",
-          "moldura": "Festim das Feras",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18069,7 +18012,6 @@
         },
         {
           "id": "campanha-festim-das-feras-armadura-de-casca-de-arvore",
-          "moldura": "Festim das Feras",
           "categoria": "armadura",
           "tabela": null,
           "tier": 1,
@@ -18087,7 +18029,6 @@
         },
         {
           "id": "campanha-festim-das-feras-avental-de-couro",
-          "moldura": "Festim das Feras",
           "categoria": "armadura",
           "tabela": null,
           "tier": 1,
@@ -18099,7 +18040,6 @@
         },
         {
           "id": "campanha-festim-das-feras-peitoral-de-assadeira",
-          "moldura": "Festim das Feras",
           "categoria": "armadura",
           "tabela": null,
           "tier": 1,
@@ -18121,7 +18061,6 @@
         },
         {
           "id": "campanha-festim-das-feras-vestimenta-acolchoada",
-          "moldura": "Festim das Feras",
           "categoria": "armadura",
           "tabela": null,
           "tier": 1,
@@ -18144,18 +18083,21 @@
       "id": "colosso-das-terras-aridas",
       "nome": "Colosso das Terras Áridas",
       "nomeAntigo": "Colosso das Terras Secas / Terras Áridas",
-      "paginasLivro": [
+      "paginasDoEquipamento": [
         316,
         317,
         318
       ],
-      "substituiEquipamentoInicial": false,
       "regra": "De armas de fogo a dinamite, as comunidades das Terras Áridas desenvolveram uma tecnologia impressionante. As armas a seguir também estão disponíveis neste cenário — elas SOMAM às tabelas do Capítulo 2, não as substituem.",
+      "equipamentoInicial": {
+        "modo": "acrescenta",
+        "fonte": "Daggerheart: Esperança e Medo (Jambô), p.317: \"Além disso, eles também podem escolher entre as opções a seguir\" / \"As armas principais a seguir TAMBÉM estão disponíveis neste cenário\".",
+        "porque": "O livro é explícito no \"também\": as armas de fogo somam às normais. Quatro patamares, como o arsenal de caça."
+      },
       "fonteDoTexto": "DH-DigitalRegras.pdf (Jambô), Capítulo 5",
       "itens": [
         {
           "id": "campanha-colosso-das-terras-aridas-revolver",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -18189,7 +18131,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-t2",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 2,
@@ -18223,7 +18164,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-t3",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 3,
@@ -18257,7 +18197,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-t4",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 4,
@@ -18291,7 +18230,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-rifle",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -18308,7 +18246,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-rifle-t2",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 2,
@@ -18325,7 +18262,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-rifle-t3",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 3,
@@ -18342,7 +18278,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-rifle-t4",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 4,
@@ -18359,7 +18294,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-escopeta",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 1,
@@ -18381,7 +18315,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-escopeta-t2",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 2,
@@ -18403,7 +18336,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-escopeta-t3",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 3,
@@ -18425,7 +18357,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-escopeta-t4",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 4,
@@ -18447,7 +18378,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-laco",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18464,7 +18394,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-laco-t2",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 2,
@@ -18481,7 +18410,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-laco-t3",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 3,
@@ -18498,7 +18426,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-laco-t4",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 4,
@@ -18515,7 +18442,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-pequeno",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 1,
@@ -18548,7 +18474,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-pequeno-t2",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 2,
@@ -18581,7 +18506,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-pequeno-t3",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 3,
@@ -18614,7 +18538,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-revolver-pequeno-t4",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "secundaria",
           "tabela": "Física",
           "tier": 4,
@@ -18647,7 +18570,6 @@
         },
         {
           "id": "campanha-colosso-das-terras-aridas-dinamite",
-          "moldura": "Colosso das Terras Áridas",
           "categoria": "item",
           "tabela": null,
           "tier": 1,
@@ -18660,7 +18582,7 @@
     },
     {
       "nome": "Placa-mãe",
-      "paginasLivro": [
+      "paginasDoEquipamento": [
         302,
         303,
         304
@@ -18674,7 +18596,6 @@
         {
           "id": "campanha-placa-mae-motherboard-ikonis",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Ikonis",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18683,7 +18604,6 @@
         {
           "id": "campanha-placa-mae-motherboard-quantum",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Quantum",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18693,7 +18613,6 @@
         {
           "id": "campanha-placa-mae-motherboard-sucata-fragmentos-d6",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Sucata - Fragmentos (d6)",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18702,7 +18621,6 @@
         {
           "id": "campanha-placa-mae-motherboard-sucata-metais-d8",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Sucata - Metais (d8)",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18711,7 +18629,6 @@
         {
           "id": "campanha-placa-mae-motherboard-sucata-componentes-d10",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Sucata - Componentes (d10)",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18720,7 +18637,6 @@
         {
           "id": "campanha-placa-mae-motherboard-reliquias",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Relíquias",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18729,7 +18645,6 @@
         {
           "id": "campanha-placa-mae-motherboard-corda-de-rede-com-gancho",
           "categoria": "item",
-          "moldura": "Placa-mãe (Motherboard)",
           "nome": "Corda de rede (com gancho)",
           "origemNome": "livro",
           "ilegivel": false,
@@ -18737,26 +18652,49 @@
           "fonteVocabulario": "E114 — o texto foi passado para o vocabulário das cartas; a troca exata está em data/equipamentos-correcoes.json"
         }
       ],
-      "substituiEquipamentoInicial": false,
       "nomeAntigo": "Placa-mãe (Motherboard)",
       "id": "placa-mae",
-      "regra": "A arma de cada personagem é o Ikonis, customizável, e o cenário troca o ouro pela moeda quantum. Não há tabela de equipamento inicial para escolher aqui."
+      "regra": "A arma de cada personagem é o Ikonis, customizável, e o cenário troca o ouro pela moeda quantum. Não há tabela de equipamento inicial para escolher aqui.",
+      "equipamentoInicial": {
+        "modo": "arma-unica",
+        "fonte": "Daggerheart: Esperança e Medo (Jambô), p.301: \"Personagens NÃO TÊM ACESSO à seleção normal de armas principais e secundárias de Daggerheart neste cenário. Em vez disso, cada um deles têm uma arma personalizada chamada ikonis.\" E: \"Ikonis são sempre consideradas armas de duas mãos e [ocupam] o espaço de arma principal da ficha\".",
+        "porque": "⚠ Este é o caso que não cabia em \"substitui\": não há TABELA para escolher. Há UMA arma, de duas mãos, no espaço da primária — e por ser de duas mãos, não há secundária. A criação não deve oferecer escolha nenhuma de arma aqui.",
+        "armaFixa": "campanha-placa-mae-motherboard-ikonis",
+        "semSecundaria": true,
+        "itensNoInventario": [
+          "campanha-placa-mae-motherboard-corda-de-rede-com-gancho"
+        ]
+      }
+    },
+    {
+      "id": "castle-high",
+      "nome": "Castle High",
+      "paginasDoEquipamento": [],
+      "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as tabelas do Capítulo 2. O que ela traz — o voo, o artefato de fragmento celeste, as quatro torres, Riley Averill e a campanha menos letal — vive em data/molduras.json.",
+      "equipamentoInicial": {
+        "modo": "nenhum",
+        "porque": "O Capítulo 4 do Hope & Fear não dá tabelas de equipamento a Castle High: o artefato de fragmento celeste é objeto de ficção, sem linha de arma nem de armadura. Inventar estatística para ele seria regra nossa, não do livro."
+      },
+      "fonteDoTexto": "Daggerheart: Hope & Fear (Darrington Press), Capítulo 4: Castle High, p. 116–127 — tradução nossa.",
+      "itens": []
     },
     {
       "id": "reino-do-weredragao",
-      "nome": "Reino do Weredragão",
+      "nome": "Reinado do Weredragão",
       "nomeIngles": "Reign of the Weredragon",
-      "paginasLivro": [
-        128,
-        143
+      "paginasDoEquipamento": [
+        142
       ],
-      "substituiEquipamentoInicial": false,
       "regra": "As duas \"Chaves para a Vitória\" da moldura que são itens próprios. A terceira, a Espada de Sarças do Cavaleiro Cervo, usa as estatísticas do Cutelo Avançado — que já está no catálogo — e portanto é reflavor, não item novo.",
+      "equipamentoInicial": {
+        "modo": "saque",
+        "fonte": "Daggerheart SRD 2.0 — as \"Chaves para a Vitória\" da moldura.",
+        "porque": "⚠ NÃO é equipamento inicial: são itens de ENREDO que o Mestre entrega em jogo. Oferecê-los na criação daria de graça o que a campanha inteira existe para procurar."
+      },
       "fonteDoTexto": "Daggerheart: Hope & Fear, p.142",
       "itens": [
         {
           "id": "campanha-reino-do-weredragao-lady-lavenders-longsword",
-          "moldura": "Reino do Weredragão",
           "categoria": "primaria",
           "tabela": "Física",
           "tier": 4,
@@ -18775,9 +18713,10 @@
             "fonteTraducao": "minha",
             "confianca": "alta",
             "automacao": {
-              "classificacao": "resolucao-manual-de-mesa",
+              "classificacao": "estado-assistido",
               "rolaNoApp": false,
-              "motivo": "As maldições desta moldura (Maldição do Weredrake e Maldição Petrificada) não são condições do catálogo do app: elas nascem de habilidades de adversário e só somem por magia, ritual, item, local ou poder superior. Enquanto a família \"Maldito\" não existir em condicoes.json, limpar é decisão da mesa e o app não tem o que marcar."
+              "motivo": "A condição Amaldiçoado passou a existir no catálogo (10/2026), então a mesa pode MARCAR a maldição numa ficha e esta arma tem o que desmarcar. ⚠ Quem decide se a maldição acabou continua sendo a mesa: o livro diz que ela só sai por magia — feitiço, ritual, item mágico, lugar, ocorrência sobrenatural ou poder superior — e o app não tem como saber se a magia certa foi encontrada. ⚠ E `limpaCondicao` NÃO entra aqui: esse campo é lido só para CARTAS de domínio, em 4C_Ajustes.gs. Posto num item ele seria dado morto — exatamente o defeito que este catálogo passa a vida tirando.",
+              "efeitoManual": "Quebra-Maldição: encerra uma maldição que a ficção já deu como quebrável. Desmarque Amaldiçoado na ficha do alvo."
             }
           },
           "fonteDoTexto": "Daggerheart: Hope & Fear, p.142 (Reign of the Weredragon)",
@@ -18785,7 +18724,6 @@
         },
         {
           "id": "campanha-reino-do-weredragao-zoetrope-of-the-bright-bacchanal",
-          "moldura": "Reino do Weredragão",
           "categoria": "item",
           "nome": "Zootrópio do Bacanal Radiante",
           "nomeIngles": "Zoetrope of the Bright Bacchanal",
@@ -18797,9 +18735,10 @@
             "fonteTraducao": "minha",
             "confianca": "alta",
             "automacao": {
-              "classificacao": "resolucao-manual-de-mesa",
+              "classificacao": "estado-assistido",
               "rolaNoApp": false,
-              "motivo": "Mesmo motivo da Espada longa de Lady Lavender: alcance é da mesa e a família \"Maldito\" ainda não existe como condição no app."
+              "motivo": "Mesmo caso da Espada longa de Lady Lavender: a condição Amaldiçoado agora existe e pode ser desmarcada na ficha, e o alcance do desfile de faunos continua sendo decisão da mesa.",
+              "efeitoManual": "Desfile de faunos: a cena decide quem o desfile alcança. Desmarque Amaldiçoado em cada alvo alcançado."
             }
           },
           "fonteDoTexto": "Daggerheart: Hope & Fear, p.142 (Reign of the Weredragon)"
@@ -18807,30 +18746,68 @@
       ]
     },
     {
+      "id": "coracao-sombrio-de-andaluria",
+      "nome": "O Coração Sombrio de Andaluria",
+      "paginasDoEquipamento": [
+        152,
+        153
+      ],
+      "regra": "O arsenal desta moldura é o MESMO do apêndice de caça a monstros do SRD 2.0: as 36 entradas batem uma por uma. Por isso ela HERDA a lista (equipamentoInicial.apendice) em vez de repeti-la — copiar daria duas fontes para a mesma regra.",
+      "equipamentoInicial": {
+        "modo": "acrescenta",
+        "apendice": "caca-a-monstros",
+        "fonte": "Daggerheart: Hope & Fear, \"Monster-Hunting Equipment\", p.152–153: \"they can choose from the following options at character creation, or you can give them out over the course of the campaign.\"",
+        "porque": "O arsenal entra AO LADO das tabelas do Capítulo 2, nos quatro patamares — igual ao apêndice do SRD, de onde a lista vem. O livro também manda recolorir o equipamento padrão para o gênero, e isso é de mesa, não de app."
+      },
+      "fonteDoTexto": "Daggerheart: Hope & Fear (Darrington Press), Capítulo 4: Dark Heart of Andaluria, p. 144–157 — tradução nossa.",
+      "itens": []
+    },
+    {
       "id": "o-surto-selvagem",
       "nome": "O Surto Selvagem",
-      "paginasLivro": "254–261",
-      "substituiEquipamentoInicial": false,
+      "paginasDoEquipamento": [],
       "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as tabelas do Capítulo 2 normalmente. O que ela traz é a Corrupção do Surto Selvagem, que vive em data/molduras.json.",
+      "equipamentoInicial": {
+        "modo": "nenhum",
+        "porque": "Não traz tabelas próprias: as personagens usam as do Capítulo 2."
+      },
       "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 254–261.",
       "itens": []
     },
     {
       "id": "era-da-umbra",
       "nome": "Era da Umbra",
-      "paginasLivro": "280–289",
-      "substituiEquipamentoInicial": false,
+      "paginasDoEquipamento": [],
       "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as tabelas do Capítulo 2. O que ela traz — a corrupção pela Umbra, as Chamas Sagradas, a escuridão à espreita e o movimento Montar Guarda — vive em data/molduras.json.",
+      "equipamentoInicial": {
+        "modo": "nenhum",
+        "porque": "Não traz tabelas próprias: as personagens usam as do Capítulo 2."
+      },
       "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 280–289.",
       "itens": []
     },
     {
       "id": "cinco-estandartes-em-chamas",
       "nome": "Cinco Estandartes em Chamas",
-      "paginasLivro": "262–269",
-      "substituiEquipamentoInicial": false,
+      "paginasDoEquipamento": [],
       "regra": "Esta moldura não traz tabelas de equipamento próprias. O que ela traz — as relações políticas entre as cinco nações de Althas — vive em data/molduras.json e aparece no painel do Mestre.",
+      "equipamentoInicial": {
+        "modo": "nenhum",
+        "porque": "Não traz tabelas próprias. O que ela traz é a ficha de campanha das relações políticas."
+      },
       "fonteDoTexto": "Daggerheart: Esperança e Medo (Jambô), Capítulo 5, p. 262–269.",
+      "itens": []
+    },
+    {
+      "id": "jornada-ate-o-horizonte",
+      "nome": "Jornada até o Horizonte",
+      "paginasDoEquipamento": [],
+      "regra": "Esta moldura não traz tabelas de equipamento próprias: as personagens usam as do Capítulo 2. O que ela traz — a travessia por hexágonos, o descanso que só é longo num santuário, o movimento Localizar Ecos de Alma, os dez Ecos, a Trilha da Ruína e a Contagem de Vigor — vive em data/molduras.json. ⚠ E ela PROÍBE a comunidade wanderborne e a subclasse Sindicato.",
+      "equipamentoInicial": {
+        "modo": "nenhum",
+        "porque": "O Capítulo 4 do Hope & Fear não dá tabela de equipamento a esta moldura: o Cálice de Luz é item de enredo único do grupo, não linha de tabela, e inventar estatística para ele seria regra nossa."
+      },
+      "fonteDoTexto": "Daggerheart: Hope & Fear (Darrington Press), Capítulo 4: Journey to Horizon, p. 158–180 — tradução nossa.",
       "itens": []
     }
   ],

@@ -210,7 +210,23 @@ function caracteristicasDaClasse_(ficha) {
     }
   }
 
-  return saida;
+  /*
+   * --- e o que a CAMPANHA troca ---------------------------------------------
+   *
+   * ⚠ A TROCA ENTRA AQUI, no fim do único leitor, e não em cada lugar que
+   * mostra habilidade. Em Placa-mãe o Treinamento de Combate do guerreiro é
+   * substituído por Treinamento Ikonis (livro p.295) — e por esta função
+   * passam as DUAS coisas que precisavam saber: a lista que a ficha desenha e
+   * o fichaTemEfeito_ que decide se o personagem ignora o tipo de
+   * empunhadura. Trocar em qualquer outro ponto consertaria uma e deixaria a
+   * outra mentindo.
+   *
+   * (⚠ E sem acento grave nenhum neste comentário: ele é EMITIDO de dentro de
+   * um template literal, e um acento grave aqui fecha a string do gerador.
+   * Foi exatamente o que aconteceu na primeira tentativa.)
+   */
+  return (typeof comSubstituicoesDaMoldura_ === 'function')
+    ? comSubstituicoesDaMoldura_(saida, ficha) : saida;
 }
 
 /** Esta ficha realmente possui esta característica, seja de origem ou classe. */

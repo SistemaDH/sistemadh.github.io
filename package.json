@@ -7,6 +7,7 @@
   "scripts": {
     "servir": "node tools/servidor-teste.mjs 8099",
     "teste": "node tools/testes-backend.mjs",
+    "censo": "node tools/censo-automacao.mjs",
     "teste:e2e": "node tools/testes-e2e.mjs",
     "teste:layout-mobile": "node tools/testes-layout-mobile.mjs",
     "teste:layout-mestre-mobile": "node tools/testes-layout-mestre-mobile.mjs && node tools/testes-editor-adversario-mobile.mjs",
@@ -23,7 +24,7 @@
     "teste:layout-foto-mobile": "node tools/testes-foto-mobile.mjs",
     "teste:layout-responsivo": "node tools/testes-layout-responsivo.mjs",
     "teste:css": "node tools/conferir-css.mjs",
-    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste:cache-buster && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:cartas-livro && npm run teste:molduras && npm run teste:verbetes && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e && npm run teste:rolagem && npm run teste:avanco-limites && npm run teste:de-onde-vem && npm run teste:ataque-equipamento && npm run teste:reacoes-armadura && npm run teste:fim-da-cena && npm run teste:cena-da-mesa && npm run teste:posturas && npm run teste:criacao-classes-novas && npm run teste:layout-abertura-mobile && npm run teste:layout-ajustes-mobile && npm run teste:layout-avanco-mobile && npm run teste:layout-conjuracao-mobile && npm run teste:layout-criacao-mobile && npm run teste:layout-dano-mobile && npm run teste:layout-descanso-mobile && npm run teste:layout-foto-mobile && npm run teste:layout-mestre-mobile && npm run teste:layout-mobile && npm run teste:layout-mochila-em-uso-mobile && npm run teste:layout-regras-mobile && npm run teste:layout-responsivo && npm run teste:layout-toast-contexto-mobile",
+    "teste:tudo": "npm run teste:lint && npm run teste:sintaxe && npm run teste:css && npm run teste:cache-buster && npm run teste && npm run teste:jornadas-srd2 && npm run teste:gerados && npm run teste:automacao && npm run teste:cartas-livro && npm run teste:molduras && npm run teste:moldura-criacao && npm run teste:verbetes && npm run teste:funcoes && npm run teste:motor-mesa && npm run teste:motor-simbolos && npm run teste:srd2 && npm run teste:e2e && npm run teste:rolagem && npm run teste:avanco-limites && npm run teste:de-onde-vem && npm run teste:ataque-equipamento && npm run teste:reacoes-armadura && npm run teste:fim-da-cena && npm run teste:cena-da-mesa && npm run teste:posturas && npm run teste:criacao-classes-novas && npm run teste:layout-abertura-mobile && npm run teste:layout-ajustes-mobile && npm run teste:layout-avanco-mobile && npm run teste:layout-conjuracao-mobile && npm run teste:layout-criacao-mobile && npm run teste:layout-dano-mobile && npm run teste:layout-descanso-mobile && npm run teste:layout-foto-mobile && npm run teste:layout-mestre-mobile && npm run teste:layout-mobile && npm run teste:layout-mochila-em-uso-mobile && npm run teste:layout-regras-mobile && npm run teste:layout-responsivo && npm run teste:layout-toast-contexto-mobile",
     "teste:jornadas-srd2": "node tools/testes-jornadas-srd2.mjs",
     "teste:lint": "eslint .",
     "teste:sintaxe": "node tools/conferir-sintaxe.mjs",
@@ -106,7 +107,9 @@
     "teste:posturas": "node tools/testes-posturas.mjs",
     "teste:criacao-classes-novas": "node tools/testes-criacao-classes-novas.mjs",
     "teste:cache-buster": "node tools/cache-buster.mjs",
-    "cache-buster": "node tools/cache-buster.mjs --escrever"
+    "cache-buster": "node tools/cache-buster.mjs --escrever",
+    "teste:moldura-criacao": "node tools/testes-moldura-criacao.mjs",
+    "teste:automacao": "node tools/conferir-automacao.mjs"
   },
   "devDependencies": {
     "eslint": "^9.39.5",

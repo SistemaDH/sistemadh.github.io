@@ -5396,6 +5396,114 @@ teste('⚠ Montar Guarda: o app PEDE o Dado de Esperança e não mexe na ficha',
 });
 
 
+teste('⚠ Localizar Ecos de Alma: só na Jornada, nos dois descansos, e sem pedir dado', () => {
+  /*
+   * ⚠ O RESOLVEDOR DE MOVIMENTO DE MOLDURA SÓ SABIA FAZER O MONTAR GUARDA.
+   *
+   * Ele montava sempre a pergunta do Dado de Esperança e o efeito da guarda —
+   * então um movimento de moldura SEM dado nascia pedindo um número que a regra
+   * dele não tem. Localizar Ecos de Alma (Hope & Fear p.176) não rola nada: o
+   * personagem comunga com o Cálice e o Mestre diz a DIREÇÃO do próximo Eco.
+   * O preço, que é real, é gastar uma das duas vagas do descanso.
+   */
+  comMoldura('');
+  const f = fichaDeHalcyon(0);
+  const sem = contexto.movimentosDoDescanso_('curto', f).map((m) => m.id);
+  verdade(!sem.some((id) => /localizar-ecos/.test(id)), JSON.stringify(sem));
+
+  comMoldura('jornada-ate-o-horizonte');
+  const curto = contexto.movimentosDoDescanso_('curto', f);
+  const longo = contexto.movimentosDoDescanso_('longo', f);
+  const noCurto = curto.filter((m) => /localizar-ecos/.test(m.id))[0];
+  const noLongo = longo.filter((m) => /localizar-ecos/.test(m.id))[0];
+  verdade(noCurto, 'a moldura concede o movimento no curto: ' + JSON.stringify(curto.map((m) => m.id)));
+  verdade(noLongo, 'e no longo — é a nossa leitura declarada, porque no ermo só cabe curto');
+  igual(noCurto.perguntas, [], 'ele NÃO pode pedir número nenhum');
+  verdade(!/Dado de Esperança/.test(noCurto.formula || ''),
+    'e não pode anunciar um dado que a regra dele não tem: ' + noCurto.formula);
+
+  /* e o Montar Guarda, que tem dado, continua pedindo o dado */
+  comMoldura('era-da-umbra');
+  const guarda = contexto.movimentosDoDescanso_('curto', f)
+    .filter((m) => /montar-guarda/.test(m.id))[0];
+  verdade(guarda && guarda.perguntas && guarda.perguntas.length === 1,
+    'a generalização não podia tirar a pergunta do Montar Guarda');
+  comMoldura('');
+});
+
+teste('⚠ Localizar Ecos de Alma gasta a vaga e NÃO mexe na ficha', () => {
+  comMoldura('jornada-ate-o-horizonte');
+  const f = fichaDeHalcyon(2);
+  const pvAntes = Number(f.recursos.pontosDeVidaMarcados) || 0;
+  const estresseAntes = Number(f.recursos.estresseMarcado) || 0;
+
+  const previa = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'moldura:localizar-ecos-de-alma' }, { movimento: 'preparar-se' }
+  ]);
+  const feito = previa.movimentos.filter((x) => /localizar-ecos/.test(x.id))[0];
+  verdade(feito, JSON.stringify(previa.movimentos.map((x) => x.id)));
+  verdade(!feito.precisaDeRolagem, 'ele não pede rolagem nenhuma');
+  verdade(/dire[çc]ão/i.test(feito.observacao || ''),
+    'a observação tem de dizer o que a mesa narra: ' + feito.observacao);
+  verdade(/Buscadores-na-Sombra/.test(feito.observacao || ''),
+    'inclusive o preço que o livro põe nele');
+
+  igual(Number(f.recursos.pontosDeVidaMarcados) || 0, pvAntes, 'não cura');
+  igual(Number(f.recursos.estresseMarcado) || 0, estresseAntes, 'não limpa Estresse');
+
+  /* ⚠ e a vaga foi gasta: dois movimentos é o limite, e ele é um dos dois */
+  const tresMovimentos = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'moldura:localizar-ecos-de-alma' },
+    { movimento: 'preparar-se' },
+    { movimento: 'tratar-feridas' }
+  ]);
+  verdade((tresMovimentos.erros || []).length,
+    'o movimento da moldura tem de contar para o limite de dois por descanso');
+  comMoldura('');
+});
+
+teste('⚠ o descanso longo da Jornada AVISA, e o aviso sai quando o Mestre marca o santuário', () => {
+  /*
+   * ⚠ AVISA, NÃO RECUSA — e isto é decisão, não preguiça. O livro é duro ("o
+   * grupo só pode fazer descanso longo num santuário", p.176), mas o app só sabe
+   * onde a mesa está se o Mestre tiver marcado. Recusar por marca esquecida
+   * travaria a mesa no meio da sessão. É a mesma forma do limite de três
+   * descansos curtos, que avisa desde a Parte 9.
+   */
+  comMoldura('jornada-ate-o-horizonte');
+  const f = fichaDeHalcyon(2);
+
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  api('anotarCampanha', { token: tk, chave: 'lugar', valor: '' });
+
+  const noErmo = contexto.previaDoDescanso_(f, 'longo', [
+    { movimento: 'tratar-todas-as-feridas' }, { movimento: 'zerar-estresse' }
+  ]);
+  verdade((noErmo.avisos || []).some((a) => /santu[áa]rio/i.test(a)),
+    'sem marca, o descanso longo tem de avisar: ' + JSON.stringify(noErmo.avisos));
+  verdade(!(noErmo.erros || []).length, 'mas NÃO pode recusar: ' + JSON.stringify(noErmo.erros));
+
+  /* o Mestre marca o santuário, e o aviso sai de cena */
+  const r = api('anotarCampanha', { token: tk, chave: 'lugar', valor: 'santuario' });
+  verdade(r.ok, 'não consegui marcar o santuário: ' + JSON.stringify(r.erro));
+  const noSantuario = contexto.previaDoDescanso_(f, 'longo', [
+    { movimento: 'tratar-todas-as-feridas' }, { movimento: 'zerar-estresse' }
+  ]);
+  verdade(!(noSantuario.avisos || []).some((a) => /santu[áa]rio/i.test(a)),
+    'com o santuário marcado, repetir a regra a cada descanso é ruído: ' +
+    JSON.stringify(noSantuario.avisos));
+
+  /* ⚠ e o aviso é só do LONGO: o curto é o que o ermo permite */
+  const curtoNoErmo = contexto.previaDoDescanso_(f, 'curto', [
+    { movimento: 'tratar-feridas' }, { movimento: 'preparar-se' }
+  ]);
+  verdade(!(curtoNoErmo.avisos || []).some((a) => /santu[áa]rio/i.test(a)),
+    'o descanso curto não pode receber o aviso do santuário');
+
+  api('anotarCampanha', { token: tk, chave: 'lugar', valor: '' });
+  comMoldura('');
+});
+
 console.log('\nMolduras de campanha — o painel e a lista');
 
 teste('⚠ Molduras: as três que faltavam passaram a existir', () => {
@@ -5404,7 +5512,13 @@ teste('⚠ Molduras: as três que faltavam passaram a existir', () => {
   ['o-surto-selvagem', 'era-da-umbra', 'cinco-estandartes-em-chamas'].forEach((id) => {
     verdade(ids.indexOf(id) >= 0, id + ' precisa estar na lista de molduras: ' + JSON.stringify(ids));
   });
-  igual(ids.length, 8, 'cinco do livro com equipamento + as três novas');
+  /*
+   * ⚠ A CONTA TEM DOIS LIVROS AGORA. Cinco do Capítulo 5 da Jambô com
+   * equipamento, as três que faltavam, e as do Hope & Fear que vão entrando uma
+   * por uma — o Reinado do Weredragão e Castle High. Quando a próxima entrar,
+   * este número sobe de propósito, e é isso que esta linha existe para cobrar.
+   */
+  igual(ids.length, 11, 'cinco do livro com equipamento + as três novas + as QUATRO do Hope & Fear');
 });
 
 teste('⚠ Molduras: a lista é UMA — equipamento e conteúdo casam por id', () => {
@@ -5467,7 +5581,7 @@ teste('⚠ Molduras: o painel do Mestre manda o conteúdo da ESCOLHIDA, e só de
 });
 
 
-teste('⚠ Molduras: as oito têm conteúdo — nenhuma é só um nome no select', () => {
+teste('⚠ Molduras: as onze têm conteúdo — nenhuma é só um nome no select', () => {
   /*
    * ⚠ ESTE É O TESTE QUE MEDE O PEDIDO. "Automatizar as campanhas" começou com
    * cinco molduras que eram só tabelas de equipamento e três que não existiam.
@@ -5479,7 +5593,7 @@ teste('⚠ Molduras: as oito têm conteúdo — nenhuma é só um nome no select
    */
   const MOLDURAS = avaliar('MOLDURAS');
   const CONTEUDO = avaliar('MOLDURAS_CONTEUDO');
-  igual(MOLDURAS.length, 8);
+  igual(MOLDURAS.length, 11, 'entrou ou saiu moldura do catálogo — se entrou, ela tem conteúdo?');
   MOLDURAS.forEach((m) => {
     verdade(m.temConteudo, m.id + ' voltou a ser só um nome no select');
     const c = CONTEUDO[m.id];
@@ -19235,8 +19349,18 @@ teste('a criação folheia o baralho inteiro, e escolhe a carta que está na tel
   const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
   verdade(/const baralho = typeof paraCarta === 'function' \? itens\.map\(paraCarta\) : null;/.test(tela),
     'a grade de opções tem de montar o baralho inteiro');
-  verdade(/aoEscolher: \(_escolhida, indice\) => aoEscolher\(itens\[indice\]\)/.test(tela),
+  /*
+   * ⚠ A CHAMADA DEIXOU DE SER UMA LINHA quando a grade passou a bloquear a
+   * opção que a campanha proíbe: escolher pelo visor tem de passar pela mesma
+   * tranca que o cartão. A asserção olha as duas coisas que importam — o
+   * índice vem do VISOR, e o alvo é consultado antes de ser escolhido.
+   */
+  verdade(/aoEscolher: \(_escolhida, indice\) => \{/.test(tela),
+    'escolher dentro do visor tem de receber o índice folheado');
+  verdade(/const alvo = itens\[indice\];/.test(tela),
     'escolher dentro do visor tem de escolher a opção FOLHEADA, não a de origem');
+  verdade(/if \(typeof impedido === 'function' && impedido\(alvo\)\) return;/.test(tela),
+    'e o visor não pode escolher a opção que a campanha proíbe');
   verdade(/paraCarta: \(a\) => daAncestralidade\(a\)/.test(tela) &&
           /paraCarta: \(c\) => daComunidade\(c\)/.test(tela),
   'ancestralidade e comunidade têm de passar pelo baralho');
@@ -19605,6 +19729,1540 @@ teste('⚠ todo `case` que lê FICHA no 99_Api.gs tem de ser roteado pelo motor'
   igual(foraDoMotor, [], 'o frontend manda para o motor ações que o index.ts recusa');
 });
 
+/* ==========================================================================
+ *  ⚠ 66 ITENS DE QUATRO MOLDURAS QUE NUNCA APARECIAM — e a prévia que mentia
+ *
+ *  A mesa escolheu Placa-mãe, leu na janela de confirmação que "a criação de
+ *  ficha GANHA as tabelas de equipamento desta campanha", abriu a ficha e não
+ *  achou nada. A frase era fixa para toda moldura com itens; a criação, porém,
+ *  só sabia SUBSTITUIR, e só o Festim substituía.
+ *
+ *  A fonte tem cinco formas, e agora cada moldura declara a sua.
+ * ========================================================================== */
+console.log('\nO equipamento das molduras de campanha');
+
+teste('⚠ toda moldura com item declara o que faz com ele — e nenhuma fica muda', () => {
+  const MOLD = avaliar('MOLDURAS');
+  const CAMP = avaliar('EQUIPAMENTO_CAMPANHA');
+  const MODOS = ['substitui', 'acrescenta', 'arma-unica', 'saque', 'nenhum'];
+
+  MOLD.forEach((m) => {
+    const modo = ((m.equipamentoInicial || {}).modo) || '';
+    verdade(MODOS.indexOf(modo) >= 0, `${m.id}: modo inválido "${modo}"`);
+    /*
+     * ⚠ O INVARIANTE QUE PEGA O DEFEITO: item no catálogo com modo "nenhum" é
+     * item que nunca vai aparecer na tela. Foi exatamente isso com 66 itens.
+     */
+    if ((m.itens || []).length) {
+      verdade(modo !== 'nenhum',
+        `${m.id} tem ${m.itens.length} item(ns) e modo "nenhum" — eles nunca apareceriam`);
+    }
+  });
+
+  // E os modos são os que a fonte manda, moldura por moldura.
+  const modoDe = (id) => ((MOLD.find((m) => m.id === id) || {}).equipamentoInicial || {}).modo;
+  igual(modoDe('festim-das-feras'), 'substitui',
+    'livro p.270-279: "em vez de usar as tabelas de equipamento do Capítulo 2"');
+  igual(modoDe('caca-a-monstros'), 'acrescenta',
+    'SRD 2.0: "You can make the following weapons and items available to your players"');
+  igual(modoDe('colosso-das-terras-aridas'), 'acrescenta',
+    'livro p.317: "as armas principais a seguir TAMBÉM estão disponíveis neste cenário"');
+  igual(modoDe('placa-mae'), 'arma-unica',
+    'livro p.301: "não têm acesso à seleção normal de armas... em vez disso, a ikonis"');
+  igual(modoDe('reino-do-weredragao'), 'saque',
+    'as Chaves para a Vitória são itens de enredo, não equipamento inicial');
+  ['o-surto-selvagem', 'era-da-umbra', 'cinco-estandartes-em-chamas']
+    .forEach((id) => igual(modoDe(id), 'nenhum', id + ' não traz tabela própria'));
+
+  // Cada modo declarado cita a fonte: nada aqui entra por palpite.
+  MOLD.filter((m) => (m.itens || []).length).forEach((m) => {
+    verdade(String(m.equipamentoInicial.fonte || '').length > 30,
+      m.id + ': o modo precisa citar a fonte');
+  });
+
+  /*
+   * A ARMA ÚNICA tem de existir e ser de duas mãos — é o que faz a criação
+   * esconder a secundária. Uma ikonis de uma mão deixaria o personagem sem
+   * secundária por engano, não por regra.
+   */
+  const pm = MOLD.find((m) => m.id === 'placa-mae');
+  const ikonis = CAMP.find((c) => c.id === pm.equipamentoInicial.armaFixa);
+  verdade(ikonis, 'a armaFixa da Placa-mãe tem de estar no catálogo');
+  igual(pm.equipamentoInicial.semSecundaria, true);
+  verdade((pm.equipamentoInicial.itensNoInventario || []).length >= 1,
+    'a corda de rede é item de criação de TODO personagem da Placa-mãe');
+});
+
+teste('⚠ a prévia da escolha diz a verdade — uma frase por modo', () => {
+  const doMestre = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const limpar = () => {
+    const r = api('reiniciarMoldura', { token: doMestre, confirmado: true });
+    return r;
+  };
+  limpar();
+
+  const previa = (id) => {
+    const r = api('definirMoldura', { token: doMestre, moldura: id });
+    verdade(!r.ok, 'sem confirmar tem de recusar e devolver a prévia');
+    return (r.erro.extra.mudancas || []).join(' | ');
+  };
+
+  /*
+   * ⚠ ESTE É O DEFEITO: antes, TODA moldura com item dizia "ganha as tabelas
+   * desta campanha, além das do Capítulo 2" — inclusive a Placa-mãe, que não
+   * tem tabela nenhuma, e o Weredragão, cujos itens são de enredo.
+   */
+  verdade(/S[ÓO] as tabelas/.test(previa('festim-das-feras')),
+    'o Festim substitui, e a prévia tem de dizer isso');
+  verdade(/ao lado das do Cap/.test(previa('caca-a-monstros')),
+    'o arsenal de caça acrescenta');
+  verdade(/ao lado das do Cap/.test(previa('colosso-das-terras-aridas')),
+    'as armas das Terras Áridas acrescentam');
+  const pm = previa('placa-mae');
+  verdade(/N[ÃA]O usa as tabelas de armas/.test(pm), 'Placa-mãe: ' + pm);
+  verdade(/duas m[ãa]os e sem secund/.test(pm), 'Placa-mãe tem de avisar da secundária: ' + pm);
+  verdade(/de enredo/.test(previa('reino-do-weredragao')),
+    'as Chaves para a Vitória não são equipamento de criação');
+  // E a que não tem item não promete nada sobre equipamento.
+  verdade(!/tabelas de equipamento|op[çc][õo]es desta campanha/.test(previa('era-da-umbra')),
+    'a Era da Umbra não tem tabela — não pode prometer equipamento');
+  limpar();
+});
+
+teste('⚠ a criação obedece o modo, e a arma única não é escolha', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
+  verdade(/const modoDaMoldura = \(\(catalogo\.moldura \|\| \{\}\)\.equipamentoInicial \|\| \{\}\)\.modo/.test(tela),
+    'a criação tem de ler o MODO, não o booleano antigo');
+  verdade(/acrescenta: juntar/.test(tela), 'falta o modo acrescenta');
+  verdade(/'arma-unica': \(cat\) => \(cat === 'armadura' \? doLivro\.armadura : \[\]\)/.test(tela),
+    'na arma única não há tabela de arma nenhuma para oferecer');
+  verdade(/saque: \(cat\) => doLivro\[cat\]/.test(tela),
+    'o modo saque NÃO entra na criação — usa as tabelas normais');
+  /*
+   * ⚠ E O ITEM DE INVENTÁRIO DA MOLDURA TEM DE SER GRAVADO, não só mostrado.
+   * Listar sem gravar faria a ficha nascer sem a corda, e a etapa 5 viraria
+   * uma promessa que a Mochila não cumpre.
+   */
+  verdade(/itensNoInventario\) \|\| \[\]\)\s*\n\s*\.map\(\(id\) => \(catalogo\.equipamentoDaMoldura \|\| \[\]\)/.test(tela),
+    'o item de inventário da moldura tem de entrar no inventário gravado');
+  verdade(/Item inicial de \$\{catalogo\.moldura\.nome\}/.test(tela),
+    'o item gravado tem de dizer de onde veio');
+});
+
+teste('⚠ escolher a campanha relê a sessão na HORA (o nome da moeda)', () => {
+  const estado = fs.readFileSync(new URL('../js/estado.js', import.meta.url), 'utf8');
+  const painel = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  /*
+   * O nome da moeda e o rótulo do dano chegam pelo `sessao`, que o app só
+   * repergunta a cada 20s ou ao voltar para a aba. Quem acabou de escolher a
+   * campanha olha a tela na hora — e em 09/10/2026 concluiu que não tinha
+   * funcionado, reiniciou, e tentou outra.
+   */
+  verdade(/async atualizarSessao\(forcar\)/.test(estado),
+    'atualizarSessao precisa aceitar forçar');
+  verdade(/if \(!forcar && Date\.now\(\) - ultimaConferida < 20000\) return null;/.test(estado),
+    'o travão de 20s continua valendo para quem NÃO forçou');
+  igual((painel.match(/acoes\.atualizarSessao\(true\)/g) || []).length, 2,
+    'escolher E reiniciar a campanha têm de reler a sessão na hora');
+});
+
+teste('⚠ a Mochila diz que a moeda da campanha não converteu nada', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/ficha.js', import.meta.url), 'utf8');
+  /*
+   * A regra está certa e é deliberada (ver `moedaDaMolduraDaMesa_`): troca o
+   * nome e a granularidade, não o valor. O que faltava era a tela dizer isso —
+   * sem a frase, o mesmo número de sempre parece campanha que não funcionou.
+   */
+  verdade(/Nesta campanha o dinheiro se chama \$\{moedaDaMesa\.nomePlural\}/.test(tela),
+    'a Mochila tem de nomear a moeda da campanha');
+  verdade(/nada foi convertido/.test(tela),
+    'e tem de dizer que ninguém converteu nada');
+});
+
+/* ==========================================================================
+ *  ⚠ AS MOLDURAS: O QUE MUDA AGORA E O QUE SÓ MUDA EM FICHA NOVA
+ *
+ *  Relato da mesa: "escolhi o cenário e não mudou nada, tipo ouro ou armas".
+ *  Medido nas oito: QUATRO delas não mudam nada numa ficha que já existe —
+ *  a única coisa que fazem é trocar as tabelas da CRIAÇÃO. O app estava certo
+ *  e calado, que é a pior combinação.
+ * ========================================================================== */
+console.log('\nMolduras: o que muda agora, o que muda na criação');
+
+teste('SETE molduras não mudam nada em ficha que já existe — e isso é medido', () => {
+  /*
+   * ⚠ ERAM QUATRO NA MEDIÇÃO ANTERIOR, E A QUARTA ESTAVA ERRADA.
+   *
+   * O Cinco Estandartes em Chamas aparecia como "muda em ficha viva: 1
+   * mecânica" porque a ficha de campanha dele — a tabela de relações políticas
+   * das cinco nações — é uma `automacao`. Mas ela não toca ficha nenhuma: é
+   * CONSULTA do Mestre. A frase do painel vinha dessa conta, então o painel
+   * prometia, para quem escolhesse aquela campanha, uma mudança que não existe.
+   *
+   * Só apareceu quando a Leitura do Céu Noturno do Weredragão entrou pelo mesmo
+   * campo e tirou o Weredragão da lista: a conferência quebrou, e foi ela que
+   * mostrou o erro antigo. Agora `automacao.escopo` separa os dois mundos, e o
+   * `mecanicasDaMolduraDaMesa_` — único leitor de "o que o motor aplica" — só
+   * devolve as de ficha.
+   */
+  const MOLDURAS = avaliar('MOLDURAS');
+  const soNaCriacao = [];
+  const mudamAgora = [];
+  MOLDURAS.forEach((m) => {
+    const mec = contexto.mecanicasDaMolduraDaMesa_(m.id) || [];
+    (mec.length ? mudamAgora : soNaCriacao).push(m.id);
+  });
+  igual(soNaCriacao.sort(), [
+    'caca-a-monstros', 'castle-high', 'cinco-estandartes-em-chamas',
+    'colosso-das-terras-aridas', 'coracao-sombrio-de-andaluria', 'festim-das-feras',
+    'reino-do-weredragao'
+  ], 'mudou quais molduras não têm mecânica de FICHA — a frase do painel depende disto');
+  /*
+   * ⚠ A JORNADA ENTROU AQUI quando os dois leitores dela nasceram: o movimento
+   * de descanso Localizar Ecos de Alma aparece na tela de QUEM JÁ JOGA, e o
+   * aviso do descanso longo também. É a primeira moldura do Hope & Fear a mudar
+   * ficha viva.
+   */
+  igual(mudamAgora.sort(),
+    ['era-da-umbra', 'jornada-ate-o-horizonte', 'o-surto-selvagem', 'placa-mae']);
+
+  /*
+   * E cada uma das sete faz ALGUMA coisa — senão escolhê-la não faria
+   * diferença nenhuma, e aí o defeito seria outro. São dois jeitos de fazer
+   * diferença sem mexer em ficha viva: trocar o equipamento de quem nasce, ou
+   * trazer uma tabela que o Mestre consulta.
+   */
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  soNaCriacao.forEach((id) => {
+    const m = MOLDURAS.find((x) => x.id === id);
+    const modo = ((m.equipamentoInicial || {}).modo) || 'nenhum';
+    const c = CONTEUDO.find((x) => x.id === id) || {};
+    const deMesa = (c.mecanicas || [])
+      .filter((x) => x.automacao && x.automacao.escopo === 'mesa').length;
+    /*
+     * ⚠ PROIBIR ORIGEM É A TERCEIRA FORMA DE FAZER DIFERENÇA, e ela faltava
+     * nesta conta. Jornada até o Horizonte não tem tabela de equipamento nem
+     * ferramenta de mesa, mas PROÍBE a comunidade wanderborne e a subclasse
+     * Sindicato: escolhê-la muda o que a criação de ficha oferece, e o motor
+     * recusa a ficha nova. Sem esta linha, a moldura cairia aqui como "para que
+     * serve?" — e a resposta estaria na tela de criação.
+     */
+    const proibe = Boolean(m.origensProibidas);
+    verdade(modo !== 'nenhum' || deMesa > 0 || proibe,
+      id + ': não muda em ficha viva, não muda na criação, não proíbe origem e não traz ' +
+      'ferramenta de mesa — para que serve?');
+  });
+});
+
+teste('⚠ toda automação declara se é de FICHA, de MESA ou de CRIAÇÃO', () => {
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const semEscopo = [];
+  const deMesa = [];
+  const deCriacao = [];
+  /*
+   * ⚠ O TERCEIRO ESCOPO NASCEU DE UMA FRASE QUE IA MENTIR. O artefato de Castle
+   * High muda o que a CRIAÇÃO pergunta e não toca em ficha que já existe:
+   * declarado como 'ficha', o painel prometeria mudança para quem já está em
+   * jogo — a mesma mentira do Cinco Estandartes.
+   */
+  CONTEUDO.forEach((m) => (m.mecanicas || []).forEach((x) => {
+    if (!x.automacao) return;
+    if (['ficha', 'mesa', 'criacao'].indexOf(x.automacao.escopo) === -1) semEscopo.push(m.id + '/' + x.id);
+    if (x.automacao.escopo === 'mesa') deMesa.push(m.id + '/' + x.id);
+    if (x.automacao.escopo === 'criacao') deCriacao.push(m.id + '/' + x.id);
+  }));
+  igual(deCriacao.sort(), ['castle-high/artefato-de-fragmento-celeste'],
+    'automação de CRIAÇÃO nova tem de ser decidida de propósito, não entrar de carona');
+  igual(semEscopo, [], 'automação sem escopo declarado volta a confundir consulta com mudança de ficha');
+  /*
+   * As de mesa são afirmação, não silêncio: se uma nova aparecer, é para alguém
+   * decidir de propósito de que lado ela está. Foi esta lista que me obrigou a
+   * declarar as duas de Castle High uma por uma — e foi bom, porque uma delas é
+   * ESCOLHA guardada (a torre do grupo) e a outra é só tabela para LER (as vinte
+   * perguntas sobre Riley), e as duas estariam entrando caladas.
+   */
+  igual(deMesa.sort(), [
+    'caca-a-monstros/a-cacada',
+    'caca-a-monstros/pistas-liminares',
+    'caca-a-monstros/transformacoes-de-maldicao',
+    'castle-high/as-quatro-torres',
+    'castle-high/riley-averill',
+    'cinco-estandartes-em-chamas/relacoes-politicas',
+    'jornada-ate-o-horizonte/ecos-de-alma-e-avanco',
+    'jornada-ate-o-horizonte/onde-a-mesa-esta',
+    'jornada-ate-o-horizonte/trilha-da-ruina',
+    'reino-do-weredragao/revelacoes-da-astromante'
+  ], 'ferramenta de mesa nova tem de ser decidida de propósito, não entrar de carona');
+  /*
+   * ⚠ E O MOTOR NÃO ENTREGA AS DE MESA. Esta é a linha que impediu o painel de
+   * voltar a prometer mudança de ficha onde não há.
+   */
+  const entregues = contexto.mecanicasDaMolduraDaMesa_('reino-do-weredragao') || [];
+  igual(entregues.length, 0,
+    'o motor entregou uma mecânica de consulta como se fosse regra de ficha');
+});
+
+teste('⚠ a Leitura do Céu Noturno está inteira, e os itens dela existem', () => {
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const w = CONTEUDO.find((m) => m.id === 'reino-do-weredragao');
+  const mec = (w.mecanicas || []).find((x) => x.id === 'revelacoes-da-astromante');
+  const t = (mec.automacao || {}).leituraDoCeuNoturno;
+  verdade(t, 'a mecânica central da moldura precisa da tabela');
+  igual(t.dados, '5d6');
+  igual(t.colunas.length, 5, 'são cinco revelações (Hope & Fear p.140)');
+  igual(t.linhas.length, 6, 'a tabela é de d6');
+  igual(t.linhas.map((l) => l.d6), [1, 2, 3, 4, 5, 6], 'faltou ou repetiu uma face');
+
+  /* cada linha responde TODAS as colunas — meia tabela é pior que nenhuma */
+  const ids = t.colunas.map((c) => c.id);
+  t.linhas.forEach((l) => {
+    ids.forEach((id) => {
+      verdade(l[id] && String(l[id].texto || '').trim(),
+        `a face ${l.d6} não diz o que sai na coluna "${id}"`);
+    });
+  });
+
+  /*
+   * ⚠ O ITEM É CITADO POR ID, E O ID TEM DE EXISTIR. Nove das Chaves são
+   * equipamento do Capítulo 2 que já está no catálogo com nome em português;
+   * escrever o nome traduzido à mão daria uma tabela que discorda do catálogo
+   * no dia em que um nome mudar.
+   */
+  const porId = {};
+  const andar = (o) => {
+    if (Array.isArray(o)) return o.forEach(andar);
+    if (o && typeof o === 'object') {
+      if (typeof o.id === 'string') porId[o.id] = true;
+      Object.keys(o).forEach((k) => andar(o[k]));
+    }
+  };
+  andar(JSON.parse(fs.readFileSync(new URL('../data/equipamentos.json', import.meta.url), 'utf8')));
+  const orfaos = [];
+  t.linhas.forEach((l) => ids.forEach((id) => {
+    const v = l[id];
+    if (v && v.item && !porId[v.item]) orfaos.push(`${l.d6}/${id}: ${v.item}`);
+  }));
+  igual(orfaos, [], 'a tabela cita item que não existe no catálogo');
+
+  /* e as duas Chaves que quebram maldição são as duas da moldura */
+  const citados = [];
+  t.linhas.forEach((l) => ids.forEach((id) => {
+    const v = l[id];
+    if (v && v.item && /campanha-reino-do-weredragao/.test(v.item)) citados.push(v.item);
+  }));
+  igual(citados.sort(), [
+    'campanha-reino-do-weredragao-lady-lavenders-longsword',
+    'campanha-reino-do-weredragao-zoetrope-of-the-bright-bacchanal'
+  ], 'as duas Chaves que quebram maldição têm de aparecer na tabela');
+});
+
+teste('⚠ o painel pergunta as faces e NÃO rola a Leitura do Céu Noturno', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  verdade(/function leituraDoCeuNoturno\(m\)/.test(tela), 'a tabela precisa de leitor na tela');
+  verdade(/leituraDoCeuNoturno\(m\)/.test(tela), 'e a linha tem de estar no cartão da mecânica');
+  /*
+   * ⚠ "SÓ FICHA, SEM DADOS" — e esta é a única mecânica do app em que o livro
+   * faz os JOGADORES rolarem juntos. Um `Math.random` ou um `rolar(` aqui
+   * romperia a decisão da mesa justamente onde ela é mais tentadora.
+   */
+  const semComentarios = tela
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+  const trecho = semComentarios.slice(
+    semComentarios.indexOf('function leituraDoCeuNoturno'),
+    semComentarios.indexOf('function fichaDeCampanha'));
+  verdade(trecho.length > 200, 'não achei o corpo da função para medir');
+  verdade(!/Math\.random|dados\.rolar|rolarD/.test(trecho),
+    'o painel não pode rolar a leitura: são 5d6 na mesa');
+  verdade(/select/.test(trecho), 'a tela tem de PERGUNTAR a face que saiu');
+});
+
+teste('o painel diz quando a campanha não muda ficha existente', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  verdade(/function quandoAMolduraMuda\(c\)/.test(tela),
+    'o painel precisa dizer o que a campanha muda, e quando');
+  verdade(/quandoAMolduraMuda\(c\),/.test(tela), 'a linha tem de estar no bloco do cenário');
+  /*
+   * ⚠ A CONTA SAI DO QUE O SERVIDOR MANDA, não de uma lista escrita na tela.
+   * Uma lista à mão sobreviveria à moldura que um dia ganhar mecânica — e o
+   * painel passaria a mentir justamente sobre a novidade.
+   */
+  verdade(/const comAutomacao = \(c\.mecanicas \|\| \[\]\)\.concat\(doApendice\)/.test(tela),
+    'o "muda agora" tem de ser contado das mecânicas que o servidor mandou');
+  /*
+   * ⚠ E AS HERDADAS ENTRAM NA CONTA, porque elas APARECEM ABAIXO. O Coração
+   * Sombrio de Andaluria não tem automação própria nenhuma: contando só as dela,
+   * a frase diria zero ferramenta de mesa e o painel desenharia quatro.
+   */
+  verdade(/painel\.apendicesDaMoldura/.test(tela),
+    'a conta tem de incluir as ferramentas herdadas do apêndice');
+  /*
+   * ⚠ E A CONTA SEPARA FICHA DE CONSULTA. Sem isto, a tabela de relações
+   * políticas e a Leitura do Céu Noturno voltariam a ser anunciadas como
+   * mudança nas fichas — exatamente a promessa que a mesa foi conferir e não
+   * encontrou.
+   */
+  verdade(/m\.automacao\.escopo === 'ficha'/.test(tela),
+    'a tela tem de contar só as automações de FICHA no "muda agora"');
+  /*
+   * ⚠ E A DE CRIAÇÃO ENTRA NA FRASE DAS FICHAS NOVAS. Contada junto com as de
+   * ficha, o painel prometeria a quem já joga uma pergunta que só a criação faz.
+   */
+  verdade(/escopo === 'criacao'/.test(tela),
+    'a tela tem de separar a automação de CRIAÇÃO das outras duas');
+  verdade(/pergunta[\s\S]{0,80}criação de fichas NOVAS/.test(tela),
+    'e tem de dizer que a pergunta a mais é na criação de fichas NOVAS');
+  verdade(/ferramenta[\s\S]{0,60}de mesa do Mestre/.test(tela),
+    'e tem de dizer, em frase própria, que o resto é ferramenta de mesa');
+  /*
+   * ⚠ E A PROMESSA POR MECÂNICA LÊ O MESMO `escopo`. Ela dizia "o app aplica"
+   * para TODA automação, inclusive as de mesa: o aviso do alto estava certo e o
+   * cartão logo abaixo dele desmentia.
+   */
+  verdade(/function promessaDaMecanica/.test(tela),
+    'a promessa de cada mecânica tem de ser uma função só, e não uma frase solta');
+  verdade(/escopo === 'mesa'[\s\S]{0,200}ferramenta de mesa/.test(tela),
+    'e ela tem de dizer FERRAMENTA DE MESA quando o escopo é de mesa');
+  verdade(!/festim-das-feras|caca-a-monstros|reino-do-weredragao/.test(tela),
+    'o painel não pode trazer nome de moldura escrito à mão');
+});
+
+teste('⚠ a criação RÁPIDA não pode pular a regra de equipamento da campanha', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
+  /*
+   * O DEFEITO: o caminho rápido saltava da herança direto para as cartas,
+   * pulando a etapa 5 — a ÚNICA que lê a moldura. Em Festim das Feras a ficha
+   * nascia com a arma do Guia de Caráter, do Capítulo 2, que é exatamente o
+   * que aquela campanha proíbe.
+   */
+  verdade(/function rapidoPrecisaDoEquipamento\(\)/.test(tela),
+    'o rápido precisa saber quando NÃO pode pular o equipamento');
+  verdade(/return modo === 'substitui';/.test(tela),
+    'só `substitui` obriga a parar: é o modo em que a sugestão do Guia não existe na campanha');
+  verdade(/if \(passoAtual === IDX_HERANCA\) return rapidoPrecisaDoEquipamento\(\) \? IDX_EQUIPAMENTO : 6;/.test(tela),
+    'o salto da herança tem de consultar a moldura');
+  verdade(/if \(passoAtual === 6\) return rapidoPrecisaDoEquipamento\(\) \? IDX_EQUIPAMENTO : IDX_HERANCA;/.test(tela),
+    'e o VOLTAR tem de desfazer o mesmo caminho, senão a etapa vira um beco');
+
+  /*
+   * ⚠ E A ARMA ÚNICA PRECISA SER APLICADA FORA DO DESENHO DA ETAPA.
+   *
+   * Na Placa-mãe não há o que escolher, então o rápido continua pulando a
+   * etapa 5 — e por isso a regra não pode morar só no `desenhar` dela. Eu
+   * quase deixei assim: o comentário que escrevi dizia que a etapa "já grava
+   * sozinha", e ela só grava quando é desenhada.
+   */
+  verdade(/function aplicarArmaUnicaDaMoldura\(\)/.test(tela),
+    'a arma imposta pela campanha precisa de função própria');
+  verdade(/aplicarArmaUnicaDaMoldura\(\);\n    if \(rascunho\.modo === 'rapida'\)/.test(tela),
+    'o guia da classe tem de ser corrigido pela moldura logo depois de aplicado');
+  const noPasso = (tela.match(/const armaUnica = aplicarArmaUnicaDaMoldura\(\);/g) || []).length;
+  igual(noPasso, 1, 'a etapa 5 tem de usar a MESMA função, não uma segunda cópia da regra');
+});
+
+/* ======================================================================== *
+ *  A ANCESTRALIDADE QUE A CAMPANHA PROÍBE
+ * ======================================================================== */
+
+/* ======================================================================== *
+ *  A ANOTAÇÃO DE CAMPANHA — o caderno do Mestre
+ * ======================================================================== */
+
+console.log('\nMolduras: a anotação de campanha');
+
+/*
+ * ⚠ SEM AUXILIAR NOVO: `comMoldura` já existe nesta bateria, lá na seção do
+ * Surto Selvagem, e faz exatamente isto. Uma segunda cópia seria a mesma
+ * pergunta ("em que campanha a mesa está?") com dois donos no mesmo arquivo.
+ */
+
+teste('⚠ a anotação guarda, e sobrevive ao reler a mesa', () => {
+  /*
+   * O DEFEITO QUE ELA CONSERTA: a Leitura do Céu Noturno é feita UMA VEZ, na
+   * sessão zero, e vivia num Map do navegador. Recarregar apagava o que a mesa
+   * tinha decidido sobre a campanha inteira.
+   */
+  comMoldura('reino-do-weredragao');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const r = api('anotarCampanha', { token: tk, chave: 'ceu:lugarDoSegredo', valor: 3 });
+  verdade(r.ok, 'não gravou: ' + JSON.stringify(r.erro));
+  igual(r.dados.anotacoes['ceu:lugarDoSegredo'], 3);
+  igual(contexto.mesaLer_().anotacoesDeCampanha['reino-do-weredragao']['ceu:lugarDoSegredo'], 3,
+    'a anotação tem de estar na mesa, não só na resposta');
+  igual(api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha['ceu:lugarDoSegredo'], 3,
+    'o painel precisa receber a anotação da campanha escolhida');
+});
+
+teste('⚠ as cinco colunas convivem: anotar uma não apaga as irmãs', () => {
+  /*
+   * ⚠ ESTA CONFERÊNCIA NASCEU DE UMA MUTAÇÃO QUE PASSOU VERDE. Eu quebrei o
+   * motor de propósito (cada gravação começando de um bloco vazio) e a bateria
+   * inteira continuou verde — porque todos os casos escreviam UMA chave e
+   * conferiam ELA. A Leitura do Céu Noturno tem cinco colunas no mesmo caderno,
+   * e a batida da Caçada e as pistas liminares vão para o mesmo lugar: perder
+   * as irmãs apagaria quatro revelações a cada escolha.
+   */
+  comMoldura('reino-do-weredragao');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const colunas = ['lugarDoSegredo', 'aliadoPoderoso', 'chave1', 'chave2', 'lugarDoDesfecho'];
+  colunas.forEach((c, i) => api('anotarCampanha', { token: tk, chave: 'ceu:' + c, valor: i + 1 }));
+
+  const guardadas = api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha;
+  colunas.forEach((c, i) => {
+    igual(guardadas['ceu:' + c], i + 1, `a coluna ${c} não sobreviveu às escolhas seguintes`);
+  });
+
+  /* e apagar UMA não leva as outras */
+  api('anotarCampanha', { token: tk, chave: 'ceu:chave1', valor: '' });
+  const depois = api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha;
+  igual(depois['ceu:chave1'], undefined);
+  igual(depois['ceu:lugarDoSegredo'], 1, 'apagar uma coluna derrubou outra');
+  igual(Object.keys(depois).length, 4);
+});
+
+teste('⚠ TROCAR DE CAMPANHA NÃO APAGA a anotação da outra', () => {
+  /*
+   * ⚠ ERA ESTA PERGUNTA QUE ME FAZIA NÃO GUARDAR NADA. Guardado num campo só,
+   * trocar de campanha ou destrancar a escolha jogaria fora a leitura inteira
+   * da sessão zero — e aí guardar seria pior que não guardar. Com um mapa por
+   * ID DE MOLDURA a resposta é: nada se perde.
+   */
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  comMoldura('reino-do-weredragao');
+  api('anotarCampanha', { token: tk, chave: 'ceu:aliadoPoderoso', valor: 6 });
+
+  comMoldura('era-da-umbra');
+  igual(api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha, {},
+    'a campanha nova não pode herdar o caderno da antiga');
+  api('anotarCampanha', { token: tk, chave: 'nota', valor: 'a Chama de Foz de Âmbar está apagada' });
+
+  comMoldura('reino-do-weredragao');
+  igual(api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha['ceu:aliadoPoderoso'], 6,
+    'voltar para a campanha antiga tem de devolver o caderno dela');
+  const todas = contexto.mesaLer_().anotacoesDeCampanha;
+  igual(Object.keys(todas).sort(), ['era-da-umbra', 'reino-do-weredragao'],
+    'as duas anotações continuam guardadas, cada uma na sua moldura');
+});
+
+teste('⚠ valor vazio APAGA — é como se desfaz uma escolha da leitura', () => {
+  comMoldura('reino-do-weredragao');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  api('anotarCampanha', { token: tk, chave: 'ceu:chave1', valor: 2 });
+  const r = api('anotarCampanha', { token: tk, chave: 'ceu:chave1', valor: '' });
+  verdade(r.ok, 'apagar precisa ser a mesma ação, não uma segunda');
+  verdade(r.dados.apagada, 'a resposta tem de dizer que apagou');
+  igual(r.dados.anotacoes['ceu:chave1'], undefined);
+});
+
+teste('⚠ sem campanha escolhida, não há o que anotar', () => {
+  comMoldura('');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const r = api('anotarCampanha', { token: tk, chave: 'ceu:chave1', valor: 1 });
+  verdade(!r.ok, 'anotação órfã aparece depois sem ninguém lembrar de onde veio');
+  verdade(/não está em nenhuma campanha/.test((r.erro || {}).mensagem || ''));
+});
+
+teste('⚠ é do MESTRE: jogador comum não escreve no caderno da campanha', () => {
+  comMoldura('reino-do-weredragao');
+  const reg = api('registrar', { nome: 'Curiosa', codigo: 'senha-curiosa' });
+  const tkJogador = (reg.ok ? reg : api('entrar', { nome: 'Curiosa', codigo: 'senha-curiosa' })).dados.token;
+  const r = api('anotarCampanha', { token: tkJogador, chave: 'ceu:chave2', valor: 1 });
+  verdade(!r.ok, 'a campanha é do Mestre; dois donos no mesmo caderno é conflito calado');
+});
+
+teste('⚠ o motor valida a FORMA e não interpreta o conteúdo', () => {
+  comMoldura('reino-do-weredragao');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+
+  /* chave com espaço, chave gigante e valor que não é texto nem número */
+  verdade(!api('anotarCampanha', { token: tk, chave: 'ceu chave', valor: 1 }).ok,
+    'chave com espaço entraria em qualquer lugar que monta id com ela');
+  verdade(!api('anotarCampanha', { token: tk, chave: 'x'.repeat(41), valor: 1 }).ok);
+  verdade(!api('anotarCampanha', { token: tk, chave: 'ceu:x', valor: { a: 1 } }).ok,
+    'caderno guarda texto e número — objeto seria banco de dados pela porta de trás');
+
+  /* texto longo é CORTADO, não recusado: anotação de mesa não deve dar erro */
+  const longo = 'A'.repeat(900);
+  const r = api('anotarCampanha', { token: tk, chave: 'nota', valor: longo });
+  verdade(r.ok, 'texto longo não pode barrar a anotação');
+  verdade(r.dados.anotacoes.nota.length <= 400,
+    'o teto tem de ser aplicado no motor: ' + r.dados.anotacoes.nota.length);
+});
+
+teste('⚠ a ação está roteada no motor — senão a tela grava num 404 mudo', () => {
+  const motor = fs.readFileSync(
+    new URL('../supabase/functions/engine-api/index.ts', import.meta.url), 'utf8');
+  const bloco = motor.slice(motor.indexOf('const ACOES'), motor.indexOf('])', motor.indexOf('const ACOES')));
+  verdade(/"anotarCampanha"/.test(bloco),
+    'sem a ação em ACOES, a tela guarda a leitura e recebe 404 — foi o que quase ' +
+    'aconteceu com o reiniciarMoldura');
+  const tela = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  verdade(/acoes\.anotarCampanha\(/.test(tela), 'a tela tem de gravar no servidor');
+  verdade(!/CEU_NOTURNO/.test(tela),
+    'o Map da aba tem de ter saído: dois lugares guardando a mesma leitura é o defeito de sempre');
+  verdade(/painel\.anotacoesDaCampanha/.test(tela),
+    'e a tela tem de LER do que o servidor mandou, não de uma cópia local');
+});
+
+console.log('\nMolduras: a origem que a campanha proíbe');
+
+/*
+ * ⚠ SESSÃO PRÓPRIA, E ISSO NÃO É ZELO EXCESSIVO. A primeira versão destes
+ * testes reusou um token declarado 18 mil linhas acima, e ele já tinha sido
+ * invalidado por um teste de troca de código no meio do caminho: a recusa que
+ * eu li como "a moldura proibiu" era "Sessão inválida". A asserção passava
+ * verde pelo motivo errado — e foi só porque eu IMPRIMI a recusa na mensagem
+ * de falha que o engano apareceu.
+ */
+function jogadorNovo(nome) {
+  return api('registrar', { nome: nome, codigo: 'senha-de-' + nome.toLowerCase() }).dados.token;
+}
+
+teste('⚠ Placa-mãe PROÍBE clanks, e o MOTOR recusa a ficha nova', () => {
+  /*
+   * O DEFEITO: o livro diz na p.294 que "clanks não estão disponíveis neste
+   * cenário — todos os seres robóticos autônomos são remanescentes e nenhum
+   * tem senciência", e o app oferecia clank na grade de criação do mesmo jeito.
+   * É o único cenário do Capítulo 5 que proíbe uma ancestralidade.
+   */
+  const m = contexto.mesaLer_();
+  m.moldura = 'placa-mae';
+  m.molduraTravada = true;
+  contexto.mesaGravar_(m);
+
+  const fichaClank = contexto.fichaRapida_({
+    nome: 'Lata', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Clank', comunidade: 'Highborne',
+    cartas: ['grace-encantar', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+
+  const token = jogadorNovo('ProibicaoUm');
+  const r = api('criarPersonagem', { token: token, ficha: fichaClank });
+  verdade(!r.ok, 'o motor aceitou um clank numa mesa de Placa-mãe');
+  const recusa = JSON.stringify(r.erro || {});
+  verdade(/Clank/.test(recusa), 'a recusa precisa dizer qual ancestralidade: ' + recusa);
+  verdade(/Placa-m/.test(recusa), 'e qual campanha proíbe: ' + recusa);
+  verdade(/p\.294/.test(recusa), 'e a página do livro, para a mesa poder conferir: ' + recusa);
+
+  /* a mesma ficha com outra ancestralidade entra sem reclamar */
+  const ok = contexto.fichaRapida_({
+    nome: 'Viço', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Elfo', comunidade: 'Highborne',
+    cartas: ['grace-encantar', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const entrou = api('criarPersonagem', { token: token, ficha: ok });
+  verdade(entrou.ok, 'a proibição não pode pegar quem não é clank: ' + JSON.stringify(entrou.erro || {}));
+
+  /*
+   * ⚠ E A HERANÇA MISTA É A SEGUNDA PORTA. Ela guarda IDS, não nomes — proibir
+   * só pelo nome deixaria entrar "goblin-clank" com a característica do clank.
+   */
+  const misto = contexto.fichaRapida_({
+    nome: 'Meio-lata', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'goblin-clank (mista)', comunidade: 'Highborne',
+    cartas: ['grace-encantar', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  misto.origem.ancestralidadeMista = ['goblin', 'clank'];
+  verdade(!api('criarPersonagem', { token: token, ficha: misto }).ok,
+    'a mista podia entregar a ancestralidade proibida por outro caminho');
+
+  contexto.mesaGravar_(Object.assign(contexto.mesaLer_(), { moldura: '', molduraTravada: false }));
+});
+
+teste('⚠ a proibição vale só para ficha NOVA — não emparedamos quem já joga', () => {
+  /*
+   * DECISÃO DE MESA, não economia de código: uma mesa pode escolher Placa-mãe
+   * com fichas de clank já em jogo. Recusar o SALVAMENTO delas emparedaria
+   * personagens existentes. É a mesma fronteira do equipamento inicial — a
+   * campanha muda o nascimento, não quem já nasceu.
+   */
+  const semMoldura = contexto.mesaLer_();
+  semMoldura.moldura = '';
+  semMoldura.molduraTravada = false;
+  contexto.mesaGravar_(semMoldura);
+
+  const f = contexto.fichaRapida_({
+    nome: 'Veterano de Lata', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Clank', comunidade: 'Highborne',
+    cartas: ['grace-encantar', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  const token = jogadorNovo('ProibicaoDois');
+  const criado = api('criarPersonagem', { token: token, ficha: f });
+  verdade(criado.ok, 'sem campanha, clank é ficha normal: ' + JSON.stringify(criado.erro || {}));
+
+  const comMoldura = contexto.mesaLer_();
+  comMoldura.moldura = 'placa-mae';
+  comMoldura.molduraTravada = true;
+  contexto.mesaGravar_(comMoldura);
+
+  const salvo = api('salvarPersonagem', {
+    token: token, id: criado.dados.personagem.id,
+    ficha: criado.dados.personagem.ficha, versao: criado.dados.personagem.versao
+  });
+  verdade(salvo.ok, 'a ficha de clank que JÁ EXISTIA deixou de poder ser salva');
+
+  contexto.mesaGravar_(Object.assign(contexto.mesaLer_(), { moldura: '', molduraTravada: false }));
+});
+
+teste('⚠ a lista de proibições vem do DADO, não de um `if` com o id da moldura', () => {
+  const MOLDURAS = avaliar('MOLDURAS');
+  const placa = MOLDURAS.find((m) => m.id === 'placa-mae');
+  igual((placa.origensProibidas || {}).ancestralidades, ['clank'],
+    'a proibição tem de chegar ao motor dentro da moldura');
+  verdade(/p\.294/.test((placa.origensProibidas || {}).motivo || ''),
+    'sem a página citada não há como conferir a regra na fonte');
+
+  /*
+   * ⚠ E AGORA SÃO DUAS MOLDURAS QUE PROÍBEM, com TRÊS tipos de proibição. A
+   * Jornada até o Horizonte proíbe a comunidade wanderborne (p.160) e a
+   * subclasse Sindicato (p.162) — foi ela que mostrou que a tranca só sabia
+   * recusar ancestralidade, e que as outras duas portas estavam abertas.
+   */
+  const jornada = MOLDURAS.find((m) => m.id === 'jornada-ate-o-horizonte');
+  igual((jornada.origensProibidas || {}).comunidades, ['wanderborne']);
+  igual((jornada.origensProibidas || {}).subclasses, ['ladino-sindicato']);
+  verdade(/p\.160 e p\.162/.test((jornada.origensProibidas || {}).motivo || ''),
+    'sem as páginas citadas não há como conferir a regra na fonte');
+
+  /* as outras nove não proíbem nada, e isso é afirmação, não silêncio */
+  MOLDURAS.filter((m) => ['placa-mae', 'jornada-ate-o-horizonte'].indexOf(m.id) === -1)
+    .forEach((m) => {
+    igual(m.origensProibidas, null, m.id + ' passou a proibir algo sem que ninguém notasse');
+  });
+
+  const motor = fs.readFileSync(new URL('../backend/40_Regras.gs', import.meta.url), 'utf8');
+  verdade(/function origemProibidaDaMoldura_\(/.test(motor), 'a regra precisa de função própria');
+  /*
+   * ⚠ A GUARDA OLHA O CÓDIGO, NÃO OS COMENTÁRIOS — e esta distinção já me
+   * custou meia hora aqui. O comentário da função CITA "placa-mae" para dizer
+   * que escrever `if (moldura === 'placa-mae')` seria a terceira cópia da
+   * regra; uma varredura ingênua acusa justamente o texto que explica por que
+   * a regra não está escrita à mão.
+   */
+  const semComentarios = motor
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
+  verdade(!/placa-mae/.test(semComentarios),
+    'o motor não pode ter o id da moldura escrito à mão: a segunda que proibir algo nasceria calada');
+
+  const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
+  verdade(/const ancestralidadeImpedida = \(a\) => origemImpedida/.test(tela),
+    'a tela precisa marcar o cartão impedido');
+  verdade(/impedido: ancestralidadeImpedida,/.test(tela), 'e a grade precisa consultar');
+  verdade(/botaoDeCaracteristica\(a, f, impedidaPelaCampanha\)/.test(tela),
+    'a herança MISTA é a segunda porta e precisa da mesma tranca');
+  verdade(!/'clank'|"clank"/.test(tela),
+    'a tela não pode ter a ancestralidade proibida escrita à mão');
+});
+
+
+/* ======================================================================== *
+ *  A HABILIDADE DE CLASSE QUE A CAMPANHA TROCA
+ * ======================================================================== */
+
+console.log('\nMolduras: a habilidade de classe que a campanha troca');
+
+function guerreiroDeTeste() {
+  return contexto.fichaRapida_({
+    nome: 'Bruta', classe: 'Guerreiro', subclasse: 'Mestre de Armas',
+    ancestralidade: 'Anão', comunidade: 'Highborne',
+    cartas: ['blade-cortar-ao-meio', 'bone-por-um-fio'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+}
+
+function naMoldura(id, fn) {
+  const antes = contexto.mesaLer_();
+  const m = contexto.mesaLer_();
+  m.moldura = id;
+  m.molduraTravada = Boolean(id);
+  contexto.mesaGravar_(m);
+  try { return fn(); } finally {
+    const volta = contexto.mesaLer_();
+    volta.moldura = antes.moldura || '';
+    volta.molduraTravada = antes.molduraTravada === true;
+    contexto.mesaGravar_(volta);
+  }
+}
+
+teste('⚠ Placa-mãe troca o Treinamento de Combate por Treinamento Ikonis', () => {
+  /*
+   * O DEFEITO: o livro diz na p.295 que em Placa-mãe a habilidade Treinamento
+   * de Combate do guerreiro é SUBSTITUÍDA por Treinamento Ikonis. A ficha
+   * continuava listando a original — e o servidor continuava APLICANDO a
+   * metade dela que é regra: o guerreiro seguia ignorando empunhadura.
+   */
+  const f = guerreiroDeTeste();
+  const nomes = (lista) => lista.map((x) => x.nome);
+
+  const sem = naMoldura('', () => contexto.caracteristicasDaClasse_(f));
+  verdade(nomes(sem).indexOf('Treinamento de Combate') !== -1,
+    'fora da campanha o guerreiro tem a habilidade do livro');
+
+  const com = naMoldura('placa-mae', () => contexto.caracteristicasDaClasse_(f));
+  verdade(nomes(com).indexOf('Treinamento Ikonis') !== -1,
+    'na campanha a habilidade trocada tem de aparecer');
+  verdade(nomes(com).indexOf('Treinamento de Combate') === -1,
+    'e a original tem de sair — senão o guerreiro fica com as duas');
+  igual(com.length, sem.length, 'é troca, não acréscimo nem perda');
+
+  /*
+   * ⚠ O TEXTO VAI JUNTO. Treinamento Ikonis não existe em data/classes.json —
+   * é da moldura. Sem o texto a ficha desenharia "Texto não encontrado no
+   * catálogo." embaixo do nome.
+   */
+  const trocada = com.find((x) => x.nome === 'Treinamento Ikonis');
+  verdade(/aprimoramento pot/.test(trocada.texto || ''),
+    'a característica trocada chegou sem texto: a ficha mostraria um nome órfão');
+  igual(trocada.trocadaPelaMoldura, 'Treinamento de Combate',
+    'a ficha precisa poder dizer o que foi trocado');
+  verdade(/p\. ?295/.test(trocada.fonte || ''), 'e de que página veio a troca');
+});
+
+teste('⚠ e o EFEITO da habilidade original deixa de valer', () => {
+  /*
+   * Esta é a metade que importa para a regra: Treinamento de Combate faz o
+   * guerreiro ignorar o tipo de empunhadura. Trocar só o nome na tela e deixar
+   * o servidor aplicando o efeito seria a prévia mentindo de novo — e a ikonis
+   * é de DUAS MÃOS, então essa exceção é exatamente a que mudaria a conta.
+   */
+  const f = guerreiroDeTeste();
+  verdade(naMoldura('', () => contexto.fichaTemEfeito_(f, 'ignora-empunhadura')),
+    'fora da campanha o guerreiro ignora empunhadura');
+  verdade(!naMoldura('placa-mae', () => contexto.fichaTemEfeito_(f, 'ignora-empunhadura')),
+    'na campanha o efeito da habilidade trocada continuava valendo');
+});
+
+teste('⚠ a MULTICLASSE recebe a mesma troca', () => {
+  /*
+   * `caracteristicasDaClasse_` resolve classe, subclasse e multiclasse, e a
+   * troca é aplicada no fim dela de propósito: um bardo que multiclassou em
+   * guerreiro numa mesa de Placa-mãe perde a mesma habilidade, pelo mesmo
+   * motivo. Aplicar a troca antes da multiclasse deixaria essa porta aberta.
+   */
+  const f = contexto.fichaRapida_({
+    nome: 'Dobrada', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Anão', comunidade: 'Highborne',
+    cartas: ['grace-encantar', 'codex-livro-de-illiat'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  });
+  f.multiclasse = { classe: 'Guerreiro', subclasse: 'Mestre de Armas', cartas: ['fundacao'] };
+  const nomes = naMoldura('placa-mae', () => contexto.caracteristicasDaClasse_(f).map((x) => x.nome));
+  verdade(nomes.indexOf('Treinamento Ikonis') !== -1,
+    'quem multiclassou em guerreiro também recebe a troca');
+  verdade(nomes.indexOf('Treinamento de Combate') === -1, 'e perde a original');
+});
+
+teste('⚠ a troca vem do DADO, e por UM leitor só', () => {
+  const MEC = avaliar('MECANICAS_DE_MOLDURA');
+  const placa = MEC['placa-mae'] || [];
+  const troca = placa
+    .map((m) => (m.automacao || {}).substituiCaracteristicaDeClasse)
+    .filter(Boolean)[0];
+  verdade(troca, 'a troca tem de chegar ao motor dentro das mecânicas da moldura');
+  igual(troca.classe, 'guerreiro');
+  igual(troca.remove, 'Treinamento de Combate');
+  igual(troca.poe, 'Treinamento Ikonis');
+
+  /*
+   * ⚠ UM LEITOR SÓ. A lista de características de classe é o que a FICHA
+   * desenha e o que o servidor CONSULTA para saber se o personagem ignora
+   * empunhadura. A troca entra no fim de `caracteristicasDaClasse_` — em
+   * qualquer outro ponto consertaria uma das duas e deixaria a outra mentindo.
+   */
+  const ger = fs.readFileSync(new URL('../tools/gerar-48-criacao.mjs', import.meta.url), 'utf8');
+  verdade(/comSubstituicoesDaMoldura_\(saida, ficha\) : saida;/.test(ger),
+    'a troca tem de ser aplicada no fim do único leitor');
+  /*
+   * ⚠ SEM COMENTÁRIOS, DE NOVO — e esta foi a SEGUNDA vez no mesmo lote. A
+   * explicação da função cita "guerreiro" e "Placa-mãe" justamente para contar
+   * por que nenhum dos dois está escrito no código; uma varredura ingênua
+   * acusa o texto que explica a ausência. Vale para toda guarda deste tipo:
+   * ela mede CÓDIGO, e comentário não é código.
+   */
+  /*
+   * ⚠ E A FICHA PRECISA DIZER QUE HOUVE TROCA. Sem isso, quem abre a ficha com
+   * o livro ao lado vê uma habilidade que não está na página da classe e
+   * conclui que o app errou; e quem não tem o livro nunca descobre que perdeu
+   * a original. O nome do que saiu vem do servidor, não de uma tabela na tela.
+   */
+  const ficha = fs.readFileSync(new URL('../js/telas/ficha.js', import.meta.url), 'utf8');
+  verdade(/c\.trocadaPelaMoldura/.test(ficha),
+    'a ficha tem de dizer qual habilidade a campanha substituiu');
+  verdade(/Esta campanha substituiu \$\{c\.trocadaPelaMoldura\}/.test(ficha),
+    'e o nome do que saiu tem de vir do servidor, não de uma tabela na tela');
+
+  const rodape = fs.readFileSync(new URL('../tools/4E_Mesa.rodape.js', import.meta.url), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '');
+  verdade(!/placa-mae|[Gg]uerreiro/.test(rodape),
+    'o rodapé do mesa não pode ter o id da moldura nem o nome da classe escritos à mão');
+});
+
+teste('⚠ a condição Amaldiçoado existe, e os dois itens do Weredragão têm o que desmarcar', () => {
+  /*
+   * O DEFEITO: a Espada longa de Lady Lavender e o Zootrópio do Bacanal
+   * Radiante são, no livro, os dois itens que ENCERRAM maldição — e o motivo
+   * registrado na automação deles era, com estas palavras, "enquanto a família
+   * 'Maldito' não existir em condicoes.json, limpar é decisão da mesa e o app
+   * não tem o que marcar". O item existia e não tinha alvo.
+   *
+   * ⚠ E "Amaldiçoado" NÃO é tradução minha: é termo da Jambô. A habilidade
+   * Amaldiçoar de adversário (livro p.236) diz "escolha um alvo Distante para
+   * ser temporariamente Amaldiçoado".
+   */
+  const CONDICOES = avaliar('CONDICOES');
+  verdade(CONDICOES.amaldicoado, 'a condição Amaldiçoado precisa existir no catálogo');
+  igual(CONDICOES.amaldicoado.nome, 'Amaldiçoado');
+  igual(CONDICOES.amaldicoado.tipo, 'especial',
+    'não é temporária: a maldição de campanha não sai com jogada de ação');
+  igual(contexto.normalizarCondicao_('Cursed'), 'amaldicoado',
+    'o nome em inglês tem de achar a condição');
+  igual(contexto.normalizarCondicao_('Maldito'), 'amaldicoado');
+
+  /* e a ficha consegue marcar e desmarcar */
+  const f = guerreiroDeTeste();
+  contexto.ajustarCondicao_(f, { chave: 'amaldicoado', ligar: true });
+  verdade((f.condicoes || []).some((x) => (x && x.id ? x.id : x) === 'amaldicoado'),
+    'a mesa precisa poder MARCAR a maldição numa ficha');
+  contexto.ajustarCondicao_(f, { chave: 'amaldicoado', ligar: false });
+  verdade(!(f.condicoes || []).some((x) => (x && x.id ? x.id : x) === 'amaldicoado'),
+    'e desmarcar');
+
+  /*
+   * ⚠ O ITEM GANHOU LEMBRETE, NÃO BOTÃO. `limpaCondicao` é lido só para CARTAS
+   * de domínio (4C_Ajustes.gs); posto num item seria dado morto. O que o item
+   * carrega é `efeitoManual`, que a ficha escreve embaixo dele — e é esse campo
+   * que existe para dizer o que fica com a mesa.
+   */
+  const CAMPANHA = avaliar('EQUIPAMENTO_CAMPANHA');
+  const dois = CAMPANHA.filter((i) => /reino-do-weredragao/.test(i.id));
+  igual(dois.length, 2, 'os dois itens do Weredragão têm de continuar no catálogo');
+  dois.forEach((i) => {
+    verdade(/Amaldiçoado/.test((i.automacao || {}).efeitoManual || ''),
+      i.id + ': o lembrete tem de dizer o que a mesa desmarca');
+    verdade(!(i.automacao || {}).limpaCondicao,
+      i.id + ': `limpaCondicao` em item é dado morto — só carta de domínio lê esse campo');
+  });
+});
+
+console.log('\nMolduras: a Jornada até o Horizonte, e as DUAS portas que estavam abertas');
+
+/*
+ * ⚠ A TRANCA DE ORIGEM SÓ SABIA RECUSAR ANCESTRALIDADE.
+ *
+ * Jornada até o Horizonte proíbe a comunidade WANDERBORNE (Hope & Fear p.160) e
+ * a subclasse SINDICATO do ladino (p.162) — nos dois casos porque mil anos de
+ * santuário selado não deixam ninguém crescer na estrada nem manter rede de
+ * contatos por um continente. O motor sabia recusar clank na Placa-mãe e deixava
+ * as outras duas portas abertas.
+ */
+function fichaDaJornada(extra) {
+  return contexto.validarFicha_(contexto.fichaRapida_(Object.assign({
+    nome: 'Peregrino', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Humano', comunidade: 'Loreborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }, extra || {})));
+}
+
+teste('⚠ a Jornada recusa a COMUNIDADE wanderborne, e aceita as outras', () => {
+  const proibida = contexto.origemProibidaDaMoldura_(
+    fichaDaJornada({ comunidade: 'Wanderborne' }), 'jornada-ate-o-horizonte');
+  verdade(proibida, 'wanderborne tem de ser recusada nesta campanha');
+  igual(proibida.tipo, 'comunidade', 'e o motor tem de dizer QUE TIPO de origem é');
+  igual(proibida.id, 'wanderborne');
+  verdade(/Jornada at[ée] o Horizonte/.test(proibida.moldura), 'e de que campanha');
+  verdade(/p\.160/.test(proibida.motivo || ''), 'com a página da fonte no motivo');
+
+  /* ⚠ e o nome vem do catálogo, não da string que a ficha guardou */
+  verdade(/Wanderborne/i.test(proibida.nome), 'o nome exibido vem do catálogo: ' + proibida.nome);
+
+  igual(contexto.origemProibidaDaMoldura_(fichaDaJornada(), 'jornada-ate-o-horizonte'), null,
+    'loreborne continua disponível');
+  igual(contexto.origemProibidaDaMoldura_(
+    fichaDaJornada({ comunidade: 'Wanderborne' }), 'castle-high'), null,
+    'e wanderborne só é proibida NESTA campanha');
+});
+
+teste('⚠ a Jornada recusa a SUBCLASSE Sindicato, e pelo id — não pelo nome', () => {
+  const proibida = contexto.origemProibidaDaMoldura_(
+    fichaDaJornada({ classe: 'Ladino', subclasse: 'Sindicato',
+      cartas: ['midnight-abrir-e-puxar', 'grace-encantar'] }),
+    'jornada-ate-o-horizonte');
+  verdade(proibida, 'o Sindicato tem de ser recusado nesta campanha');
+  igual(proibida.tipo, 'subclasse');
+  igual(proibida.id, 'ladino-sindicato', 'o id vem do normalizador de subclasse');
+  verdade(/p\.162/.test(proibida.motivo || ''));
+
+  igual(contexto.origemProibidaDaMoldura_(
+    fichaDaJornada({ classe: 'Ladino', subclasse: 'Caminhante Noturno',
+      cartas: ['midnight-abrir-e-puxar', 'grace-encantar'] }),
+    'jornada-ate-o-horizonte'), null,
+    'a outra subclasse do ladino continua disponível');
+});
+
+teste('⚠ e a Placa-mãe continua recusando clank, do mesmo jeito que antes', () => {
+  /*
+   * A generalização não podia mexer no que já valia: este é o caso que existia
+   * antes de a tranca aprender comunidade e subclasse.
+   */
+  const proibida = contexto.origemProibidaDaMoldura_(
+    fichaDaJornada({ ancestralidade: 'Clank' }), 'placa-mae');
+  verdade(proibida, 'clank tem de continuar recusado na Placa-mãe');
+  igual(proibida.tipo, 'ancestralidade');
+  igual(proibida.id, 'clank');
+  igual(proibida.ancestralidade, 'clank',
+    'o campo antigo continua indo, para não quebrar quem já o lia');
+  verdade(/p\.294/.test(proibida.motivo || ''));
+});
+
+teste('⚠ a criação de ficha é recusada pelo MOTOR nas três proibições', () => {
+  /*
+   * ⚠ SESSÃO NOVA, não o token lá de cima. Já me pegou uma vez: um token
+   * declarado dezoito mil linhas antes já estava invalidado no meio do caminho,
+   * e a recusa que eu li como "a moldura proibiu" era "Sessão inválida" — a
+   * asserção passava verde pelo motivo errado.
+   */
+  const token = jogadorNovo('ProibicaoDaJornada');
+  const mesa = contexto.mesaLer_();
+
+  contexto.mesaGravar_(Object.assign({}, mesa,
+    { moldura: 'jornada-ate-o-horizonte', molduraTravada: false }));
+
+  const recusada = (extra, oQue) => {
+    const r = api('criarPersonagem', { token: token, ficha: fichaDaJornada(extra) });
+    verdade(!r.ok, 'o motor ACEITOU ' + oQue + ' numa mesa da Jornada: ' + JSON.stringify(r.erro));
+    return r.erro || {};
+  };
+
+  const comunidade = recusada({ comunidade: 'Wanderborne' }, 'wanderborne');
+  igual((comunidade.extra || {}).tipoProibido, 'comunidade',
+    'a recusa tem de dizer o tipo: ' + JSON.stringify(comunidade));
+  igual((comunidade.extra || {}).origemProibida, 'wanderborne');
+
+  const sub = recusada({ classe: 'Ladino', subclasse: 'Sindicato',
+    cartas: ['midnight-abrir-e-puxar', 'grace-encantar'] }, 'o Sindicato');
+  igual((sub.extra || {}).tipoProibido, 'subclasse');
+
+  /* e a ficha permitida nasce */
+  const boa = api('criarPersonagem', { token: token, ficha: fichaDaJornada() });
+  verdade(boa.ok, 'a ficha permitida não nasceu: ' + JSON.stringify(boa.erro));
+
+  contexto.mesaGravar_(Object.assign(contexto.mesaLer_(), { moldura: '', molduraTravada: false }));
+});
+
+teste('⚠ a tela de criação bloqueia os TRÊS tipos, e por um leitor só', () => {
+  const tela = fs.readFileSync(new URL('../js/telas/criacao.js', import.meta.url), 'utf8');
+  verdade(/function origemImpedida\(tipo, item\)/.test(tela),
+    'os três impedimentos têm de sair de um leitor só');
+  verdade(/const ancestralidadeImpedida = \(a\) => origemImpedida\('ancestralidades', a\)/.test(tela),
+    'a ancestralidade continua passando por ele');
+  verdade(/const comunidadeImpedida = \(c\) => origemImpedida\('comunidades', c\)/.test(tela));
+  verdade(/const subclasseImpedida = \(s\) => origemImpedida\('subclasses', s\)/.test(tela));
+  verdade(/impedido: comunidadeImpedida/.test(tela),
+    'a grade de comunidades tem de receber o impedimento');
+  verdade(/const impedida = subclasseImpedida\(s\)/.test(tela),
+    'e o cartão de subclasse também');
+  /*
+   * ⚠ E O CARTÃO IMPEDIDO TEM REGRA DE CSS. Sem ela, a classe entrava no cartão
+   * de subclasse e não fazia nada: cara de escolhível, alvo desabilitado por
+   * baixo — o "toque que não responde e não se explica".
+   */
+  const css = fs.readFileSync(new URL('../css/criacao.css', import.meta.url), 'utf8');
+  verdade(/\.lista-escolha__item\.esta-impedido/.test(css),
+    'o cartão de subclasse impedido precisa PARECER impedido');
+});
+
+console.log('\nMolduras: Castle High, o primeiro cenário simples do Hope & Fear');
+
+/*
+ * ⚠ ESTE CENÁRIO NÃO MUDA FICHA NENHUMA, e isso é o conteúdo dele, não uma
+ * lacuna. Castle High é complexidade • no livro: o que ela traz é voo, uma
+ * escola, quatro torres e uma amiga desaparecida. O que o app pode fazer por ela
+ * é TER o texto na mesa em português e guardar as duas decisões que o livro manda
+ * a mesa tomar — e é só isso que estes testes cobram.
+ */
+function castleHigh() {
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const m = CONTEUDO.find((x) => x.id === 'castle-high');
+  verdade(m, 'castle-high saiu de data/molduras.json');
+  return m;
+}
+
+teste('Castle High: as quatro torres são ESCOLHA da mesa, e a Lock não é jogável', () => {
+  const m = castleHigh();
+  const mec = (m.mecanicas || []).find((x) => x.id === 'as-quatro-torres');
+  verdade(mec, 'a mecânica das torres sumiu');
+  const e = (mec.automacao || {}).escolhaDaMesa;
+  verdade(e, 'as torres têm de ser uma escolha guardada, não um parágrafo');
+  igual(mec.automacao.escopo, 'mesa', 'a torre não muda ficha nenhuma — o escopo é de mesa');
+  igual((e.opcoes || []).length, 5, 'quatro torres jogáveis + a Lock selada');
+
+  const jogaveis = e.opcoes.filter((o) => !o.naoJogavel);
+  igual(jogaveis.map((o) => o.id).sort(), ['bower', 'star', 'stern', 'zenith'],
+    'as quatro torres do livro, por id');
+
+  /*
+   * ⚠ A LOCK FICA NA LISTA, IMPEDIDA. É a mesma decisão do cartão de clank na
+   * Placa-mãe: quem conta quatro torres e acha três não sabe se o app perdeu uma
+   * ou se o livro não tem. Ela aparece, com o motivo escrito, e não é escolhível.
+   */
+  const lock = e.opcoes.find((o) => o.id === 'lock');
+  verdade(lock && lock.naoJogavel === true, 'a Lock Tower tem de estar presente e impedida');
+  verdade(/selada/.test(lock.texto || ''), 'e tem de dizer por que não dá para escolhê-la');
+
+  /* cada torre jogável tem o gancho que o livro dá ao Mestre */
+  jogaveis.forEach((o) => {
+    verdade(String(o.texto || '').length > 80, o.id + ': torre sem texto de mesa');
+    verdade(/Escolham/.test(o.escolhaSe || ''), o.id + ': sem a frase "escolham esta se…" do livro');
+    verdade(String(o.gancho || '').length > 60, o.id + ': sem o gancho do Mestre');
+  });
+
+  /* e a chave do caderno é UMA, com a forma que o motor aceita */
+  verdade(/^[A-Za-z0-9_.:-]{1,40}$/.test(e.chave || ''),
+    'a chave da torre tem de passar na validação de forma do caderno: ' + e.chave);
+});
+
+teste('Castle High: a tabela de Riley é só para LER, e vem numerada pelo dado', () => {
+  const m = castleHigh();
+  const mec = (m.mecanicas || []).find((x) => x.id === 'riley-averill');
+  verdade(mec, 'a mecânica de Riley sumiu');
+  const t = (mec.automacao || {}).tabelaRolada;
+  verdade(t, 'as vinte perguntas têm de estar estruturadas, não enfiadas num parágrafo');
+  igual(mec.automacao.escopo, 'mesa', 'é ferramenta de mesa: ninguém aplica nada em ficha');
+  igual(t.dado, 'd20', 'o livro manda rolar 1d20');
+  igual((t.linhas || []).length, 20, 'as vinte perguntas do livro');
+  igual(t.linhas.map((l) => l.n), Array.from({ length: 20 }, (_, i) => i + 1),
+    'os números são os do DADO, de 1 a 20, e em ordem');
+  t.linhas.forEach((l) => {
+    verdade(String(l.texto || '').length > 15, 'linha ' + l.n + ' sem pergunta');
+  });
+
+  /*
+   * ⚠ E NADA DE GUARDAR. A resposta é ficção falada na sessão zero: guardar
+   * pela metade seria "o editor que não guarda", e guardar inteiro seria pedir à
+   * Mestra que digitasse vinte respostas num celular.
+   */
+  verdade(!t.chave && !t.chaveDoTexto, 'a tabela de Riley não tem chave de caderno — e não deve ter');
+});
+
+teste('⚠ Castle High: o artefato virou PERGUNTA na criação, e a ficha guarda a resposta', () => {
+  /*
+   * ⚠ ESTE CASO ERA O CONTRÁRIO DELE MESMO. Até 25/10 ele exigia
+   * `automacao: null` e um ponto de interesse dizendo "a criação ainda NÃO
+   * pergunta qual é o seu artefato" — e estava certo enquanto não perguntava.
+   * Agora pergunta, e o caso cobra a outra ponta: a declaração, as três
+   * perguntas, e de quem é cada uma.
+   */
+  const m = castleHigh();
+  const artefato = (m.mecanicas || []).find((x) => x.id === 'artefato-de-fragmento-celeste');
+  verdade(artefato, 'o artefato de fragmento celeste sumiu');
+  const a = artefato.automacao || {};
+  igual(a.escopo, 'criacao',
+    'o artefato muda a CRIAÇÃO, não a ficha de quem já joga — e o painel lê este escopo');
+  const bloco = a.perguntasDeHistoria || {};
+  igual((bloco.perguntas || []).length, 3);
+  verdade(/Hope & Fear/.test(bloco.fonte || ''), 'a fonte tem de dizer de onde vêm as perguntas');
+
+  /* ⚠ duas são do livro; a primeira é nossa, e o dado diz qual é qual */
+  const nossas = (bloco.perguntas || []).filter((q) => q.nossa === true);
+  igual(nossas.length, 1, 'só a pergunta "qual é o seu artefato" é nossa — as outras duas são do livro');
+  igual(nossas[0].id, 'artefato');
+  verdade((nossas[0].inspiracao || []).length >= 5,
+    'a nossa carrega a lista do livro como inspiração: é ela que dá o que responder');
+
+  /* e o texto deixou de declarar como aberto o que fechou */
+  const junto = (artefato.texto || []).join(' ');
+  verdade(!/PONTO DE INTERESSE/.test(junto), 'o ponto de interesse foi fechado: tire-o do texto');
+  verdade(/criação de ficha PERGUNTA/.test(junto), 'e o texto tem de dizer que agora pergunta');
+});
+
+teste('⚠ a ficha guarda a resposta da campanha com a PERGUNTA junto', () => {
+  /*
+   * ⚠ A PERGUNTA VAI JUNTO DA RESPOSTA de propósito. Guardado só o texto, uma
+   * troca de campanha deixaria "uma vassoura velha" na ficha sem ninguém saber a
+   * que aquilo respondia — e o histórico e as conexões já resolvem isso assim.
+   */
+  const vazia = contexto.fichaVazia_();
+  verdade(Array.isArray((vazia.historia || {}).campanha),
+    'o esqueleto da ficha precisa do bloco `historia.campanha`');
+
+  const ficha = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Estudante', classe: 'Bardo', subclasse: 'Músico Errante',
+    ancestralidade: 'Humano', comunidade: 'Highborne'
+  }));
+  ficha.historia.campanha = [{
+    chave: 'artefato-de-fragmento-celeste:artefato',
+    pergunta: 'Qual é o seu artefato de fragmento celeste?',
+    resposta: 'Uma bengala que zumbe'
+  }];
+  const depois = contexto.validarFicha_(ficha);
+  igual((depois.historia.campanha || []).length, 1, 'a resposta da campanha não sobreviveu à validação');
+  igual(depois.historia.campanha[0].pergunta, 'Qual é o seu artefato de fragmento celeste?');
+});
+
+teste('Castle High: nenhuma origem é proibida, e as observações do livro estão lá', () => {
+  const m = castleHigh();
+  const MOLDURAS = avaliar('MOLDURAS');
+  const cat = MOLDURAS.find((x) => x.id === 'castle-high');
+  verdade(cat, 'castle-high não entrou no catálogo do motor');
+  igual(cat.origensProibidas || null, null, 'Castle High não proíbe origem nenhuma');
+  igual(((cat.equipamentoInicial || {}).modo) || 'nenhum', 'nenhum',
+    'o livro não dá tabela de equipamento a Castle High');
+
+  /* o motor aceita criar ficha nesta mesa, inclusive de clank (que a Placa-mãe proíbe) */
+  const f = contexto.validarFicha_(contexto.fichaRapida_({
+    nome: 'Estudante', classe: 'Guardião', subclasse: 'Robusto',
+    ancestralidade: 'Clank', comunidade: 'Highborne',
+    cartas: ['blade-redemoinho', 'valor-pele-dura'],
+    experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+  }));
+  verdade(f && f.identidade, 'a ficha de Castle High não nasceu');
+
+  const o = m.origens || {};
+  verdade((o.comunidades || []).some((c) => c.todas === true),
+    'o livro diz que TODAS as comunidades estão disponíveis — isto tem de estar dito como tal');
+  igual((o.classes || []).length, 4,
+    'as quatro observações de classe do livro: patrulheiro, druida, ladino e serafim');
+  verdade((o.ancestralidades || []).some((a) => /Faeries/.test(a.nome)),
+    'a observação sobre quem já voa (faerie e aetheris) é a que muda a escolha do artefato');
+});
+
+console.log('\nMolduras: O Coração Sombrio de Andaluria, e a herança do apêndice');
+
+/*
+ * ⚠ ESTE CENÁRIO NÃO TROUXE REGRA NOVA — ELE TROUXE A MESMA REGRA.
+ *
+ * As mecânicas de campanha do Dark Heart of Andaluria (Hope & Fear p.152–157) são
+ * as do apêndice de caça a monstros do SRD 2.0 (p.201–202) que o app já tinha
+ * inteiro: o arsenal (36 entradas, batendo uma por uma), a Caçada em cinco
+ * batidas, as quatro perguntas de Fazer um Monstro, as Pistas Liminares de 4 a 6
+ * e as três transformações de maldição.
+ *
+ * Copiar daria duas fontes à mesma regra. Então a moldura HERDA, e estes testes
+ * cobram as duas pontas da herança: a lista de equipamento (resolvida pelo
+ * gerador) e as mecânicas (resolvidas pelo motor).
+ */
+teste('⚠ as duas telas descrevem os MESMOS modos de equipamento', () => {
+  /*
+   * ⚠ ISTO NASCEU DE UMA FRASE ERRADA NO PAINEL. Ele dizia "ela só TROCA o
+   * equipamento inicial" para qualquer campanha que mexesse no equipamento — e
+   * três delas (Caça a Monstros, Colosso, Andaluria) são `acrescenta`, que não
+   * troca nada: põe as opções AO LADO das tabelas do Capítulo 2. A tela da
+   * CRIAÇÃO já dizia a coisa certa; o painel descrevia errado.
+   *
+   * São duas frases de propósito (duas perguntas diferentes), e esta conferência
+   * é o que impede que elas divirjam de novo: as duas telas têm de cobrir
+   * exatamente os mesmos modos. Um modo novo que nasça descrito só de um lado
+   * falha aqui.
+   */
+  const chaves = (arquivo, trechoDe, trechoAte) => {
+    const txt = fs.readFileSync(new URL(arquivo, import.meta.url), 'utf8');
+    const i = txt.indexOf(trechoDe);
+    verdade(i >= 0, arquivo + ': não achei o mapa de modos (' + trechoDe + ')');
+    const fim = txt.indexOf(trechoAte, i);
+    const bloco = txt.slice(i, fim > i ? fim : i + 900);
+    const achadas = [];
+    ['substitui', 'acrescenta', 'arma-unica', 'saque'].forEach((modo) => {
+      const alvo = modo === 'arma-unica' ? "'arma-unica':" : modo + ':';
+      if (bloco.indexOf(alvo) >= 0) achadas.push(modo);
+    });
+    return achadas.sort();
+  };
+
+  const naCriacao = chaves('../js/telas/criacao.js',
+    'substitui: \'O equipamento inicial sai', '}[modoDaMoldura]');
+  const noPainel = chaves('../js/telas/mestre.js',
+    'function fraseDoModoDeEquipamento(modo) {', "}[modo] || '';");
+
+  igual(naCriacao, ['acrescenta', 'arma-unica', 'saque', 'substitui'],
+    'a criação descreve os quatro modos que mexem em equipamento');
+  igual(noPainel, ['acrescenta', 'arma-unica', 'saque', 'substitui'],
+    'o painel descreve os quatro, num mapa só');
+
+  /*
+   * ⚠ E O PAINEL RESPONDE ISSO NUM LUGAR SÓ. O mapa já existia no seletor de
+   * moldura, com o comentário certo — e a frase do alto da campanha, no MESMO
+   * arquivo, dizia "ela só TROCA o equipamento inicial" para todos os modos. As
+   * duas frases agora saem da mesma função.
+   */
+  const painel = fs.readFileSync(new URL('../js/telas/mestre.js', import.meta.url), 'utf8');
+  igual((painel.match(/Fichas NOVAS ganham as opções desta campanha/g) || []).length, 1,
+    'a frase do modo tem de estar escrita UMA vez no painel');
+  igual((painel.match(/fraseDoModoDeEquipamento\(/g) || []).length, 3,
+    'uma definição e dois leitores: o seletor de moldura e o aviso do alto da campanha');
+  verdade(!/ela só troca[\s\S]{0,40}equipamento inicial/.test(painel),
+    'e o painel não pode voltar a dizer que TODA campanha troca o equipamento');
+});
+
+teste('Andaluria HERDA o arsenal de caça — a lista continua num lugar só', () => {
+  const MOLDURAS = avaliar('MOLDURAS');
+  const dela = MOLDURAS.find((x) => x.id === 'coracao-sombrio-de-andaluria');
+  const apendice = MOLDURAS.find((x) => x.id === 'caca-a-monstros');
+  verdade(dela, 'coracao-sombrio-de-andaluria não entrou no catálogo');
+
+  igual(dela.equipamentoInicial.apendice, 'caca-a-monstros', 'a herança tem de estar declarada');
+  igual(dela.equipamentoInicial.modo, apendice.equipamentoInicial.modo,
+    'o arsenal é o mesmo: o que ele faz na criação tem de ser o mesmo');
+  igual(dela.itens.slice().sort(), apendice.itens.slice().sort(),
+    'os itens dela são EXATAMENTE os do apêndice — resolvidos, não copiados');
+  igual(dela.itens.length, 36, 'as 36 entradas do arsenal (9 peças × 4 patamares)');
+
+  /*
+   * ⚠ E OS ITENS NÃO FORAM DUPLICADOS NO CATÁLOGO. Herdar é apontar para a mesma
+   * lista; se cada moldura tivesse a sua cópia, o catálogo teria 72 entradas de
+   * caça e a busca mostraria tudo em dobro.
+   */
+  const CAMPANHA = avaliar('EQUIPAMENTO_CAMPANHA');
+  const deCaca = CAMPANHA.filter((i) => /^campanha-caca-a-monstros-/.test(i.id));
+  igual(deCaca.length, 36, 'o catálogo tem UMA cópia das 36 entradas, não duas');
+  igual(new Set(CAMPANHA.map((i) => i.id)).size, CAMPANHA.length,
+    'nenhum item de campanha repetido no catálogo');
+});
+
+teste('Andaluria herda as MECÂNICAS, e o motor diz de onde elas vêm', () => {
+  const herdado = contexto.apendicesDaMoldura_('coracao-sombrio-de-andaluria');
+  igual(herdado.length, 1, 'ela herda um apêndice');
+  igual(herdado[0].id, 'caca-a-monstros');
+  verdade(/SRD 2\.0/.test(herdado[0].fonteDoTexto || ''),
+    'o que o motor devolve tem de dizer de que fonte vem: ' + herdado[0].fonteDoTexto);
+  verdade(String(herdado[0].paginasLivro || '').length > 4, 'e de que página');
+  igual((herdado[0].mecanicas || []).map((x) => x.id), [
+    'arsenal-de-caca', 'a-cacada', 'fazer-um-monstro', 'pistas-liminares',
+    'transformacoes-de-maldicao'
+  ], 'as cinco mecânicas do apêndice, na ordem dele');
+
+  /* quem não herda nada recebe lista vazia, não `undefined` */
+  igual(contexto.apendicesDaMoldura_('castle-high'), []);
+  igual(contexto.apendicesDaMoldura_(''), []);
+  igual(contexto.apendicesDaMoldura_('moldura-que-nao-existe'), []);
+});
+
+teste('⚠ o apêndice herdado não tem automação de FICHA — e se tiver, há código a escrever', () => {
+  /*
+   * A herança de hoje chega ao PAINEL (o motor devolve as mecânicas) e à CRIAÇÃO
+   * (o gerador resolve os itens). Ela NÃO chega a `mecanicasDaMolduraDaMesa_`, que
+   * é o que o motor aplica nas fichas — e isso está certo só enquanto o apêndice
+   * não tiver nenhuma automação de ficha.
+   *
+   * ⚠ Esta conferência existe para o dia em que tiver: se alguém puser uma
+   * automação de ficha no apêndice, ela falha aqui, e não em silêncio na mesa de
+   * alguém que escolheu Andaluria e não recebeu o efeito.
+   */
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const herdeiras = CONTEUDO.filter((m) => (m.apendices || []).length);
+  verdade(herdeiras.length, 'ninguém herda apêndice — este teste perdeu o assunto');
+  herdeiras.forEach((m) => {
+    (m.apendices || []).forEach((id) => {
+      const a = CONTEUDO.find((x) => x.id === id);
+      verdade(a, m.id + ' herda de ' + id + ', que não existe em data/molduras.json');
+      const deFicha = (a.mecanicas || [])
+        .filter((x) => x.automacao && x.automacao.escopo === 'ficha');
+      igual(deFicha.map((x) => x.id), [],
+        `o apêndice "${id}" ganhou automação de FICHA. A herança chega ao painel e à ` +
+        'criação, mas NÃO a mecanicasDaMolduraDaMesa_: ligue lá antes de deixar isto passar');
+    });
+  });
+});
+
+teste('Andaluria: o conteúdo próprio dela é o que o apêndice NÃO tem', () => {
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const m = CONTEUDO.find((x) => x.id === 'coracao-sombrio-de-andaluria');
+  verdade(m, 'a moldura saiu de data/molduras.json');
+  igual(m.complexidade, 3, 'complexidade ••• no livro');
+  igual((m.mecanicas || []).map((x) => x.id), ['fortunas-dos-drabardi', 'a-caca-nesta-campanha'],
+    'as mecânicas próprias são só as que o apêndice não cobre');
+
+  /* e a mecânica que fala da caçada EXPLICA a herança, em vez de repetir a regra */
+  const caca = m.mecanicas.find((x) => x.id === 'a-caca-nesta-campanha');
+  const junto = (caca.texto || []).join(' ');
+  verdade(/HERDA/.test(junto), 'o texto tem de dizer que a moldura herda o apêndice');
+  verdade(!/cinco batidas[\s\S]{0,40}Chegada/.test(junto),
+    'e não pode repetir as batidas da trilha: elas moram no apêndice');
+
+  /* as seis comunidades que o livro comenta, e as três ancestralidades */
+  igual((m.origens.comunidades || []).length, 6, 'as seis comunidades comentadas no livro');
+  igual((m.origens.ancestralidades || []).length, 3);
+  igual((m.origens.classes || []).length, 4);
+  igual((m.perguntasDeSessaoZero || []).length, 6, 'as seis perguntas de sessão zero');
+
+  /* ⚠ nenhuma origem proibida aqui — ao contrário de Journey to Horizon, que proíbe wanderborne */
+  igual(m.origensProibidas || null, null);
+  verdade((m.origens.comunidades || []).some((c) => (c.comunidades || []).includes('wanderborne')),
+    'wanderborne É disponível nesta campanha (os caio) — e o livro comenta justamente ela');
+});
+
+
+console.log('\nMolduras: a Trilha da Ruína e os nove Ecos — o caderno aguenta a maior campanha do livro');
+
+/* O conteúdo das molduras vem do DADO, como no resto desta seção. */
+const MOLDURAS_RUINA = JSON.parse(
+  fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+
+teste('⚠ a Trilha da Ruína cabe inteira no caderno da campanha', () => {
+  /*
+   * ⚠ ESTE CASO NASCEU DE UM TETO QUE MEDIA A COISA ERRADA. O caderno aceitava
+   * 40 chaves por campanha, e a Trilha da Ruína tem SESSENTA E OITO caixas: a
+   * campanha mais completa do livro não cabia no caderno, e quem avisava era uma
+   * recusa no meio da sessão mandando "apague alguma antes".
+   *
+   * Então o caso escreve a trilha INTEIRA, do jeito que o painel escreve — uma
+   * caixa por chave — e exige que todas estejam lá no fim. Se alguém baixar o
+   * teto de volta, isto falha com a conta na mão.
+   */
+  comMoldura('jornada-ate-o-horizonte');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+
+  const mec = MOLDURAS_RUINA.find((x) => x.id === 'jornada-ate-o-horizonte')
+    .mecanicas.find((x) => x.id === 'trilha-da-ruina');
+  const trilha = mec.automacao.trilhaDaRuina;
+  const todas = [];
+  const juntar = (lista) => (lista || []).forEach((c) => { todas.push(c); juntar(c.filhas); });
+  trilha.patamares.forEach((pt) => juntar(pt.caixas));
+  igual(todas.length, 68, 'a folha do apêndice tem 68 caixas — se mudou, confira a folha');
+
+  todas.forEach((c) => {
+    const r = api('anotarCampanha', { token: tk, chave: trilha.chavePrefixo + c.id, valor: 'x' });
+    verdade(r.ok, `o caderno recusou a caixa ${c.id}: ` + JSON.stringify(r.erro));
+  });
+
+  const guardadas = api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha;
+  const faltando = todas.filter((c) => guardadas[trilha.chavePrefixo + c.id] !== 'x');
+  igual(faltando.length, 0, 'caixas que não sobreviveram: ' +
+    faltando.map((c) => c.id).join(', '));
+});
+
+teste('⚠ e o teto que sobrou é de TAMANHO, não de contagem', () => {
+  /*
+   * O teto de chaves protege uma campanha de virar banco de dados; o que protege
+   * a LINHA DA MESA (lida inteira a cada abertura do painel) é o tamanho. Aqui a
+   * recusa é provada pelo lado grande: anotações de 400 caracteres enchem o
+   * caderno muito antes das 120 chaves.
+   */
+  comMoldura('jornada-ate-o-horizonte');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  const gordo = 'x'.repeat(400);
+  let recusa = null;
+  for (let i = 0; i < 200 && !recusa; i++) {
+    const r = api('anotarCampanha', { token: tk, chave: 'gordo:' + i, valor: gordo });
+    if (!r.ok) recusa = r.erro;
+  }
+  verdade(recusa, 'o caderno aceitou crescer sem fim');
+  verdade(/tamanho máximo|anotações\. Apague/.test(String(recusa.mensagem || recusa)),
+    'a recusa precisa dizer o que fazer, e não só que não deu: ' + JSON.stringify(recusa));
+
+  /*
+   * ⚠ E O CASO LIMPA A SUJEIRA QUE FEZ. O caderno é da MESA, e esta bateria usa
+   * uma mesa só: deixar duzentas anotações gordas aqui faria o próximo caso
+   * falhar por falta de espaço — um teste reprovando o outro, que é o jeito mais
+   * caro de descobrir que a bateria compartilha estado. Aconteceu.
+   */
+  for (let i = 0; i < 200; i++) api('anotarCampanha', { token: tk, chave: 'gordo:' + i, valor: '' });
+});
+
+teste('⚠ os nove Ecos: o décimo NÃO tem vaga, porque o grupo começa com ele', () => {
+  const mec = MOLDURAS_RUINA.find((x) => x.id === 'jornada-ate-o-horizonte')
+    .mecanicas.find((x) => x.id === 'ecos-de-alma-e-avanco');
+  const e = mec.automacao.ecosDeAlma;
+  igual(e.escopo, undefined);
+  igual(mec.automacao.escopo, 'mesa', 'o caderno guarda, e nada disso toca ficha');
+  igual(e.total, 10, 'são dez Ecos ao todo (livro p.165)');
+  igual(e.comecaCom, 1, 'o primeiro é o que Saraya pôs no Cálice');
+  igual(e.aRecolher, 9, 'nove a recolher — é o número de santuários que o Mestre escolhe (p.169)');
+  verdade(e.chaveDoLugar && e.chaveDoCalice && e.chaveDoLugar !== e.chaveDoCalice,
+    'o lugar e a marca do Cálice são duas perguntas: não podem dividir a chave');
+
+  /* e as dezoito chaves das nove vagas convivem com a trilha inteira */
+  comMoldura('jornada-ate-o-horizonte');
+  const tk = api('entrarMestre', { codigo: 'codigo-do-mestre' }).dados.token;
+  for (let i = 1; i <= e.aRecolher; i++) {
+    verdade(api('anotarCampanha', { token: tk, chave: e.chaveDoLugar + i, valor: 'Santuário ' + i }).ok);
+    verdade(api('anotarCampanha', { token: tk, chave: e.chaveDoCalice + i, valor: 'x' }).ok);
+  }
+  const guardadas = api('painelDoMestre', { token: tk }).dados.anotacoesDaCampanha;
+  igual(guardadas[e.chaveDoLugar + 9], 'Santuário 9');
+  igual(guardadas[e.chaveDoCalice + 9], 'x');
+});
+
+teste('⚠ a Trilha da Ruína é dado, e o dado tem de estar inteiro', () => {
+  /*
+   * A trilha vale como ferramenta porque veio da folha do apêndice: patamar por
+   * patamar, com a regra de cada um e o aninhamento do livro. Um id repetido
+   * faria duas caixas dividirem a mesma marca no caderno — tocar numa marcaria
+   * a outra.
+   */
+  const trilha = MOLDURAS_RUINA.find((x) => x.id === 'jornada-ate-o-horizonte')
+    .mecanicas.find((x) => x.id === 'trilha-da-ruina').automacao.trilhaDaRuina;
+  igual(trilha.patamares.length, 4);
+  const vistos = {};
+  const juntar = (lista, profundidade) => (lista || []).forEach((c) => {
+    verdade(c.id && c.texto, 'toda caixa precisa de id e de texto');
+    verdade(!vistos[c.id], `id repetido na trilha: ${c.id}`);
+    vistos[c.id] = true;
+    verdade(profundidade <= 2, `aninhamento fundo demais em ${c.id}: a folha vai até três níveis`);
+    juntar(c.filhas, profundidade + 1);
+  });
+  trilha.patamares.forEach((pt) => {
+    verdade(pt.numero >= 1 && pt.numero <= 4, 'patamar fora de 1..4');
+    verdade((pt.regra || '').length > 20, `o patamar ${pt.numero} está sem a regra do livro`);
+    verdade(pt.nome && pt.nomeIngles, `o patamar ${pt.numero} precisa do nome nas duas línguas`);
+    juntar(pt.caixas, 0);
+  });
+  igual(Object.keys(vistos).length, 68);
+  verdade(/Hope & Fear/.test(trilha.fonte || ''), 'a fonte tem de dizer de onde isto veio');
+});
+
+
+teste('⚠ as duas características que INFLIGEM a maldição estão no dado, com fonte', () => {
+  /*
+   * ⚠ O APP NÃO TRANSFORMA NINGUÉM SOZINHO, e por isso isto é ferramenta de
+   * mesa: as duas rolam dados, comparam com o limiar do alvo e terminam numa
+   * transformação na ficha de quem joga. O que faltava era ter o texto à mão, em
+   * português, em vez de abrir o SRD em inglês no meio da cena.
+   */
+  const CONTEUDO = JSON.parse(
+    fs.readFileSync(new URL('../data/molduras.json', import.meta.url), 'utf8')).molduras;
+  const mec = CONTEUDO.find((x) => x.id === 'caca-a-monstros')
+    .mecanicas.find((x) => x.id === 'transformacoes-de-maldicao');
+  const c = (mec.automacao || {}).caracteristicasDeAdversario || {};
+  igual(mec.automacao.escopo, 'mesa', 'é ferramenta do Mestre: o app não aplica nada disso');
+  igual((c.itens || []).length, 2);
+  verdade(/SRD 2\.0/.test(c.fonte || ''), 'a fonte tem de dizer de onde o texto veio');
+
+  const vampiro = (c.itens || []).find((x) => x.id === 'maldicao-do-vampiro');
+  const lobo = (c.itens || []).find((x) => x.id === 'maldicao-do-lobo');
+  verdade(vampiro && lobo, 'faltou uma das duas características');
+  [vampiro, lobo].forEach((x) => {
+    igual(x.tipo, 'Ação');
+    verdade((x.texto || '').length > 200, `${x.id}: o texto da característica está curto demais`);
+    verdade(/alcance Corpo a Corpo/.test(x.texto), `${x.id}: o alcance tem de estar no texto`);
+    verdade(/gastar um Medo/.test(x.texto), `${x.id}: o custo em Medo tem de estar no texto`);
+    verdade((x.seOJogadorQuiser || '').length > 40,
+      `${x.id}: falta a cláusula de quando o JOGADOR quer a transformação`);
+  });
+
+  /* ⚠ só a do Lobo tem contagem, e ela é a do livro: longo prazo, 6 */
+  igual(vampiro.contagem, null, 'a Maldição do Vampiro não tem contagem — ela resolve na hora');
+  igual(lobo.contagem.tipo, 'longo-prazo');
+  igual(lobo.contagem.valorInicial, 6, 'a Contagem de Licantropia é de 6 (SRD p.202)');
+  verdade(/descanso/.test(lobo.contagem.descricao || ''),
+    'a descrição tem de dizer quando a contagem anda');
+
+  /* e o tipo da contagem existe de verdade no motor */
+  verdade(contexto.tipoDeContagem_(lobo.contagem.tipo),
+    'o tipo declarado não existe na lista de tipos de contagem do motor');
+});
 
 console.log(`\n${passou} passaram, ${falhou} falharam.\n`);
 if (falhou) {

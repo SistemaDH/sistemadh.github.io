@@ -13,23 +13,8 @@
 import { chromium } from 'playwright';
 import zlib from 'node:zlib';
 import { criarServidor } from './servidor-teste.mjs';
+import { escolherNoCartao } from './ajuda-bateria-ficha.mjs';
 
-/*
- * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
- *
- * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
- * do nome-que-abre-a-carta, e no texto das cartas de domínio as palavras
- * glosadas também são botões. Medido: a metade de BAIXO de todo cartão está
- * pelo menos 73% livre (mediana 100%), mas o centro geométrico cai em cima do
- * nome em 8 dos 39 cartões da grade.
- *
- * Isto NÃO é contorno de teste: é a mesma mira que um dedo usa, e é a área que
- * a medição prova estar sempre livre.
- */
-async function escolherNoCartao(alvo) {
-  const caixa = await alvo.boundingBox();
-  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
-}
 
 
 /** Um PNG de verdade, para o editor de foto ter o que desenhar. */
@@ -119,10 +104,10 @@ await p.getByRole('button', { name: /Criação rápida/ }).click();
 await p.locator('.criacao__rodape .btn--principal').click();
 
 await p.waitForSelector('.lista-escolha__item .cartao__alvo');            // classe
-await p.locator('.lista-escolha__item .cartao__alvo').first().click();
+await escolherNoCartao(p.locator('.lista-escolha__item .cartao__alvo').first());
 await p.locator('.criacao__rodape .btn--principal').click();
 await p.waitForSelector('.lista-escolha__item .cartao__alvo');            // subclasse
-await p.locator('.lista-escolha__item .cartao__alvo').first().click();
+await escolherNoCartao(p.locator('.lista-escolha__item .cartao__alvo').first());
 await p.locator('.criacao__rodape .btn--principal').click();
 await p.waitForSelector('.grade-opcoes__item');              // herança
 await escolherNoCartao(p.locator('.grade-opcoes__item .cartao__alvo').first());
@@ -458,9 +443,9 @@ await foto('f13-avanco-opcoes');
 
 await p.fill('.avanco__conquista input', 'Palco de mil vilarejos');
 const evasao = p.locator('.avanco__opcao', { hasText: 'Evasão +1' });
-await evasao.locator('.cartao__alvo').click();
+await escolherNoCartao(evasao.locator('.cartao__alvo'));
 const estresse = p.locator('.avanco__opcao', { hasText: 'Estresse +1' });
-await estresse.locator('.cartao__alvo').click();
+await escolherNoCartao(estresse.locator('.cartao__alvo'));
 await foto('f14-avanco-escolhido');
 
 await p.getByRole('button', { name: 'Continuar' }).click();

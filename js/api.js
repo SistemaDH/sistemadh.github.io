@@ -3,8 +3,8 @@
  * Backend 100% Supabase Edge Functions.
  */
 
-import { CONFIG, MENSAGENS_ERRO } from './config.js?v=c6180d3193';
-import { esperar } from './util.js?v=c6180d3193';
+import { CONFIG, MENSAGENS_ERRO } from './config.js?v=dd0875ae30';
+import { esperar } from './util.js?v=dd0875ae30';
 
 /*
  * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
@@ -78,6 +78,7 @@ const ACOES_ENGINE = new Set([
   'previaDescanso','movimentosDeDescanso','aplicarDescanso',
   'opcoesDeAvanco','previaDeAvanco','aplicarAvanco','desfazerAvanco','aplicarCartaPermanente',
   'painelDoMestre','definirMoldura','reiniciarMoldura','molduraDaMesa','acenderRamoSacro','definirBanquetes',
+  'anotarCampanha',
   'configurarTransformacao',
   'abrirSessao','encerrarSessaoDaMesa','voltarParaAPrimeiraSessao','encerrarCenaDaMesa',
   'encontro','definirEncontro','acrescentarAoEncontro','ajustarAdversario',
@@ -235,6 +236,7 @@ export const api = {
   reiniciarMoldura: (token,confirmado) => chamar('reiniciarMoldura',{token,confirmado}),
   acenderRamoSacro: (token,confirmado) => chamar('acenderRamoSacro',{token,confirmado}),
   definirBanquetes: (token,ligar) => chamar('definirBanquetes',{token,ligar}),
+  anotarCampanha: (token,chave,valor) => chamar('anotarCampanha',{token,chave,valor}),
   molduraDaMesa: (token,id) => chamar('molduraDaMesa',{token,id}),
 
   encontro: token => chamar('encontro',{token}),

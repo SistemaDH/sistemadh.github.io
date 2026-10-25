@@ -239,6 +239,164 @@ if (soNoConteudo.length) {
 }
 const semConteudo = idsDoEquipamento.filter((id) => !porIdDeConteudo.has(id));
 
+/*
+ * ⚠ O NOME DA MOLDURA É UMA RESPOSTA SÓ — E ELA MORAVA EM DOIS LUGARES.
+ *
+ * `data/equipamentos.json` tem o nome porque ele vai em cada item
+ * (`EQUIPAMENTO_CAMPANHA[].moldura`), e `data/molduras.json` tem o nome porque
+ * ele vai no painel. Ninguém comparava os dois. Em 10/2026 a Weredragão
+ * mostrou o preço disso: o `nomeIngles` dela estava errado ("Realm" em vez de
+ * "Reign"), o nome em português veio desse erro, e corrigir um lado teria
+ * deixado o outro mentindo em silêncio.
+ */
+for (const m of (d.campanhas || [])) {
+  const c = porIdDeConteudo.get(m.id);
+  if (c && c.nome && m.nome && c.nome !== m.nome) {
+    throw new Error(`moldura "${m.id}" tem DOIS nomes: "${m.nome}" em ` +
+      `data/equipamentos.json e "${c.nome}" em data/molduras.json. ` +
+      'É uma pergunta com duas respostas — acerte as duas.');
+  }
+}
+
+/*
+ * ⚠ E O ITEM NÃO REPETE O NOME DA MOLDURA DELE.
+ *
+ * Cada um dos 102 itens de campanha carregava um campo `moldura` próprio que
+ * NINGUÉM LIA — o gerador sempre derivou esse campo do nome da moldura-mãe. E
+ * eles já discordavam: os sete itens da Placa-mãe diziam "Placa-mãe
+ * (Motherboard)" enquanto a moldura dizia "Placa-mãe". Dado morto que a
+ * próxima pessoa acreditaria.
+ */
+for (const m of (d.campanhas || [])) {
+  for (const i of (m.itens || [])) {
+    if ('moldura' in i) {
+      throw new Error(`item "${i.id}" declara "moldura" à mão. O nome da ` +
+        'moldura vem da moldura-mãe; repetir aqui é criar um segundo lugar ' +
+        'para errar.');
+    }
+  }
+}
+
+/*
+ * ⚠ DUAS PERGUNTAS DIFERENTES COM O MESMO NOME DE CAMPO.
+ *
+ * `paginasLivro` em `data/equipamentos.json` respondia "em que página estão as
+ * TABELAS DE EQUIPAMENTO" para as cinco molduras que têm itens (275–277 no
+ * Festim, 316–318 no Colosso) e "em que página está o CAPÍTULO" para as três
+ * que não têm. Foi assim que o capítulo do Colosso ficou registrado como
+ * "316–325" em `data/molduras.json`: alguém copiou a página do equipamento.
+ *
+ * Agora são dois campos com dois nomes: `paginasDoEquipamento` aqui e
+ * `paginasLivro` no conteúdo — e o capítulo vem SÓ do conteúdo.
+ */
+for (const m of (d.campanhas || [])) {
+  if ('paginasLivro' in m) {
+    throw new Error(`moldura "${m.id}" ainda tem "paginasLivro" em ` +
+      'data/equipamentos.json. Ali o campo é `paginasDoEquipamento` (a página ' +
+      'das TABELAS); a página do CAPÍTULO mora em data/molduras.json.');
+  }
+  const c = porIdDeConteudo.get(m.id);
+  if (c && !String(c.paginasLivro || '').trim()) {
+    throw new Error(`moldura "${m.id}" tem conteúdo e não diz de que página ` +
+      'ele veio. Sem procedência não há como conferir.');
+  }
+}
+
+/*
+ * ⚠ CADA MOLDURA DIZ O QUE FAZ COM O EQUIPAMENTO — e o gerador recusa quem não diz.
+ *
+ * Antes era um booleano, `substituiEquipamentoInicial`, e ele só sabia duas
+ * coisas: troca tudo, ou nada. A fonte tem CINCO formas, e por causa disso
+ * 66 itens de quatro molduras estavam no catálogo sem jamais aparecer na tela:
+ *
+ *   substitui   o Festim: as tabelas dela NO LUGAR das do Capítulo 2.
+ *   acrescenta  Caça a Monstros e Colosso: AO LADO das do Capítulo 2, nos
+ *               quatro patamares — não é equipamento só de criação.
+ *   arma-unica  Placa-mãe: não há tabela. Há UMA arma (a ikonis), de duas
+ *               mãos, no espaço da primária, e por isso sem secundária.
+ *   saque       Weredragão: itens de ENREDO que o Mestre entrega em jogo.
+ *               Oferecê-los na criação daria de graça o que a campanha existe
+ *               para procurar.
+ *   nenhum      as três que não trazem tabela própria.
+ *
+ * Declarar é obrigatório: uma moldura nova com itens e sem `modo` para o
+ * gerador aqui, em vez de entrar calada e nunca aparecer.
+ */
+/*
+ * ⚠ UMA MOLDURA PODE HERDAR O ARSENAL DE OUTRA — e HERDAR NÃO É COPIAR.
+ *
+ * O Coração Sombrio de Andaluria (Hope & Fear p.152–153) traz o mesmo arsenal de
+ * caça a monstros que o apêndice do SRD 2.0 (p.201–202) que o app já tinha
+ * inteiro: as 36 entradas batem uma por uma — soqueira de latão bento, escopeta
+ * sagrada, besta de repetição, estaca de madeira, escudo consagrado, chicote de
+ * corrente e as três armaduras, nos quatro patamares.
+ *
+ * Copiar as 36 para dentro da moldura nova daria DUAS FONTES à mesma regra, e
+ * duas fontes divergem — é a forma do defeito que este gerador passa a vida
+ * recusando. Então a herdeira declara `equipamentoInicial.apendice` e o gerador
+ * RESOLVE a lista a partir do dono, na hora de gerar. A lista continua escrita
+ * em um lugar só; quem a lê é que são dois.
+ *
+ * E as recusas: a herdeira não pode ter itens próprios (seria metade herdada e
+ * metade escrita à mão, com ninguém sabendo qual é qual), o dono tem de existir
+ * e ter itens, e os dois MODOS têm de concordar — herdar um arsenal que entra
+ * "ao lado" das tabelas do Capítulo 2 e anunciá-lo como "no lugar" delas seria
+ * mentir sobre o que a moldura faz na criação de ficha.
+ */
+const itensDaMoldura = new Map((d.campanhas || []).map((m) => [m.id, m.itens || []]));
+for (const m of (d.campanhas || [])) {
+  const eq = m.equipamentoInicial || {};
+  if (!eq.apendice) continue;
+  if ((m.itens || []).length) {
+    throw new Error(`moldura "${m.id}" herda o arsenal de "${eq.apendice}" E tem ` +
+      `${m.itens.length} item(ns) próprio(s). Escolha um dos dois: metade herdada e ` +
+      'metade escrita à mão é a lista com duas fontes de novo.');
+  }
+  const dono = (d.campanhas || []).find((x) => x.id === eq.apendice);
+  if (!dono) {
+    throw new Error(`moldura "${m.id}" herda de "${eq.apendice}", que não existe.`);
+  }
+  if (!(dono.itens || []).length) {
+    throw new Error(`moldura "${m.id}" herda de "${eq.apendice}", que não tem item nenhum.`);
+  }
+  const modoDoDono = (dono.equipamentoInicial || {}).modo;
+  if (modoDoDono !== eq.modo) {
+    throw new Error(`moldura "${m.id}" herda de "${eq.apendice}" e declara modo ` +
+      `"${eq.modo}", mas o dono declara "${modoDoDono}". O arsenal é o mesmo: ` +
+      'o que ele faz na criação de ficha tem de ser o mesmo também.');
+  }
+  itensDaMoldura.set(m.id, dono.itens);
+}
+
+const MODOS_DE_EQUIPAMENTO = ['substitui', 'acrescenta', 'arma-unica', 'saque', 'nenhum'];
+for (const m of (d.campanhas || [])) {
+  const eq = m.equipamentoInicial || null;
+  if (!eq || !MODOS_DE_EQUIPAMENTO.includes(eq.modo)) {
+    throw new Error(`moldura "${m.id}" sem equipamentoInicial.modo válido ` +
+      `(esperava um de ${MODOS_DE_EQUIPAMENTO.join(', ')}) — ` +
+      'declare o que ela faz, senão os itens dela nunca aparecem na tela.');
+  }
+  /* ⚠ a lista RESOLVIDA, porque uma moldura pode herdar o arsenal de outra */
+  const itens = itensDaMoldura.get(m.id) || [];
+  if (itens.length && eq.modo === 'nenhum') {
+    throw new Error(`moldura "${m.id}" tem ${itens.length} item(ns) e modo "nenhum": ` +
+      'eles ficariam no catálogo sem nunca aparecer. Foi exatamente esse o defeito de 10/2026.');
+  }
+  if (!itens.length && eq.modo !== 'nenhum') {
+    throw new Error(`moldura "${m.id}" não tem item e declara modo "${eq.modo}".`);
+  }
+  if (eq.modo === 'arma-unica') {
+    if (!(m.itens || []).some((i) => i.id === eq.armaFixa)) {
+      throw new Error(`moldura "${m.id}": armaFixa "${eq.armaFixa}" não está na lista de itens dela.`);
+    }
+    for (const id of (eq.itensNoInventario || [])) {
+      if (!(m.itens || []).some((i) => i.id === id)) {
+        throw new Error(`moldura "${m.id}": itensNoInventario cita "${id}", que não é item dela.`);
+      }
+    }
+  }
+}
+
 L.push(`/**
  * As molduras de campanha: equipamento exclusivo e conteúdo, lado a lado.
  *
@@ -251,11 +409,31 @@ L.push(`/**
 L.push('const MOLDURAS = [');
 for (const m of (d.campanhas || [])) {
   const c = porIdDeConteudo.get(m.id) || null;
+  const eq = m.equipamentoInicial || { modo: 'nenhum' };
   L.push(`  ${j({ id: m.id, nome: m.nome, regra: m.regra || '',
-                  substituiEquipamentoInicial: Boolean(m.substituiEquipamentoInicial),
-                  paginasLivro: m.paginasLivro || (c && c.paginasLivro) || '',
+                  equipamentoInicial: eq,
+                  // Derivado do modo, e só por isso continua existindo: é a
+                  // pergunta que a criação faz desde o primeiro dia.
+                  substituiEquipamentoInicial: eq.modo === 'substitui',
+                  // A página do CAPÍTULO vem do conteúdo, e só dele.
+                  paginasLivro: (c && c.paginasLivro) || '',
+                  // A página das TABELAS DE EQUIPAMENTO, que é outra pergunta.
+                  paginasDoEquipamento: m.paginasDoEquipamento || [],
+                  /*
+                   * ⚠ O QUE A MOLDURA PROÍBE NA CRIAÇÃO — derivado do conteúdo,
+                   * nunca escrito aqui.
+                   *
+                   * Hoje é só a Placa-mãe, e só clanks: no Vale dos Ecos todo
+                   * ser robótico autônomo é um remanescente e nenhum tem
+                   * senciência (livro p.294). Entra em `MOLDURAS` porque é a
+                   * criação de ficha que precisa saber — e `MOLDURAS` é o que
+                   * `molduraDaMesa` manda para a tela. `MOLDURAS_CONTEUDO`, que
+                   * tem o capítulo inteiro, só vai para o painel do Mestre.
+                   */
+                  origensProibidas: (c && c.origensProibidas) || null,
                   temConteudo: Boolean(c),
-                  itens: m.itens.map((i) => i.id) })},`);
+                  /* ⚠ resolvida: a herdeira recebe aqui os ids do apêndice dela */
+                  itens: (itensDaMoldura.get(m.id) || []).map((i) => i.id) })},`);
 }
 L.push('];\n');
 
@@ -267,6 +445,37 @@ for (const m of (conteudoMolduras.molduras || [])) {
 L.push('};\n');
 
 L.push('/** As mecânicas de moldura que o servidor sabe aplicar, por id de moldura. */');
+/*
+ * ⚠ TODA AUTOMAÇÃO DIZ SE ELA MUDA FICHA OU SE É FERRAMENTA DE MESA.
+ *
+ * O painel conta as automações para dizer à Mestra o que a campanha muda nas
+ * fichas que JÁ EXISTEM — e essa frase já estava errada por uma: as relações
+ * políticas do Cinco Estandartes são uma tabela de consulta, não mudam ficha
+ * nenhuma. A Leitura do Céu Noturno do Weredragão é da mesma natureza. Sem
+ * `escopo` declarado, cada tabela de consulta nova faria o painel prometer uma
+ * mudança que não existe — exatamente a queixa que abriu este trabalho.
+ */
+/*
+ * ⚠ TRÊS ESCOPOS, E O TERCEIRO NASCEU DE UMA FRASE QUE IA MENTIR.
+ *
+ * 'ficha' é o que o app aplica nas fichas que JÁ EXISTEM; 'mesa' é ferramenta do
+ * Mestre, que não toca ficha nenhuma. O artefato de Castle High não é nem um nem
+ * outro: ele muda o que a CRIAÇÃO pergunta, e não mexe em quem já está em jogo.
+ * Declarado como 'ficha', o painel diria "1 mecânica que o app aplica nas fichas
+ * que já existem" — a mesma mentira que o Cinco Estandartes contou por meses.
+ */
+const ESCOPOS_DE_AUTOMACAO = ['ficha', 'mesa', 'criacao'];
+for (const m of (conteudoMolduras.molduras || [])) {
+  for (const mec of (m.mecanicas || [])) {
+    if (!mec.automacao) continue;
+    if (!ESCOPOS_DE_AUTOMACAO.includes(mec.automacao.escopo)) {
+      throw new Error(`mecânica "${m.id}/${mec.id}" tem automacao sem ` +
+        `\`escopo\` válido (esperava ${ESCOPOS_DE_AUTOMACAO.join(' ou ')}). ` +
+        'Sem isso o painel não sabe se ela muda ficha ou se é consulta de mesa.');
+    }
+  }
+}
+
 L.push('const MECANICAS_DE_MOLDURA = {');
 for (const m of (conteudoMolduras.molduras || [])) {
   const comAutomacao = (m.mecanicas || []).filter((x) => x.automacao);

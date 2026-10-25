@@ -6,16 +6,16 @@
  * que segue as nove etapas do livro.
  */
 
-import { el, dataRelativa } from '../util.js?v=c6180d3193';
-import { CONFIG } from '../config.js?v=c6180d3193';
-import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=c6180d3193';
-import { mensagemDoErro } from '../api.js?v=c6180d3193';
-import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=c6180d3193';
-import { abrirCriacao } from './criacao.js?v=c6180d3193';
-import { abrirFichaEmJogo } from './ficha.js?v=c6180d3193';
-import { abrirPainelDoMestre } from './mestre.js?v=c6180d3193';
-import { icone } from '../componentes/icone.js?v=c6180d3193';
-import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=c6180d3193';
+import { el, dataRelativa } from '../util.js?v=dd0875ae30';
+import { CONFIG } from '../config.js?v=dd0875ae30';
+import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=dd0875ae30';
+import { mensagemDoErro } from '../api.js?v=dd0875ae30';
+import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=dd0875ae30';
+import { abrirCriacao } from './criacao.js?v=dd0875ae30';
+import { abrirFichaEmJogo } from './ficha.js?v=dd0875ae30';
+import { abrirPainelDoMestre } from './mestre.js?v=dd0875ae30';
+import { icone } from '../componentes/icone.js?v=dd0875ae30';
+import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=dd0875ae30';
 
 /** O nível em que a mesa está, para marcar quem ficou para trás. */
 function nivelDaMesa() {

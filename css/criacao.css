@@ -609,6 +609,23 @@
   border-radius: 0 var(--raio-sm) var(--raio-sm) 0;
 }
 
+/*
+ * A ARMA QUE NÃO SE ESCOLHE — a ikonis da Placa-mãe.
+ *
+ * Não é seletor: é o lugar onde a arma JÁ está. Por isso parece cartão e não
+ * opção — nada aqui responde ao toque, e um cartão com cara de escolhível
+ * faria a pessoa procurar as outras opções que não existem.
+ */
+.criacao__armaUnica {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  margin-bottom: var(--e3);
+  border-left: 3px solid var(--cor-ouro);
+}
+
+.criacao__armaUnica p { margin: 0; }
+
 .criacao__molduraNome {
   margin: 0 0 var(--e2);
   font-size: var(--txt-md);
@@ -644,3 +661,41 @@
 }
 
 .criacao__caracteristica.btn--principal .criacao__caracteristicaOrdem { color: inherit; }
+
+/*
+ * A OPÇÃO QUE A CAMPANHA PROÍBE.
+ *
+ * ⚠ ELA FICA NA GRADE. Sumir com o cartão seria mais fácil e pior: quem
+ * conhece Daggerheart conta 24 ancestralidades, acha 23 e não sabe se o app
+ * perdeu uma, se é defeito ou se a campanha tirou. O cartão continua ali, com
+ * o nome abrindo a carta — ler sobre clanks segue permitido; nascer clank no
+ * Vale dos Ecos é que não.
+ *
+ * `cursor: default` em vez de `not-allowed`: o cartão não é um botão recusado,
+ * é informação. E o motivo embaixo é o que faz o bloqueio PARECER bloqueio, em
+ * vez de toque que não responde.
+ */
+.grade-opcoes__item.esta-impedido,
+/*
+ * ⚠ E O CARTÃO DA LISTA TAMBÉM, porque a campanha pode proibir SUBCLASSE: a
+ * Jornada até o Horizonte proíbe o Sindicato do ladino. Sem esta linha a classe
+ * `esta-impedido` entrava no cartão de subclasse e não fazia nada — o cartão
+ * ficava com cara de escolhível, com o alvo desabilitado por baixo, que é
+ * exatamente o "toque que não responde e não se explica" que esta regra existe
+ * para evitar.
+ */
+.lista-escolha__item.esta-impedido {
+  cursor: default;
+  border-color: var(--cor-borda);
+  opacity: .72;
+}
+
+.criacao__impedido {
+  margin: var(--e1) 0 0;
+  padding: var(--e1) var(--e2);
+  border-left: 3px solid var(--cor-alerta, var(--cor-esperanca));
+  border-radius: var(--raio-sm);
+  background: rgba(255, 201, 74, .07);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto);
+}

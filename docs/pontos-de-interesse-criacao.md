@@ -173,3 +173,68 @@ Três casos, três decisões diferentes:
 mostra chamada, domínios, Evasão e PV de cada classe na própria tela: a
 comparação acontece na lista, e o folheador não acrescentaria nada. O nome
 continua abrindo as cartas das subclasses daquela classe.
+
+---
+
+## ⚠ PONTO DE INTERESSE — o centro do cartão de escolha não escolhe (21/10/2026)
+
+O cartão inteiro é alvo de escolha, e isso é desenho declarado: o nome que abre a
+carta, as palavras glosadas do verbete e os campos **sobem por cima** do alvo de
+propósito (`.cartao--alvo`, `css/componentes.css`). O preço é que parte da área
+do cartão faz outra coisa quando você toca nela.
+
+**Medido no cartão de subclasse "Músico Errante", viewport de 360px:** 73% da
+área escolhe, a faixa de baixo escolhe, e o **centro geométrico NÃO** — ali mora
+o gatilho de verbete "uma vez por descanso" (limites de uso, livro p.101). As
+nove faixas de altura, da de cima para a de baixo: 4, 4, 9, 9, 5, 6, 4, 9, 9
+pontos livres de nove.
+
+Ou seja: quem toca no meio exato daquele cartão abre o glossário em vez de
+escolher a subclasse. Toca de novo um dedo acima e escolhe.
+
+⚠ **Não é defeito de código, é o preço do desenho — e eu não mexi nele.** Tirar o
+"Escolher" do rodapé de cada cartão foi decisão medida (custava ~56px por cartão,
+22% da altura do passo de herança), e as palavras glosadas serem tocáveis dentro
+do texto é o que o folheador existe para ser. **Fica aqui porque é seu, não meu:**
+se na mesa alguém tocar no meio e achar que o app travou, a saída é dar ao cartão
+uma marca visível de onde se escolhe — e isso é mudança de interface, que é sua.
+
+⚠ **O que mudou foi a prova.** O centro troca de dono a cada quebra de linha do
+texto; um cartão que passa hoje reprova quando alguém acrescenta uma palavra. As
+baterias agora medem antes de tocar — veja `escolherNoCartao` em
+`tools/ajuda-bateria-ficha.mjs`.
+
+
+---
+
+## ✅ O que a CAMPANHA pergunta na criação (25/10/2026)
+
+Castle High manda todo estudante ter um **artefato de fragmento celeste**, e o
+livro traz duas perguntas sobre ele. Até aqui o artefato existia só como
+combinação falada na mesa: a criação não perguntava, a ficha não guardava, e na
+sessão seguinte ninguém lembrava.
+
+A etapa de histórico agora mostra o bloco da campanha **antes** das perguntas de
+classe — porque é o que esta mesa combinou que todo personagem tem; as da classe
+valem para qualquer mesa. A resposta vai para `historia.campanha` e aparece na aba
+História, na seção **"Desta campanha"**.
+
+⚠ **TRÊS PERGUNTAS, E O DADO DIZ DE QUEM É CADA UMA.** "Como você conseguiu o
+seu?" e "como ele é?" são do livro. **"Qual é o seu artefato?" é nossa** — o livro
+dá a LISTA de artefatos como inspiração e nunca chega a perguntar qual é o seu, e
+sem essa resposta as outras duas não têm sobre o quê. A lista do livro aparece
+como inspiração embaixo dela.
+
+⚠ **A RESPOSTA CARREGA A PERGUNTA JUNTO** (`{chave, pergunta, resposta}`), como o
+histórico e as conexões. Guardado só o texto, trocar de campanha deixaria a
+resposta órfã.
+
+⚠ **E O CAMINHO RÁPIDO NÃO PULA MAIS A ETAPA quando a campanha pergunta.** O
+rápido pula o histórico porque o Guia de Caráter preenche tudo — e o Guia é do
+livro base, que não sabe que a mesa escolheu Castle High. É a mesma forma do
+defeito do equipamento do Festim das Feras. Quem achou foi o caso de CONTROLE da
+bateria de criação, que não conseguia chegar na etapa; eu ia consertar o teste.
+
+⚠ **ESCOPO `criacao`, e ele nasceu para não mentir.** Declarada como `ficha`, a
+mecânica faria o painel prometer mudança para quem já está em jogo. Agora o painel
+conta a pergunta na frase das **fichas NOVAS**, junto com o equipamento inicial.

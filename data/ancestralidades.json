@@ -926,14 +926,18 @@
           "nomeIngles": "Hallowed Aura",
           "nome": "Aura Consagrada",
           "texto": "Uma vez por descanso longo, quando um aliado em alcance Próximo fizer uma jogada com Medo, você pode transformá-la em uma jogada com Esperança.",
-          "automacao": "uso-por-descanso-e-conversao-de-resultado",
+          "automacao": {
+            "classificacao": "uso-por-descanso-e-conversao-de-resultado"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Celestial Wings",
           "nome": "Asas Celestiais",
           "texto": "Você tem asas que permitem voar. Uma vez por cena enquanto estiver voando, pode gastar 1 Esperança em vez de marcar 1 Ponto de Armadura.",
-          "automacao": "substituicao-de-custo-uma-vez-por-cena",
+          "automacao": {
+            "classificacao": "substituicao-de-custo-uma-vez-por-cena"
+          },
           "ordem": 2
         }
       ],
@@ -969,14 +973,18 @@
           "nomeIngles": "Stoneskin",
           "nome": "Pele de Pedra",
           "texto": "Durante a criação de personagem, receba permanentemente +1 na sua Pontuação de Armadura e nos seus limiares de dano.",
-          "automacao": "bonus-permanentes-na-criacao",
+          "automacao": {
+            "classificacao": "bonus-permanentes-na-criacao"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Immovable",
           "nome": "Imovível",
           "texto": "Enquanto estiver tocando o chão, você não pode ser erguido nem movido contra a sua vontade.",
-          "automacao": "regra-contextual-manual",
+          "automacao": {
+            "classificacao": "regra-contextual-manual"
+          },
           "ordem": 2
         }
       ],
@@ -1012,14 +1020,18 @@
           "nomeIngles": "Fireproof",
           "nome": "À Prova de Fogo",
           "texto": "Você é imune a dano causado por chamas mágicas ou mundanas.",
-          "automacao": "imunidade-passiva",
+          "automacao": {
+            "classificacao": "imunidade-passiva"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Ignition",
           "nome": "Ignição",
           "texto": "Marque 1 Estresse para envolver sua arma primária em chamas até o fim da cena. Enquanto estiver em chamas, a arma emite luz intensa e concede um bônus de 1d6 às suas jogadas de dano feitas com ela.",
-          "automacao": "custo-e-bonus-de-dano-por-cena",
+          "automacao": {
+            "classificacao": "custo-e-bonus-de-dano-por-cena"
+          },
           "ordem": 2
         }
       ],
@@ -1055,14 +1067,18 @@
           "nomeIngles": "Nimble Fingers",
           "nome": "Dedos Ágeis",
           "texto": "Quando fizer uma jogada de Finesse, você pode gastar 2 Esperança para rerrolar seu Dado de Esperança.",
-          "automacao": "custo-e-rerrolagem-manual",
+          "automacao": {
+            "classificacao": "custo-e-rerrolagem-manual"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Flicker Step",
           "nome": "Passo Cintilante",
           "texto": "Uma vez por cena, você pode se teleportar para outro ponto que consiga ver em alcance Distante.",
-          "automacao": "uso-por-cena-e-movimento-manual",
+          "automacao": {
+            "classificacao": "uso-por-cena-e-movimento-manual"
+          },
           "ordem": 2
         }
       ],
@@ -1098,14 +1114,18 @@
           "nomeIngles": "Gale Force",
           "nome": "Força do Vendaval",
           "texto": "Marque 1 Estresse para conjurar uma rajada de vento que carregue você ou um aliado em alcance Muito Próximo por até um alcance Longínquo. Além disso, você sempre pode controlar a velocidade da sua queda.",
-          "automacao": "custo-e-movimento-manual",
+          "automacao": {
+            "classificacao": "custo-e-movimento-manual"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Eye of the Storm",
           "nome": "Olho da Tempestade",
           "texto": "Gaste 2 Esperança para conceder a você ou a um aliado em alcance Corpo a Corpo +1 de Evasão até você sofrer dano Severo ou usar esta característica novamente.",
-          "automacao": "custo-e-bonus-persistente-com-termino",
+          "automacao": {
+            "classificacao": "custo-e-bonus-persistente-com-termino"
+          },
           "ordem": 2
         }
       ],
@@ -1141,14 +1161,18 @@
           "nomeIngles": "Amphibious",
           "nome": "Anfíbio",
           "texto": "Você pode respirar e se mover naturalmente debaixo d'água.",
-          "automacao": "regra-passiva",
+          "automacao": {
+            "classificacao": "regra-passiva"
+          },
           "ordem": 1
         },
         {
           "nomeIngles": "Lifespring",
           "nome": "Fonte de Vida",
           "texto": "Uma vez por descanso, quando tiver acesso a uma pequena quantidade de água, você pode marcar 1 Estresse para limpar 1 Ponto de Vida seu ou de um aliado em alcance Muito Próximo.",
-          "automacao": "custo-uso-por-descanso-e-cura-com-alvo",
+          "automacao": {
+            "classificacao": "custo-uso-por-descanso-e-cura-com-alvo"
+          },
           "ordem": 2
         }
       ],

@@ -86,7 +86,11 @@ function fichaVazia_() {
     inventario: [],
     ouro: { punhados: 0, bolsas: 0, cofres: 0 },
     historia: {          // etapas 6 e 9 — narrativo, tudo opcional
-      fundo: [], conexoes: [], descricaoFisica: {}
+      fundo: [], conexoes: [], descricaoFisica: {},
+      // O que a CAMPANHA pergunta (o artefato de Castle High, por exemplo).
+      // Cada resposta carrega a pergunta junto: trocar de campanha não deixa
+      // texto órfão sem ninguém saber a que ele respondia.
+      campanha: []
     },
     condicoes: [],       // ver 46_Condicoes.gs
     contadores: {},      // fichas/marcadores/dados nas cartas — ver 47_Contadores.gs
@@ -674,4 +678,170 @@ function migrarFicha_(ficha, schemaOrigem) {
   atual.meta.schema = SCHEMA_FICHA;
   atual.meta.migradoDe = origem === SCHEMA_FICHA ? undefined : origem;
   return atual;
+}
+
+/* ------------------------------------------------------------------------ *
+ *  O QUE A MOLDURA DE CAMPANHA PROÍBE NUMA FICHA NOVA
+ * ------------------------------------------------------------------------ */
+
+/**
+ * A ORIGEM QUE A CAMPANHA DA MESA NÃO ADMITE — ou `null`.
+ *
+ * ⚠ ERAM SÓ ANCESTRALIDADES, E O LIVRO PROÍBE MAIS QUE ISSO. Placa-mãe é o
+ * único cenário do Capítulo 5 que proíbe uma ancestralidade: "Clanks não estão
+ * disponíveis neste cenário. Todos os seres robóticos autônomos são
+ * remanescentes e, embora existam em várias formas distintas, nenhum deles tem
+ * senciência" (livro p.294).
+ *
+ * Mas Jornada até o Horizonte proíbe DUAS COISAS QUE NÃO SÃO ANCESTRALIDADE: a
+ * comunidade wanderborne (Hope & Fear p.160) e a subclasse Sindicato do ladino
+ * (p.162) — nos dois casos porque mil anos de santuário selado não deixam
+ * ninguém crescer na estrada nem manter rede de contatos por um continente. A
+ * função sabia recusar uma porta e as outras duas estavam abertas.
+ *
+ * ⚠ E A REGRA MORA NO DADO, NÃO AQUI. As listas vêm de
+ * `MOLDURAS[].origensProibidas`, que o gerador deriva de `data/molduras.json`.
+ * Escrever `if (moldura === 'placa-mae')` nesta função seria a terceira cópia da
+ * mesma condição — e a segunda moldura que proibisse algo nasceria calada.
+ *
+ * ⚠ SÓ VALE PARA FICHA NOVA, e isto é decisão de mesa, não economia de código.
+ * Uma mesa pode escolher Placa-mãe com fichas de clank já em jogo: recusar o
+ * SALVAMENTO delas emparedaria personagens que já estão na mesa. A mesma
+ * fronteira do equipamento inicial — a campanha muda o nascimento, não quem já
+ * nasceu. Por isso quem chama é `criarPersonagem`, e não `validarFicha_`.
+ */
+function origemProibidaDaMoldura_(ficha, idDaMoldura) {
+  if (typeof MOLDURAS === 'undefined') return null;
+  const id = String(idDaMoldura || '');
+  if (!id) return null;
+
+  let moldura = null;
+  for (let i = 0; i < MOLDURAS.length; i++) {
+    if (MOLDURAS[i].id === id) { moldura = MOLDURAS[i]; break; }
+  }
+  const proibidas = (moldura && moldura.origensProibidas) || null;
+  if (!proibidas) return null;
+  const motivo = String(proibidas.motivo || '');
+
+  /*
+   * A ancestralidade: a ficha guarda o NOME ("Clank"), e a herança mista guarda
+   * os IDS em `origem.ancestralidadeMista`. As duas portas precisam da mesma
+   * tranca: foi exatamente assim que a arma única da moldura escapou — a regra
+   * valia num caminho e não no outro.
+   */
+  const ancestralidades = proibidas.ancestralidades || [];
+  if (ancestralidades.length) {
+    const candidatos = [];
+    const identidade = (ficha && ficha.identidade) || {};
+    if (identidade.ancestralidade) candidatos.push(identidade.ancestralidade);
+    const mista = ((ficha && ficha.origem) || {}).ancestralidadeMista || [];
+    for (let i = 0; i < mista.length; i++) candidatos.push(mista[i]);
+
+    for (let i = 0; i < candidatos.length; i++) {
+      const canonico = typeof normalizarAncestralidade_ === 'function'
+        ? normalizarAncestralidade_(candidatos[i]) : null;
+      if (!canonico) continue;
+      if (ancestralidades.indexOf(canonico) === -1) continue;
+      const anc = (typeof ANCESTRALIDADES !== 'undefined' && ANCESTRALIDADES[canonico]) || null;
+      return {
+        tipo: 'ancestralidade',
+        id: canonico,
+        ancestralidade: canonico,
+        nome: (anc && anc.nome) || canonico,
+        moldura: moldura.nome,
+        motivo: motivo
+      };
+    }
+  }
+
+  /*
+   * A COMUNIDADE. A ficha guarda o nome ou o id, dependendo de por onde a ficha
+   * entrou, então a comparação passa pelo mesmo normalizador que o resto do
+   * motor usa — comparar string crua deixaria "Wanderborne" passar onde
+   * "wanderborne" é recusado.
+   */
+  const comunidades = proibidas.comunidades || [];
+  if (comunidades.length) {
+    const bruta = ((ficha && ficha.identidade) || {}).comunidade;
+    const canonica = typeof normalizarComunidade_ === 'function'
+      ? normalizarComunidade_(bruta) : String(bruta || '').toLowerCase();
+    if (canonica && comunidades.indexOf(canonica) !== -1) {
+      const com = (typeof COMUNIDADES !== 'undefined' && COMUNIDADES[canonica]) || null;
+      return {
+        tipo: 'comunidade',
+        id: canonica,
+        nome: (com && com.nome) || canonica,
+        moldura: moldura.nome,
+        motivo: motivo
+      };
+    }
+  }
+
+  /*
+   * A SUBCLASSE. Aqui a ficha guarda o NOME exibido ("Sindicato"), e o id mora
+   * no catálogo de classes — então a tranca resolve o id pela classe da ficha,
+   * em vez de comparar o nome, que é o que muda quando alguém reimporta o livro.
+   */
+  const subclasses = proibidas.subclasses || [];
+  if (subclasses.length) {
+    const identidade = (ficha && ficha.identidade) || {};
+    /*
+     * ⚠ O ID VEM DO NORMALIZADOR, não de comparação de nome. A ficha guarda o
+     * nome exibido ("Sindicato"), e nome é justamente o que muda quando alguém
+     * reimporta o livro — `normalizarSubclasse_` resolve id e apelidos, e é o
+     * mesmo leitor que o resto do motor usa.
+     */
+    const idDaSub = typeof normalizarSubclasse_ === 'function'
+      ? normalizarSubclasse_(identidade.subclasse) : '';
+    if (idDaSub && subclasses.indexOf(idDaSub) !== -1) {
+      return {
+        tipo: 'subclasse',
+        id: idDaSub,
+        nome: String(identidade.subclasse || idDaSub),
+        moldura: moldura.nome,
+        motivo: motivo
+      };
+    }
+  }
+
+  return null;
+}
+
+
+/**
+ * O APÊNDICE DE MECÂNICAS QUE A MOLDURA HERDA — resolvido num lugar só.
+ *
+ * ⚠ POR QUE EXISTE HERANÇA. As mecânicas de campanha do Coração Sombrio de
+ * Andaluria (Hope & Fear p.152–157) são as MESMAS do apêndice de caça a monstros
+ * do SRD 2.0 (p.201–202) que o app já tinha inteiro: o arsenal (as 36 entradas
+ * batem uma por uma), a Caçada em cinco batidas, as quatro perguntas de Fazer um
+ * Monstro, as Pistas Liminares de 4 a 6 e as três transformações de maldição.
+ *
+ * Copiar aquele conteúdo para dentro da moldura nova daria DUAS FONTES à mesma
+ * regra — e duas fontes divergem, que é a forma de defeito que este projeto passa
+ * a vida consertando. Então a moldura declara `apendices: ['caca-a-monstros']` e
+ * quem resolve é esta função, uma vez, para quem precisar.
+ *
+ * ⚠ E O QUE ELA DEVOLVE DIZ DE ONDE VEIO. O painel desenha as ferramentas
+ * herdadas com o nome e a página do apêndice ao lado: sem isso, a Mestra veria a
+ * trilha da Caçada dentro de Andaluria sem jeito de saber que aquilo é o mesmo
+ * procedimento do SRD que ela pode usar em qualquer campanha.
+ */
+function apendicesDaMoldura_(idDaMoldura) {
+  if (!idDaMoldura || typeof MOLDURAS_CONTEUDO === 'undefined') return [];
+  var c = MOLDURAS_CONTEUDO[idDaMoldura];
+  var ids = (c && c.apendices) || [];
+  var saida = [];
+  for (var i = 0; i < ids.length; i++) {
+    var a = MOLDURAS_CONTEUDO[ids[i]];
+    if (!a) continue;
+    saida.push({
+      id: a.id,
+      nome: a.nome,
+      paginasLivro: a.paginasLivro || '',
+      fonteDoTexto: a.fonteDoTexto || '',
+      mecanicas: a.mecanicas || []
+    });
+  }
+  return saida;
 }

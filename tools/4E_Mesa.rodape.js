@@ -100,6 +100,31 @@ function normalizarMesa_(m) {
    */
   m.molduraTravada = Boolean(m.moldura) && m.molduraTravada !== false;
   m.molduraDesde = m.moldura ? String(m.molduraDesde || agoraIso_()) : '';
+
+  /*
+   * A ANOTAÇÃO DE CAMPANHA — o que a campanha decidiu e ninguém quer digitar
+   * de novo.
+   *
+   * ⚠ ESTA PEÇA FALTAVA PARA TRÊS COISAS AO MESMO TEMPO: a batida atual da
+   * Caçada, as Pistas Liminares já reveladas e as cinco escolhas da Leitura do
+   * Céu Noturno. A leitura é o caso que doía: ela é feita UMA VEZ, na sessão
+   * zero, e até agora vivia só na tela — recarregar a página apagava o que a
+   * mesa tinha decidido sobre a campanha inteira.
+   *
+   * ⚠ GUARDADA POR ID DE MOLDURA, e é isso que torna honesto guardar. A
+   * pergunta que me travava era "e quando a mesa troca de campanha?". Com um
+   * mapa por moldura, a resposta é: nada se perde. Reiniciar a campanha
+   * destrava a escolha e as anotações da antiga continuam ali, intactas, para
+   * quando ela voltar — do mesmo jeito que o livro deixa a leitura ser refeita
+   * ou ter uma linha substituída por um NPC que a própria mesa inventou
+   * (Hope & Fear, p.140).
+   *
+   * ⚠ NÃO É REGRA, É ANOTAÇÃO. Nada aqui muda ficha, nem Medo, nem dano. É o
+   * caderno do Mestre, e por isso o motor não interpreta o conteúdo: valida a
+   * FORMA (chaves curtas, texto curto, tamanho com teto) e guarda. Interpretar
+   * seria inventar mecânica a partir de anotação.
+   */
+  m.anotacoesDeCampanha = normalizarAnotacoesDeCampanha_(m.anotacoesDeCampanha);
   /*
    * O ENCONTRO em jogo mora aqui do lado das contagens, pelo mesmo motivo:
    * é do GRUPO, não de um jogador, e ninguém quer perder a trilha de PV do
@@ -194,6 +219,141 @@ function publicarRecadoNaMesa_(m, recado) {
   return novo;
 }
 
+/* ------------------------------------------------------------------------ *
+ *  A ANOTAÇÃO DE CAMPANHA
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Tetos da anotação. Caderno do Mestre, não banco de dados.
+ *
+ * ⚠ O TETO DE CHAVES ERA 40, E ELE MEDIA A COISA ERRADA. A Trilha da Ruína da
+ * Jornada até o Horizonte tem SESSENTA E OITO caixas, e a campanha ainda guarda
+ * as nove vagas de Eco e o lugar onde a mesa está: com 40 chaves, uma campanha
+ * do livro não cabia no caderno — e quem avisava era uma recusa no meio da
+ * sessão, mandando "apague alguma antes".
+ *
+ * O que precisa de teto é o TAMANHO, não a contagem: uma caixa marcada custa
+ * onze bytes e uma anotação de 400 caracteres custa quarenta vezes mais. Então
+ * o teto de chaves subiu para caber a maior campanha do livro com folga, e
+ * entrou um teto de BYTES do caderno inteiro, que é o que de fato protege a
+ * linha da mesa de crescer sem fim.
+ */
+var ANOTACAO_MAX_MOLDURAS = 16;
+var ANOTACAO_MAX_CHAVES = 120;
+var ANOTACAO_MAX_TEXTO = 400;
+var ANOTACAO_MAX_BYTES = 64000;
+
+/**
+ * Valida a FORMA da anotação de campanha, sem interpretar o conteúdo.
+ *
+ * ⚠ O MOTOR NÃO LÊ O QUE ESTÁ ESCRITO AQUI, e isso é decisão. Se ele começasse
+ * a entender "a leitura caiu na face 3", a anotação viraria regra pela porta de
+ * trás: o Mestre digita e o app aplica algo. A anotação é o caderno dele —
+ * quem dá sentido ao que está escrito é a tela que desenha, e ela desenha a
+ * partir da TABELA do livro, que vive em data/molduras.json.
+ *
+ * O que o motor garante é que a forma não cresce sem limite e não traz lixo:
+ * chave curta e sem espaço, valor texto ou número, e tetos declarados acima.
+ */
+function normalizarAnotacoesDeCampanha_(bruto) {
+  const saida = {};
+  if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) return saida;
+  const molduras = Object.keys(bruto).slice(0, ANOTACAO_MAX_MOLDURAS);
+  for (let i = 0; i < molduras.length; i++) {
+    const idMoldura = String(molduras[i] || '').slice(0, 60);
+    if (!idMoldura) continue;
+    const bloco = bruto[idMoldura];
+    if (!bloco || typeof bloco !== 'object' || Array.isArray(bloco)) continue;
+    const limpo = {};
+    const chaves = Object.keys(bloco).slice(0, ANOTACAO_MAX_CHAVES);
+    for (let k = 0; k < chaves.length; k++) {
+      const chave = String(chaves[k] || '');
+      if (!/^[A-Za-z0-9_.:-]{1,40}$/.test(chave)) continue;
+      const valor = bloco[chave];
+      if (valor === null || valor === undefined || valor === '') continue;
+      if (typeof valor === 'number' && isFinite(valor)) {
+        limpo[chave] = Math.trunc(valor);
+      } else if (typeof valor === 'string') {
+        const texto = valor.slice(0, ANOTACAO_MAX_TEXTO).trim();
+        if (texto) limpo[chave] = texto;
+      }
+      /* objeto e array ficam de fora de propósito: caderno, não banco. */
+    }
+    if (Object.keys(limpo).length) saida[idMoldura] = limpo;
+  }
+  return saida;
+}
+
+/**
+ * Grava (ou apaga) uma anotação da campanha ESCOLHIDA.
+ *
+ * ⚠ SÓ DA CAMPANHA ESCOLHIDA, e a recusa é de propósito. Deixar o Mestre
+ * anotar numa moldura que a mesa não está jogando daria anotação órfã, que
+ * aparece depois sem ninguém lembrar de onde veio. Para anotar na outra, é
+ * escolher a outra.
+ *
+ * Valor vazio APAGA a chave — é como se desfaz uma escolha da leitura sem
+ * precisar de uma segunda ação.
+ */
+function anotarCampanha_(m, chave, valor) {
+  const moldura = String((m || {}).moldura || '');
+  if (!moldura) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'A mesa não está em nenhuma campanha, então não há o que anotar.');
+  }
+  const nome = String(chave || '');
+  if (!/^[A-Za-z0-9_.:-]{1,40}$/.test(nome)) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'Chave de anotação inválida: use até 40 caracteres sem espaço.');
+  }
+  const todas = normalizarAnotacoesDeCampanha_(m.anotacoesDeCampanha);
+  const bloco = todas[moldura] || {};
+  const apagar = valor === null || valor === undefined || valor === '';
+
+  if (apagar) {
+    delete bloco[nome];
+  } else if (typeof valor === 'number' && isFinite(valor)) {
+    bloco[nome] = Math.trunc(valor);
+  } else if (typeof valor === 'string') {
+    const texto = String(valor).slice(0, ANOTACAO_MAX_TEXTO).trim();
+    if (!texto) { delete bloco[nome]; } else { bloco[nome] = texto; }
+  } else {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'A anotação de campanha guarda texto ou número — nada mais.');
+  }
+
+  if (Object.keys(bloco).length > ANOTACAO_MAX_CHAVES) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'Esta campanha já tem ' + ANOTACAO_MAX_CHAVES + ' anotações. Apague alguma antes.');
+  }
+  if (Object.keys(bloco).length) todas[moldura] = bloco;
+  else delete todas[moldura];
+
+  /*
+   * ⚠ O TETO QUE IMPORTA É ESTE, e ele vale para o caderno INTEIRO — todas as
+   * campanhas juntas. A contagem de chaves protege uma campanha de virar banco
+   * de dados; o tamanho protege a LINHA DA MESA, que é lida inteira a cada
+   * abertura do painel. Medido depois de montar o bloco, porque é o bloco já
+   * montado que vai para o disco.
+   */
+  const tamanho = JSON.stringify(todas).length;
+  if (tamanho > ANOTACAO_MAX_BYTES) {
+    throw erroApi_(ERRO.DADOS_INVALIDOS,
+      'O caderno de campanhas chegou ao tamanho máximo (' + ANOTACAO_MAX_BYTES +
+      ' caracteres). Apague anotações de alguma campanha antes de escrever mais.');
+  }
+  m.anotacoesDeCampanha = todas;
+  return { moldura: moldura, chave: nome, apagada: apagar, anotacoes: bloco };
+}
+
+/** As anotações da campanha escolhida — vazio quando não há campanha. */
+function anotacoesDaCampanhaDaMesa_(m) {
+  const moldura = String((m || {}).moldura || '');
+  if (!moldura) return {};
+  const todas = normalizarAnotacoesDeCampanha_((m || {}).anotacoesDeCampanha);
+  return todas[moldura] || {};
+}
+
 /**
  * QUAL MOLDURA DE CAMPANHA A MESA ESTÁ JOGANDO — a pergunta, com um dono só.
  *
@@ -220,12 +380,58 @@ function molduraDaMesa_() {
  * Fora da moldura certa, a lista é vazia — e é isso que faz a Corrupção não
  * existir para quem não está jogando o Surto Selvagem, sem nenhum `if` de
  * moldura espalhado pelo motor de dano.
+ *
+ * ⚠ E SÓ AS DE FICHA. Esta função é a resposta para "o que o motor aplica nas
+ * personagens", e é dela que o painel tira a frase do que a campanha muda. Uma
+ * tabela de CONSULTA do Mestre — as relações políticas do Cinco Estandartes, a
+ * Leitura do Céu Noturno do Weredragão — é desenhada pelo painel a partir do
+ * conteúdo da moldura, e entrar aqui faria o motor contá-la como mudança de
+ * ficha. Foi assim que a Leitura, recém-ligada, tirou o Weredragão da lista das
+ * molduras que não mudam ficha — e a conferência pegou na hora.
  */
 function mecanicasDaMolduraDaMesa_(moldura) {
   const id = (moldura === undefined || moldura === null) ? molduraDaMesa_() : String(moldura || '');
   if (!id || typeof MECANICAS_DE_MOLDURA === 'undefined') return [];
   const lista = MECANICAS_DE_MOLDURA[id];
-  return Array.isArray(lista) ? lista : [];
+  if (!Array.isArray(lista)) return [];
+  /*
+   * ⚠ FICAM DE FORA AS DE MESA E AS DE CRIAÇÃO. Esta lista é o que o motor
+   * aplica numa ficha VIVA: a ferramenta de mesa não toca ficha nenhuma, e a de
+   * criação só muda o que a criação PERGUNTA — devolver qualquer uma delas aqui
+   * faria o painel prometer, para quem já está em jogo, uma mudança que não vem.
+   */
+  return lista.filter(function (x) {
+    return !x || !x.automacao
+      || (x.automacao.escopo !== 'mesa' && x.automacao.escopo !== 'criacao');
+  });
+}
+
+/**
+ * AS PERGUNTAS QUE A CAMPANHA FAZ NA CRIAÇÃO — ou lista vazia.
+ *
+ * ⚠ ESTA FUNÇÃO EXISTE PORQUE `mecanicasDaMolduraDaMesa_` NÃO SERVE AQUI, e
+ * isso é de propósito: aquela lista é o que o motor aplica numa ficha VIVA, e
+ * ela filtra justamente o escopo 'criacao'. A tela de criação quer o contrário —
+ * só as de criação.
+ *
+ * ⚠ E A TELA NÃO PODE LER AS MECÂNICAS DIRETO: o catálogo que ela recebe
+ * (`MOLDURAS`) não carrega `mecanicas`, que moram em `MECANICAS_DE_MOLDURA`. Foi
+ * exatamente nisso que a bateria de criação esbarrou: a pergunta estava no dado,
+ * declarada, e a tela não via nada.
+ */
+function perguntasDeHistoriaDaMoldura_(moldura) {
+  const id = (moldura === undefined || moldura === null) ? molduraDaMesa_() : String(moldura || '');
+  if (!id || typeof MECANICAS_DE_MOLDURA === 'undefined') return [];
+  const lista = MECANICAS_DE_MOLDURA[id];
+  if (!Array.isArray(lista)) return [];
+  const saida = [];
+  for (let i = 0; i < lista.length; i++) {
+    const mec = lista[i] || {};
+    const bloco = (mec.automacao || {}).perguntasDeHistoria;
+    if (!bloco || !Array.isArray(bloco.perguntas) || !bloco.perguntas.length) continue;
+    saida.push({ id: String(mec.id || ''), nome: String(mec.nome || ''), bloco: bloco });
+  }
+  return saida;
 }
 
 /**
@@ -1033,4 +1239,94 @@ function voltarParaAPrimeiraSessaoDaMesa_(m) {
     medo: m.medo,
     nota: 'A mesa voltou para antes da primeira sessão. Abrir a sessão 1 põe o Medo em 1 por personagem.'
   };
+}
+
+/**
+ * A HABILIDADE DE CLASSE QUE A CAMPANHA TROCA.
+ *
+ * ⚠ ESTAVA NO LIVRO E O APP IGNORAVA. Em Placa-mãe o Treinamento de Combate do
+ * guerreiro é SUBSTITUÍDO por Treinamento Ikonis: "você começa com o
+ * aprimoramento potência já desenvolvido e instalado na sua ikonis" (livro
+ * p.295). Até agora a ficha continuava listando a habilidade original — e,
+ * pior, o servidor continuava APLICANDO a metade dela que é regra: o guerreiro
+ * seguia ignorando o tipo de empunhadura.
+ *
+ * E a troca tem lógica de conta: nesta campanha todo personagem já tem a
+ * Ligação da ikonis, que dá bônus de dano igual ao nível. Mantido, o
+ * Treinamento de Combate daria ao guerreiro o mesmo bônus duas vezes.
+ *
+ * ⚠ ESTA É REGRA DE FICHA VIVA, não de ficha nova — e a diferença é a do
+ * equipamento ao contrário. A proibição de clanks vale só no nascimento porque
+ * ninguém deve ser emparedado por uma escolha de mesa posterior. Esta vale
+ * agora, em toda ficha, porque é como a habilidade FUNCIONA naquela campanha:
+ * sair do cenário devolve a habilidade original sozinho, sem migração.
+ *
+ * ⚠ E A LISTA VEM DO DADO. `automacao.substituiCaracteristicaDeClasse` em
+ * data/molduras.json é a única definição; nenhum id de moldura ou nome de
+ * classe está escrito nas funções que leem isto.
+ */
+function substituicoesDeClasseDaMoldura_(moldura) {
+  const mec = (typeof mecanicasDaMolduraDaMesa_ === 'function')
+    ? mecanicasDaMolduraDaMesa_(moldura) : [];
+  const saida = [];
+  for (let i = 0; i < mec.length; i++) {
+    const t = ((mec[i] || {}).automacao || {}).substituiCaracteristicaDeClasse;
+    if (t && t.remove && t.poe) saida.push(t);
+  }
+  return saida;
+}
+
+/**
+ * Aplica as trocas da campanha numa lista de características de classe.
+ *
+ * ⚠ UM LEITOR SÓ, E É `caracteristicasDaClasse_`. Ela já resolve classe,
+ * subclasse e multiclasse, e é por ela que passam tanto o que a FICHA MOSTRA
+ * quanto o que o servidor APLICA (`fichaTemEfeito_` a consulta para saber se o
+ * personagem ignora empunhadura). Trocar aqui conserta as duas coisas de uma
+ * vez; trocar em qualquer outro lugar consertaria uma e deixaria a outra
+ * mentindo — que é o defeito que este projeto passa a vida caçando.
+ */
+function comSubstituicoesDaMoldura_(lista, ficha) {
+  const trocas = substituicoesDeClasseDaMoldura_();
+  if (!trocas.length) return lista;
+
+  const chave = function (x) {
+    return (typeof chaveTexto_ === 'function') ? chaveTexto_(x) : String(x || '').toLowerCase();
+  };
+  const normClasse = function (x) {
+    return (typeof normalizarClasse_ === 'function') ? normalizarClasse_(x) : null;
+  };
+  /*
+   * A troca é por CLASSE: só o guerreiro perde o Treinamento de Combate. E
+   * `caracteristicasDaClasse_` já traz a origem de cada linha, então a
+   * multiclasse também é alcançada — um bardo que multiclassou em guerreiro
+   * numa mesa de Placa-mãe recebe a mesma troca, pelo mesmo motivo.
+   */
+  const id = (ficha && ficha.identidade) || {};
+  const classes = [normClasse(id.classe)];
+  const mc = (ficha && ficha.multiclasse) || null;
+  if (mc && mc.classe) classes.push(normClasse(mc.classe));
+
+  return lista.map(function (item) {
+    for (let i = 0; i < trocas.length; i++) {
+      const t = trocas[i];
+      if (classes.indexOf(normClasse(t.classe)) === -1) continue;
+      if (chave((item || {}).nome) !== chave(t.remove)) continue;
+      /*
+       * ⚠ O TEXTO VAI JUNTO. A ficha desenha `c.texto || catalogo.
+       * textoDaCaracteristica(c.nome)` e, quando não acha nenhum dos dois,
+       * escreve "Texto não encontrado no catálogo." Treinamento Ikonis não
+       * existe em data/classes.json — ele é da MOLDURA —, então sem mandar o
+       * texto daqui a troca apareceria como um nome órfão.
+       */
+      return {
+        nome: t.poe,
+        texto: t.texto || '',
+        origem: item.origem,
+        trocadaPelaMoldura: t.remove,
+        fonte: t.fonte || ''
+      };
+    }
+    return item;
+  });
 }

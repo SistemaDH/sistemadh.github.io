@@ -321,6 +321,28 @@
 }
 
 /*
+ * O QUE A CAMPANHA MUDA — agora, ou só em ficha nova.
+ *
+ * ⚠ Quando a moldura NÃO muda nada em ficha existente, a linha ganha a cor de
+ * alerta e a régua à esquerda. É o aviso que faltava: quem escolhe o cenário e
+ * volta para uma ficha antiga procurando a mudança precisa ler isso ANTES de
+ * concluir que o app não aplicou.
+ */
+.mestre__molduraQuando {
+  margin: 0 0 var(--e2);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+.mestre__molduraQuando.esta-so-na-criacao {
+  padding: var(--e2) var(--e3);
+  border-left: 3px solid var(--cor-alerta, var(--cor-esperanca));
+  border-radius: var(--raio-sm);
+  background: rgba(255, 201, 74, .07);
+  color: var(--cor-texto);
+}
+
+/*
  * As cartas do jogador, no cartão do Mestre.
  *
  * Mesma moldura da transformação de propósito: são os dois blocos de "o que
@@ -1263,4 +1285,296 @@
 .mestre__desfazer:hover {
   color: var(--cor-texto-suave);
   text-decoration-color: var(--cor-texto-fraco);
+}
+
+/*
+ * O CONTEÚDO DO CENÁRIO — origens, princípios e perguntas.
+ *
+ * ⚠ ESTAS REGRAS EXISTEM PORQUE O TEXTO PASSOU A TER LEITOR. Até 10/2026 as
+ * origens e os dois conjuntos de princípios viviam em data/molduras.json sem
+ * nenhuma tela: não havia o que estilizar. Agora são dobras dentro do cartão do
+ * cenário, e a margem negativa é para a régua da dobra encostar na borda do
+ * cartão em vez de flutuar com o respiro dele — do contrário o filete parece
+ * sublinhado de parágrafo, e não divisória de seção.
+ */
+.mestre__origens {
+  margin: var(--e2) calc(var(--e3) * -1) 0;
+}
+
+.mestre__origens .dobra__corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+}
+
+.mestre__origem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+/*
+ * O nome vem em duas linhas no celular e em uma no desktop: "Highborne" e "no
+ * livro: Aristocrática" lado a lado não cabem em 360px sem quebrar no meio do
+ * parêntese.
+ */
+.mestre__origemNome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--e1) var(--e2);
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+}
+
+.mestre__origemLivro {
+  font-family: var(--fonte-corpo);
+  font-size: var(--txt-xs);
+  font-style: italic;
+  color: var(--cor-texto-fraco);
+}
+
+/*
+ * Uma revelação da Astromante: rótulo, efeito, o seletor da face e o que saiu.
+ *
+ * ⚠ O SELETOR É DE LARGURA CHEIA de propósito. São cinco, um embaixo do outro,
+ * e o texto de cada face é uma frase — num celular de 360px, dois por linha
+ * cortariam o nome do lugar justamente onde ele importa.
+ */
+.mestre__revelacao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  padding: var(--e2) 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.mestre__revelacao select { width: 100%; }
+
+/*
+ * A TRILHA DA CAÇADA e a PILHA DE PISTAS — os dois cadernos de campanha.
+ *
+ * ⚠ A BATIDA É UM BOTÃO DE CARTÃO, não um item de lista com um radio dentro.
+ * Na mesa, isto é tocado com o polegar no meio de uma cena: o alvo tem de ser o
+ * cartão inteiro, e `text-align: left` porque o texto da batida é uma frase, e
+ * frase centralizada em duas linhas fica difícil de varrer com o olho.
+ */
+.mestre__batida {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  width: 100%;
+  min-height: var(--alvo-toque);
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid var(--cor-borda);
+  background: none;
+  font: inherit;
+  color: var(--cor-texto);
+}
+
+.mestre__batida.esta-marcada {
+  border-color: var(--cor-ouro-claro);
+  background: rgba(255, 201, 74, .07);
+}
+
+.mestre__batidaNome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+}
+
+/*
+ * O CABEÇALHO DO QUE É HERDADO.
+ *
+ * ⚠ ELE NÃO É UM AVISO, e por isso não usa o desenho dos avisos. Herdar o
+ * apêndice de caça a monstros é o certo, não uma ressalva: a linha serve para
+ * dizer DE ONDE vem o bloco seguinte, e some do caminho do olho depois disso.
+ */
+.mestre__herdado {
+  margin: var(--e2) 0 0;
+  padding-left: var(--e2);
+  border-left: 2px solid var(--cor-ouro-escuro);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
+}
+
+/*
+ * A ESCOLHA DA MESA — as quatro torres de Castle High, e o que vier depois.
+ *
+ * ⚠ MESMA FORMA DA BATIDA DA CAÇADA, de propósito: é o mesmo gesto (tocar o
+ * cartão inteiro para marcar, tocar de novo para desmarcar) e seria pior ter
+ * dois desenhos para a mesma ação em telas vizinhas. O que muda é só o que cada
+ * cartão carrega dentro.
+ *
+ * ⚠ A OPÇÃO IMPEDIDA NÃO É UM BOTÃO, e precisa PARECER que não é. A Lock Tower
+ * está selada no livro: ela aparece na lista para quem conta as torres, com o
+ * motivo escrito, mas não aceita toque. Sem a opacidade, um cartão que não
+ * responde ao polegar passa por defeito.
+ */
+.mestre__escolha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  width: 100%;
+  min-height: var(--alvo-toque);
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid var(--cor-borda);
+  background: none;
+  font: inherit;
+  color: var(--cor-texto);
+}
+
+.mestre__escolha.esta-marcada {
+  border-color: var(--cor-ouro-claro);
+  background: rgba(255, 201, 74, .07);
+}
+
+.mestre__escolha.esta-impedida {
+  opacity: .55;
+  cursor: default;
+}
+
+.mestre__escolhaNome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+}
+
+/*
+ * A TABELA ROLADA DO LIVRO — as vinte perguntas sobre Riley.
+ *
+ * ⚠ O NÚMERO É DO DADO, então ele é escrito e não é o marcador automático da
+ * lista: a linha 17 da tabela é "role 17", e numa lista com `list-style` o
+ * número viria da posição, que deixaria de bater no dia em que o livro tiver
+ * uma tabela que começa em 2 ou pula faixas.
+ */
+.mestre__tabelaRolada {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.mestre__tabelaRolada li {
+  display: flex;
+  gap: var(--e2);
+  align-items: baseline;
+}
+
+.mestre__tabelaNumero {
+  flex: 0 0 2.2em;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+  text-align: right;
+}
+
+/*
+ * A pista é campo + botão. Em 360px eles não cabem lado a lado com um texto de
+ * até 400 caracteres dentro do campo, então a coluna é a forma base e o botão
+ * fica alinhado à esquerda — ele é um gesto, não a ação principal do bloco.
+ */
+.mestre__pista {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--e1);
+  padding: var(--e2) 0;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.mestre__pista input { width: 100%; }
+
+/* Revelada continua na pilha, marcada: o livro diz que ela "solidifica". */
+.mestre__pista.esta-revelada input {
+  border-color: var(--cor-ouro-claro);
+}
+
+/*
+ * A TRILHA DA RUÍNA — a árvore de caixas do apêndice da Jornada.
+ *
+ * ⚠ O ANINHAMENTO É A REGRA, ENTÃO ELE PRECISA SER VISÍVEL. No livro a caixa
+ * filha é desenhada recuada sob a mãe, e é esse recuo que explica por que ela
+ * está travada antes da mãe ser marcada. No celular o recuo é curto de
+ * propósito: a tela tem 360px e o texto do evento é longo.
+ *
+ * ⚠ E O ALVO CONTINUA DE 44px mesmo recuado — a caixa de nível 2 é tão tocável
+ * quanto a de nível 0.
+ */
+.mestre__ruinaPatamar {
+  border-top: 1px solid var(--cor-borda);
+  padding-top: var(--e2);
+  margin-top: var(--e2);
+}
+
+.mestre__ruinaTitulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  margin: 0;
+}
+
+.mestre__ruinaCaixa {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: var(--alvo-toque);
+  padding: var(--e1) var(--e2);
+  text-align: left;
+  cursor: pointer;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-sm);
+  background: none;
+  font: inherit;
+  color: var(--cor-texto);
+}
+
+.mestre__ruinaCaixa--1 { margin-left: var(--e3); }
+.mestre__ruinaCaixa--2 { margin-left: calc(var(--e3) * 2); }
+
+.mestre__ruinaCaixa.esta-marcada {
+  border-color: var(--cor-ouro-claro);
+  background: rgba(255, 201, 74, .07);
+}
+
+.mestre__ruinaCaixa.esta-impedida {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.mestre__ruinaTexto { font-size: var(--txt-sm); }
+
+.mestre__impedida { color: var(--cor-texto-fraco); }
+
+/* Uma vaga de Eco de Alma: o santuário onde ele está e a marca do Cálice. */
+.mestre__eco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.mestre__eco.esta-marcada { border-color: var(--cor-ouro); }
+
+.mestre__ecoNome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+}
+
+/* Uma característica de adversário que a campanha acrescenta — texto para copiar. */
+.mestre__caracteristica {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.mestre__caracteristicaNome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  margin: 0;
 }

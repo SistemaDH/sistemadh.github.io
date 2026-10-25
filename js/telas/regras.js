@@ -12,10 +12,10 @@
  * cena, e ninguém abre uma engrenagem no meio da cena.
  */
 
-import { el, limpar, adiar } from '../util.js?v=c6180d3193';
-import { abrirModal } from '../ui.js?v=c6180d3193';
-import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=c6180d3193';
-import { icone } from '../componentes/icone.js?v=c6180d3193';
+import { el, limpar, adiar } from '../util.js?v=dd0875ae30';
+import { abrirModal } from '../ui.js?v=dd0875ae30';
+import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=dd0875ae30';
+import { icone } from '../componentes/icone.js?v=dd0875ae30';
 
 /**
  * O nome de cada categoria e a ORDEM em que aparecem.

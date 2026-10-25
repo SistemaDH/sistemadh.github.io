@@ -32,10 +32,10 @@
  * carta e vira uma barra embaixo (‹ 3 de 264 ›) — ver `carta-visor--ficha`.
  */
 
-import { el } from '../util.js?v=c6180d3193';
-import { abrirModal } from '../ui.js?v=c6180d3193';
-import { nomeComGlossa, glosaDe } from '../glossario.js?v=c6180d3193';
-import { textoAnotado } from '../verbete.js?v=c6180d3193';
+import { el } from '../util.js?v=dd0875ae30';
+import { abrirModal } from '../ui.js?v=dd0875ae30';
+import { nomeComGlossa, glosaDe } from '../glossario.js?v=dd0875ae30';
+import { textoAnotado } from '../verbete.js?v=dd0875ae30';
 
 /**
  * @param {Object} opcoes

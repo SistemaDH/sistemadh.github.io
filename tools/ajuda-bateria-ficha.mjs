@@ -11,16 +11,64 @@
  */
 
 /*
- * ⚠ TOQUE NA PARTE DE BAIXO DO CARTÃO, e não no centro.
+ * ⚠ TOQUE ONDE O CARTÃO ESCOLHE, e isso não é o centro dele.
  *
- * Desde que o cartão inteiro virou alvo de escolha, o topo dele continua sendo
- * do nome-que-abre-a-carta. Medido: a metade de BAIXO de todo cartão está pelo
- * menos 73% livre, mas o centro geométrico cai em cima do nome em 8 dos 39
- * cartões da grade. Não é contorno de teste: é a mira que um dedo usa.
+ * Desde que o cartão inteiro virou alvo de escolha, o que escolhe é a área
+ * "vazia": o nome-que-abre-a-carta, as palavras glosadas do verbete e os campos
+ * sobem por cima do alvo de propósito (veja `.cartao--alvo` no componentes.css).
+ * A mira é a faixa de BAIXO, medida como a mais livre — a mesma que um dedo usa.
+ *
+ * ⚠ E A MIRA SOZINHA NÃO BASTA. Em 21/10/2026 a bateria de Conjuração morreu de
+ * timeout de 30s no cartão de subclasse: o centro de "Músico Errante" caiu em
+ * cima do gatilho de verbete "uma vez por descanso". Medido naquele cartão: 73%
+ * da área escolhe, a faixa de baixo escolhe, o centro NÃO. E o centro não é uma
+ * área ruim por acaso — ele troca de dono a cada quebra de linha do texto, então
+ * um cartão que passa hoje reprova quando alguém acrescenta uma palavra.
+ *
+ * Então a escolha PERGUNTA ao navegador quem recebe o toque antes de tocar; se a
+ * mira estiver coberta, ela varre o cartão por um ponto que escolhe e DIZ qual
+ * elemento estava na frente. O que era um timeout de 30 segundos sem explicação
+ * virou uma linha com o nome de quem cobriu.
  */
 export async function escolherNoCartao(alvo) {
-  const caixa = await alvo.boundingBox();
-  await alvo.click({ position: { x: Math.round(caixa.width / 2), y: Math.round(caixa.height - 12) } });
+  await alvo.scrollIntoViewIfNeeded();
+  const ponto = await alvo.evaluate((elemento) => {
+    const r = elemento.getBoundingClientRect();
+    const dono = (x, y) => {
+      const achado = document.elementFromPoint(Math.round(x), Math.round(y));
+      return {
+        livre: achado === elemento || Boolean(achado && elemento.contains(achado)),
+        classe: achado ? String(achado.className || achado.tagName) : 'nada'
+      };
+    };
+    /* Só pontos que estão de fato na tela: fora dela o navegador responde "nada". */
+    const naTela = (y) => r.top + y >= 1 && r.top + y <= window.innerHeight - 1;
+    const alturas = [];
+    for (let i = 0; i < 14; i++) {
+      const y = r.height - 12 - (i * r.height) / 16;
+      if (y > 4 && naTela(y)) alturas.push(y);
+    }
+    const mira = alturas.length
+      ? dono(r.left + r.width / 2, r.top + alturas[0])
+      : { livre: false, classe: 'cartão fora da tela' };
+    if (mira.livre) return { x: Math.round(r.width / 2), y: Math.round(alturas[0]), desvio: null };
+    for (const y of alturas) {
+      for (const fracao of [0.5, 0.18, 0.82]) {
+        const p = dono(r.left + r.width * fracao, r.top + y);
+        if (p.livre) return { x: Math.round(r.width * fracao), y: Math.round(y), desvio: mira.classe };
+      }
+    }
+    return { x: null, y: null, desvio: mira.classe };
+  });
+
+  if (ponto.x === null) {
+    throw new Error(
+      `nenhum ponto deste cartão escolhe: "${ponto.desvio}" cobre a mira e a varredura não achou área livre`);
+  }
+  if (ponto.desvio) {
+    console.log(`  ⚠ a mira de baixo estava coberta por "${ponto.desvio}" — escolhido em ${ponto.x},${ponto.y}`);
+  }
+  await alvo.click({ position: { x: ponto.x, y: ponto.y } });
 }
 
 /** Cria acesso, cria personagem pela criação rápida e para no roster. */
@@ -42,10 +90,10 @@ export async function criarPersonagemRapido(page, { nome = 'Lyra de Teste' } = {
   await page.locator('.criacao__rodape .btn--principal').click();
 
   await page.waitForSelector('.lista-escolha__item .cartao__alvo');
-  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await escolherNoCartao(page.locator('.lista-escolha__item .cartao__alvo').first());
   await page.locator('.criacao__rodape .btn--principal').click();
   await page.waitForSelector('.lista-escolha__item .cartao__alvo');
-  await page.locator('.lista-escolha__item .cartao__alvo').first().click();
+  await escolherNoCartao(page.locator('.lista-escolha__item .cartao__alvo').first());
   await page.locator('.criacao__rodape .btn--principal').click();
   await page.waitForSelector('.grade-opcoes__item');
   await escolherNoCartao(page.locator('.grade-opcoes__item .cartao__alvo').first());
