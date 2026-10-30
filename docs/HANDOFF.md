@@ -4218,3 +4218,29 @@ agora sai de `data/molduras.json`.
 
 **Estado:** 1309 testes de backend, 158 conferências de moldura, 6 casos na bateria
 de criação, 48 telas na baseline do Mestre, 40 baterias em `teste:tudo`.
+
+---
+
+## Deploy da v27 (26/10/2026)
+
+`engine-api` **v27**, ACTIVE, `verify_jwt: false`, pino
+`ENGINE_COMMIT = 718ff59774388fd33c160525e1c73a5451512d3b`.
+
+⚠ **Não foi repin:** entrou `anotarCampanha` em `ACOES` (50 ações). Sem ela, todo
+o caderno de campanha dá 404 mudo.
+
+⚠ **A ordem foi cumprida inteira**, e o passo 2 é o que importa: os 24
+`SOURCE_FILES` foram baixados do GitHub NAQUELE commit e conferidos por md5 contra
+o que a suíte testou — 24 iguais, 0 diferentes. O motor não executa o que está no
+contêiner; ele busca do commit fixado.
+
+⚠ **O deploy pode ser bloqueado pelo classificador do modo automático.** Aconteceu
+na primeira tentativa, sem explicação. Não contorne: pare, explique e peça a
+palavra dela. Ela autorizou e a segunda tentativa subiu.
+
+⚠ **Projeto hiberna.** "currently hibernated and will wake on next supported
+request" não é erro: é o Supabase dormindo. Acorda na primeira requisição real.
+
+⚠ **As 24 fontes são buscadas na primeira requisição AUTENTICADA**, não no deploy.
+O deploy verde não prova que o motor carrega: quem fecha a prova é a primeira
+abertura do app pela mesa.

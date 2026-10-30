@@ -2848,3 +2848,46 @@ herdadas, escrito à mão. Com as maldições viradas ferramenta, a Caça a Mons
 passou a ter três, e **o estado de Andaluria falhou por causa de uma mudança na
 Caça a Monstros**, apontando para a tela errada. Agora a conta é LIDA de
 `data/molduras.json`, como as outras desta bateria.
+
+---
+
+## Deploy da v27 (26/10/2026) — o motor aprende a anotar
+
+Primeiro deploy desde a v26, e **não é repin**: muda a função também, porque
+entrou a ação `anotarCampanha` na lista `ACOES`. Sem ela, tudo que grava anotação
+— o caderno da campanha, a Leitura do Céu Noturno, a trilha da Caçada, as pistas,
+a Trilha da Ruína, os nove Ecos, a marca de lugar da Jornada — bateria num 404
+mudo com o frontend novo já no ar.
+
+A ordem foi cumprida na ordem:
+
+1. **Commit imutável:** `718ff59774388fd33c160525e1c73a5451512d3b` ("Commit
+   completo"), o push dela.
+2. ⚠ **Os 24 `SOURCE_FILES` conferidos no GitHub, naquele commit, por md5 contra
+   o que a suíte testou: 24 iguais, 0 diferentes.** É o passo que existe porque
+   o motor não executa o que está no meu contêiner — ele busca do commit fixado.
+3. `ENGINE_COMMIT` atualizado, com o diff conferido: **uma linha só**.
+4. Deploy com **`verify_jwt: false` explícito**. A função autentica sozinha pelo
+   token de sessão no corpo; com `true`, a mesa inteira ficaria trancada para fora.
+5. **Relido do servidor:** v27, ACTIVE, `verify_jwt: false`, pino `718ff59`, e
+   `anotarCampanha` na lista.
+6. **Advisors de segurança:** só o `rls_enabled_no_policy` INFO nas seis tabelas
+   de sempre — esperado, e não se cria política pública para calá-lo.
+
+### ⚠ O deploy foi BLOQUEADO na primeira tentativa, e eu parei
+
+O classificador do modo automático recusou a chamada, sem explicação. Não
+contornei — nem por curl, nem por outro caminho: um deploy de produção não é lugar
+para desvio, e a recusa existe justamente para que alguém decida. Parei, expliquei
+o que faltava e **esperei a palavra dela**, que veio como "pode subir e
+continuar".
+
+⚠ **E o projeto estava HIBERNADO** ("currently hibernated and will wake on next
+supported request") — três tentativas de advisor falharam por isso antes do
+deploy. Depois de subir, acordou e respondeu normalmente.
+
+### ⚠ O que o deploy NÃO prova sozinho
+
+As 24 fontes são buscadas na PRIMEIRA requisição autenticada, não no deploy.
+Conferi que as 24 existem e batem no commit fixado, mas quem fecha a prova é a
+primeira abertura do app pela mesa.
