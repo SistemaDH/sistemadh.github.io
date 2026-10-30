@@ -801,6 +801,17 @@ ele vivia numa pasta irmã do meu contêiner, sem estar escrito em documento
 nenhum.
 
 ⚠ **Ou seja: o verde da suíte dependia de uma pasta que só existia num lugar.**
+
+> ⚠ **CORREÇÃO (30/10/2026): o trecho acima era FALSO na parte mais importante.**
+> O corpus **estava** escrito, e no próprio repositório: `.github/workflows/ci.yml`
+> o baixa a cada rodada, nomeando `klrkdekira/daggerheart-system-json` no commit
+> fixado `7677b0c2`. Eu procurei em `docs/` e no clone dela, não achei, e declarei
+> ausência — procurar em dois lugares e concluir que não existe é exatamente a
+> forma de erro que este projeto caça. O que era verdade: o corpus não está no
+> repositório nem no clone dela, então quem roda a suíte local sem baixá-lo vê as
+> conferências pularem. Como ligar: `docs/HANDOFF.md`, seção "Rodar a suíte na
+> máquina dela".
+
 Na máquina dela a suíte nunca passou inteira, e nem ela nem eu sabíamos, porque
 quem rodava era sempre eu, no único lugar onde o corpus estava.
 

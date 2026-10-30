@@ -2236,6 +2236,17 @@ dependia de uma pasta que existia num único lugar, e **na máquina dela a suít
 nunca passou inteira**. Nem ela nem eu sabíamos, porque quem rodava era sempre
 eu, no único lugar onde o corpus estava.
 
+> ⚠ **CORREÇÃO (30/10/2026): o trecho acima era FALSO na parte mais importante.**
+> O corpus **estava** escrito, e no próprio repositório: `.github/workflows/ci.yml`
+> o baixa a cada rodada, nomeando `klrkdekira/daggerheart-system-json` no commit
+> fixado `7677b0c2`. Eu procurei em `docs/` e no clone dela, não achei, e declarei
+> ausência — procurar em dois lugares e concluir que não existe é exatamente a
+> forma de erro que este projeto caça. O que era verdade: o corpus não está no
+> repositório nem no clone dela, então quem roda a suíte local sem baixá-lo vê as
+> conferências pularem. Como ligar: `docs/HANDOFF.md`, seção "Rodar a suíte na
+> máquina dela".
+
+
 A escolha está escrita no `lib-corpus-srd2.mjs`: **pular alto, não falhar nem
 calar.** Falhar deixa a suíte inútil onde o corpus não existe; pular calado é
 pior, porque alguém lê "0 erros" e acredita que o catálogo foi conferido contra a
@@ -2891,3 +2902,51 @@ deploy. Depois de subir, acordou e respondeu normalmente.
 As 24 fontes são buscadas na PRIMEIRA requisição autenticada, não no deploy.
 Conferi que as 24 existem e batem no commit fixado, mas quem fecha a prova é a
 primeira abertura do app pela mesa.
+
+---
+
+## 30/10/2026 — A pasta que eu disse que não existia estava escrita no próprio repositório
+
+### ⚠ O ERRO É MEU, E É DA FORMA QUE ESTE PROJETO MAIS CAÇA
+
+Em 21/10 eu escrevi, num comentário feito para ser confiado, que o corpus do SRD
+2.0 "nunca esteve escrito em documento nenhum" e que "o verde da suíte dependia
+de uma pasta que só existia num lugar". Repeti a frase em três documentos.
+
+**Era falso.** `.github/workflows/ci.yml` baixa o corpus **a cada rodada**,
+nomeando o repositório e o commit fixado:
+
+```
+klrkdekira/daggerheart-system-json @ 7677b0c28f2efb12bba4a29f23d8068d47f37d64
+```
+
+Eu procurei em `docs/` e no clone dela, não achei, e **declarei ausência**.
+Procurar em dois lugares e concluir que a coisa não existe é exatamente o erro
+que eu venho apontando nos outros lotes — e agora foi num comentário meu, que
+alguém leria como fato.
+
+A descoberta veio de uma pergunta dela que não tinha nada a ver: ela cogitou
+migrar para o Claude Code, eu fui escrever o passo a passo de rodar a suíte na
+máquina dela, e para isso abri o CI — que é onde a resposta sempre esteve.
+
+### ✅ E a consequência é melhor do que a correção
+
+Com o corpus clonado ao lado do repositório, `teste:tudo` rodou **sem nenhum
+PULADO**: `224/224 fontes Rule implementadas` e `8/8 módulos de campanha`. O
+catálogo está conferido contra a fonte — coisa que, desde a reconstrução do
+contêiner, as duas conferências só vinham prometendo.
+
+⚠ **O checkout no commit fixado não é capricho:** as conferências comparam hash
+sha256 por registro, e no `main` daquele repositório os hashes mudam.
+
+### ✅ E o HANDOFF ganhou a seção que faltava
+
+"Rodar a suíte na máquina dela": Node 20+, `npm ci`, `npx playwright install
+chromium` (⚠ sem isso 30 e tantas baterias nem abrem), as duas linhas do corpus,
+e a ordem dos comandos do mais rápido ao mais lento.
+
+⚠ **Duas coisas que achei escrevendo, e que valem:** `.gitattributes` já traz
+`* text=auto eol=lf`, então o Windows não quebra a conferência byte a byte dos
+gerados; e o **CI roda praticamente a suíte inteira a cada push** para `main`,
+baterias de navegador incluídas — ou seja, o verde que importa nunca dependeu só
+da minha máquina.

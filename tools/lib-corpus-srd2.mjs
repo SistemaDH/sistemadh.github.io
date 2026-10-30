@@ -1,22 +1,33 @@
 /**
  * lib-corpus-srd2.mjs — ONDE ESTÁ O CORPUS DO SRD 2.0, e o que fazer sem ele.
  *
- * ⚠ POR QUE ISTO EXISTE: A SUÍTE NÃO RODAVA NA MÁQUINA DELA.
+ * ⚠ CORREÇÃO (30/10/2026): A FRASE QUE ESTAVA AQUI ERA FALSA.
  *
- * Cinco ferramentas conferem o catálogo contra o corpus JSON-LD do SRD 2.0 —
- * um checkout FIXADO, com hash sha256 anotado por registro. Esse corpus nunca
- * esteve no repositório (são milhares de arquivos de fonte de terceiro) nem no
- * clone dela: ele vivia numa pasta irmã do meu contêiner.
+ * Até hoje este comentário dizia que o corpus "nunca esteve escrito em
+ * documento nenhum" e que "o verde da suíte dependia de uma pasta que só
+ * existia num lugar". **Não é verdade, e a prova estava no repositório o tempo
+ * todo:** `.github/workflows/ci.yml` baixa o corpus a cada rodada, nomeando o
+ * repositório e o commit fixado —
  *
- * Em 21/10/2026 o contêiner foi reclamado, eu reconstruí o ambiente a partir do
- * clone dela, e `npm run teste:tudo` quebrou em
- * `teste:srd2-regras-referenciadas` com mais de quinhentas linhas de
- * "fonte/hash inválido". Nenhuma delas era defeito: era a ausência do corpus.
+ *     klrkdekira/daggerheart-system-json @ 7677b0c28f2efb12bba4a29f23d8068d47f37d64
  *
- * E isso significa que o verde da suíte dependia de uma pasta que só existia
- * num lugar, sem estar escrita em nenhum documento. Na máquina dela a suíte
- * NUNCA passou inteira — e nem ela nem eu sabíamos, porque quem rodava era
- * sempre eu, no único lugar onde o corpus estava.
+ * Eu procurei em `docs/` e no clone dela e concluí que não existia. Procurar em
+ * dois lugares e declarar ausência é a forma de erro que este projeto caça, e
+ * desta vez fui eu quem a cometeu — num comentário escrito para ser confiado.
+ *
+ * ⚠ O QUE ERA VERDADE, E CONTINUA SENDO: o corpus não está no repositório (são
+ * milhares de arquivos de fonte de terceiro) nem no clone dela. Quem roda a
+ * suíte localmente sem baixá-lo vê `teste:srd2-regras-referenciadas` quebrar com
+ * mais de quinhentas linhas de "fonte/hash inválido" — nenhuma delas defeito.
+ * Foi o que aconteceu em 21/10/2026, quando o contêiner foi reclamado.
+ *
+ * ⚠ COMO LIGAR O CORPUS, em uma linha, ao lado do repositório:
+ *
+ *     git clone https://github.com/klrkdekira/daggerheart-system-json.git srd2-source
+ *     cd srd2-source && git checkout 7677b0c28f2efb12bba4a29f23d8068d47f37d64
+ *
+ * Numa pasta IRMÃ chamada `srd2-source`, as ferramentas acham sozinhas. Noutro
+ * lugar, aponte `SRD2_CORPUS_DIR` — que é o que o CI faz.
  *
  * ⚠ A ESCOLHA: PULAR ALTO, NÃO FALHAR NEM CALAR.
  *

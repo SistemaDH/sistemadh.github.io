@@ -3799,6 +3799,17 @@ Nenhum era defeito: cinco ferramentas conferem contra um **corpus JSON-LD do SRD
 do meu contêiner, sem estar escrito em documento nenhum. **O verde da suíte
 dependia de uma pasta que só existia num lugar.**
 
+> ⚠ **CORREÇÃO (30/10/2026): o trecho acima era FALSO na parte mais importante.**
+> O corpus **estava** escrito, e no próprio repositório: `.github/workflows/ci.yml`
+> o baixa a cada rodada, nomeando `klrkdekira/daggerheart-system-json` no commit
+> fixado `7677b0c2`. Eu procurei em `docs/` e no clone dela, não achei, e declarei
+> ausência — procurar em dois lugares e concluir que não existe é exatamente a
+> forma de erro que este projeto caça. O que era verdade: o corpus não está no
+> repositório nem no clone dela, então quem roda a suíte local sem baixá-lo vê as
+> conferências pularem. Como ligar: `docs/HANDOFF.md`, seção "Rodar a suíte na
+> máquina dela".
+
+
 `tools/lib-corpus-srd2.mjs`: sem corpus, **⚠ PULA ALTO** (diz onde procurou, como
 ligar via `SRD2_CORPUS_DIR`, e que o verde não cobre isso) e sai com 0; com
 corpus, confere hash por hash como antes — provado com corpus falso, que volta a
@@ -4244,3 +4255,69 @@ request" não é erro: é o Supabase dormindo. Acorda na primeira requisição r
 ⚠ **As 24 fontes são buscadas na primeira requisição AUTENTICADA**, não no deploy.
 O deploy verde não prova que o motor carrega: quem fecha a prova é a primeira
 abertura do app pela mesa.
+
+---
+
+## RODAR A SUÍTE NA MÁQUINA DELA (30/10/2026)
+
+Escrito porque ela vai continuar pelo Claude Code, no clone dela, e este era o
+único pedaço que o projeto nunca documentou: a gente registrou que a suíte nunca
+tinha rodado inteira ali, e não escreveu como fazer rodar.
+
+### 1. O que precisa estar instalado
+
+| | |
+|---|---|
+| **Node 20 ou mais** | `package.json` declara `"engines": {"node": ">=20"}`. |
+| **`npm ci`** no clone | instala as duas dependências de desenvolvimento: `eslint` e `playwright` **fixado em 1.62.1**. Não há dependência de runtime: o app é JS puro. |
+| **`npx playwright install chromium`** | ⚠ **sem isso, 30 e tantas das 40 baterias nem abrem.** As baterias tentam um caminho fixo de Linux (`/opt/pw-browsers/...`) e, quando não acham, caem no navegador padrão do Playwright — que só existe depois deste comando. |
+| **O corpus do SRD 2.0** | veja abaixo. Sem ele, duas conferências PULAM dizendo isso alto; com ele, a suíte roda inteira. |
+
+### 2. O corpus do SRD 2.0, em duas linhas
+
+Numa pasta **irmã** do repositório (ao lado de `sistemadh.github.io`):
+
+```
+git clone https://github.com/klrkdekira/daggerheart-system-json.git srd2-source
+cd srd2-source && git checkout 7677b0c28f2efb12bba4a29f23d8068d47f37d64
+```
+
+É o mesmo repositório e o **mesmo commit fixado** que `.github/workflows/ci.yml`
+baixa a cada rodada. Chamando a pasta de `srd2-source` e deixando-a ao lado do
+repositório, as ferramentas acham sozinhas; noutro lugar, aponte
+`SRD2_CORPUS_DIR`.
+
+⚠ **O checkout no commit fixado não é capricho:** as conferências comparam hash
+sha256 por registro. No `main` daquele repositório os hashes mudam e as 224
+fontes passam a acusar.
+
+### 3. Windows não quebra a conferência de gerados
+
+`.gitattributes` traz `* text=auto eol=lf`, então os arquivos chegam com LF mesmo
+no Windows. Sem isso, `teste:gerados` acusaria **todos** os arquivos gerados: os
+geradores escrevem LF e a comparação é byte a byte.
+
+### 4. A ordem para saber se está tudo de pé
+
+```
+npm run teste:lint        # segundos — ESLint
+npm run teste:sintaxe     # segundos — 169 arquivos JS/MJS
+npm run teste             # ~1 min   — 1309 testes de backend, sem navegador
+npm run teste:gerados     # ~1 min   — 16 geradores, byte a byte
+npm run teste:automacao   # segundos — a forma do campo `automacao`
+npm run teste:srd2        # ~1 min   — só passa inteiro COM o corpus
+npm run teste:tudo        # ~25 min  — as 40 baterias, com navegador
+```
+
+Os cinco primeiros respondem em poucos minutos e pegam quase tudo que é de regra
+ou de dado. O `teste:tudo` é o que abre Chromium em 360/390/430 e demora.
+
+⚠ **E o CI roda praticamente a suíte inteira a cada push** para `main` —
+incluindo as baterias de navegador e as do SRD com o corpus. Se algo passar aqui
+e quebrar lá, o CI é quem tem razão: ele roda num Ubuntu limpo, sem nada do que
+sobrou na máquina.
+
+### 5. O que NÃO precisa estar na máquina
+
+Os PDFs do livro e da errata ficam onde estão (`Documents\Daggerheart`) — nenhuma
+ferramenta os lê. Eles servem para conferir regra à mão, antes de implementar.
