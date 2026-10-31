@@ -3014,3 +3014,34 @@ Lobisomem, sete adversários e quatro cartas do Pavor. O
 `docs/srd2-conformidade.md`, o checkpoint do HANDOFF e o
 `data/srd2-fonte.json` diziam 10. Corrigidos os três. Nenhuma conferência lia o
 número, então nada quebrava — o que é justamente o motivo de ter sobrevivido.
+
+## 30/10/2026 (5) — O repositório confere com o Supabase: as funções e as nove migrações
+
+Tudo conferido **só lendo** o Supabase; nada foi implantado nem alterado no banco.
+
+### ✅ `mesa-api` e `player-api` deixaram de ser transcrição
+
+Os dois arquivos eram cópia feita à mão a partir da função publicada, e o
+`arquitetura-supabase.md` mandava baixar e comparar antes de qualquer redeploy.
+Baixados: batem com o repositório linha a linha — a única diferença é a quebra de
+linha final. ⚠ O `player-api` no ar ainda carrega o ramo `aliadosDaMesa`, que o
+app não chama desde a v26: código morto publicado, que só sai com redeploy.
+
+### ⚠ `auth-api` e `photo-api` NÃO são cópia fiel
+
+Conferindo as outras duas pelo mesmo caminho: o repositório tem uma versão
+**compactada à mão** do que está no ar. Mesma lógica na leitura, mas não provado
+token a token — e eu quase escrevi "as seis conferidas" no HANDOFF antes de
+baixar estas duas. Ficou registrado: antes de redeploy, substituir pelo download.
+
+### ✅ As nove migrações
+
+O banco registra 9 migrações, todas de 04/09/2026; o repositório tinha **uma**,
+com nome curto e uma linha a menos que a aplicada (`rid bigint;`, declarada e nunca
+usada — mas é o que rodou). Agora `supabase/migrations/` tem as nove com o nome de
+versão do banco, e **cada arquivo tem o mesmo md5 que o banco calcula** sobre
+`supabase_migrations.schema_migrations`. Seis são andaime daquele dia (`pg_net`
+liga-desliga, `apply_character_batch` criada e apagada).
+
+⚠ E o arquivo antigo estava com **CRLF na cópia local** — a mesma pegadinha do
+`js/config.js` que parou a suíte hoje cedo.

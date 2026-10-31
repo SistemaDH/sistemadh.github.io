@@ -11,6 +11,7 @@ declare
   v jsonb;
   r jsonb;
   affected integer;
+  rid bigint;
 begin
   for v in select value from jsonb_array_elements(coalesce(p_personagens, '[]'::jsonb))
   loop

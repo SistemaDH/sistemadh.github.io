@@ -219,10 +219,24 @@ a v6 foi relida e bate **byte a byte** (md5 `049cc683…`) com
 `supabase/functions/app-api/index.ts` na `main`. Esse arquivo deixou de ser
 transcrição e passou a ser fonte conferida.
 
-⚠ `mesa-api/index.ts` e `player-api/index.ts` **continuam sendo transcrição**, feita a
-partir da função publicada, e ainda não foram conferidas contra um download. Antes de
-qualquer redeploy dessas duas, baixar e comparar primeiro — implantar por cima pode
-apagar em silêncio algo que está no ar e não está no repositório.
+`mesa-api/index.ts` (v2) e `player-api/index.ts` (v1) **foram conferidos contra o
+download em 30/10/2026**: o código no ar bate com o do repositório, linha a linha — a
+única diferença é a quebra de linha no fim do arquivo, que o repositório tem e o
+pacote publicado não. Os dois deixaram de ser transcrição e passaram a ser fonte
+conferida.
+
+⚠ O `player-api` no ar **ainda tem** o ramo `aliadosDaMesa`: desde a v26 do
+`engine-api` o app não chama mais essa ação lá, mas a função nunca foi reimplantada,
+então o código morto continua publicado (e no repositório, porque o repositório é
+cópia fiel). Tirar exige redeploy — palavra dela.
+
+⚠ **`auth-api/index.ts` e `photo-api/index.ts` não são cópia fiel.** Baixados em
+30/10/2026, o código no ar está formatado em várias linhas, com indentação; o do
+repositório é uma versão **compactada** à mão (constantes juntas numa linha, nomes de
+variável encurtados). As ações, as mensagens e as checagens são as mesmas na leitura,
+mas isso não foi provado token a token. Antes de qualquer redeploy dessas duas,
+**substituir o arquivo pelo download** — implantar a versão compactada por cima pode
+mudar algo que ninguém viu.
 
 As funções `apps-script-db`, `character-api`, `rules-engine`, `game-api` e
 `runtime-test` continuam ACTIVE, mas são lápides: respondem `410 DESATIVADO` e não
@@ -267,6 +281,19 @@ Tabelas principais:
 - `auth_rate_limits`.
 
 A ficha completa fica em `personagens.dados` (JSONB). Salvamentos usam controle otimista por `versao`. A exclusão de personagem é lógica (`excluido=true`).
+
+### Migrações
+
+O banco registra **9 migrações**, todas de 04/09/2026 (o dia da troca do Apps Script
+pelo Supabase). Até 30/10/2026 o repositório guardava só uma, com nome curto
+(`20260904_…`) e uma linha a menos que a aplicada. Desde então `supabase/migrations/`
+tem as nove, com o nome de versão completo que o banco usa, e **cada arquivo bate com
+o md5 que o próprio banco calcula** sobre `supabase_migrations.schema_migrations`.
+
+Seis delas são andaime daquele dia e se desfazem entre si: `pg_net` ligado três vezes
+para testes internos e desligado duas, e `apply_character_batch` criada e apagada. O
+que sobra de efeito é `auth_rate_limits`, `apply_engine_mutations` e a remoção da
+tabela `backend_secrets` da ponte com o Apps Script.
 
 ## Fotos
 
