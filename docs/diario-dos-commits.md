@@ -3286,3 +3286,16 @@ acende; a lista traz estado sem a ficha. As guardas do Medo e da dona do
 chamado foram quebradas de propósito e acusaram.
 
 Gate: `teste:tudo` verde. Deploys depois do push, na ordem do CLAUDE.md.
+
+## 31/10/2026 (8) — Deploys do lote 5
+
+- `engine-api` **v28**, `verify_jwt: false`, `ENGINE_COMMIT = 9fc28b3a015792450c83794c4e92bdec8a81706a`
+  (os 24 `SOURCE_FILES` servidos pelo GitHub nesse commit conferidos byte a byte
+  contra o que a suíte testou: 24 de 24 idênticos). Relida no ar: pin, status
+  ACTIVE e autenticação certos; as seis ações novas respondem "faça login" sem
+  token e uma ação inventada continua recusada.
+- `app-api` **v7**, `verify_jwt: false` — a lista do roster com estado, foto e
+  `encerrada`. A consulta JSON foi validada contra o banco (coluna `dados` é
+  jsonb; `encerrada` vale null nas 8 fichas ativas).
+- Não testado com login de verdade (o roster cheio, a teia gravada, o chamado de
+  ponta a ponta): isso fica para a primeira abertura da Vanessa.
