@@ -2950,3 +2950,31 @@ e a ordem dos comandos do mais rápido ao mais lento.
 gerados; e o **CI roda praticamente a suíte inteira a cada push** para `main`,
 baterias de navegador incluídas — ou seja, o verde que importa nunca dependeu só
 da minha máquina.
+
+## 30/10/2026 (2) — A suíte roda na máquina dela, e as duas pegadinhas que o Windows escondia
+
+Primeira sessão pelo Claude Code, no clone dela. `npm ci`, Chromium do
+Playwright e o corpus em `7677b0c` — e os cinco rápidos mais o `teste:srd2`
+passaram de primeira. O `teste:tudo` precisou de três rodadas, e **nenhuma das
+duas paradas era defeito do código**.
+
+### ⚠ 1. CRLF na cópia local quebra o cache-buster
+
+`js/config.js` estava com CRLF no disco. O git não acusa — normaliza na
+comparação —, mas o cache-buster faz o hash sobre o arquivo em disco, e acusou
+26 arquivos "sem a versão". A prova de que o código estava certo: uma cópia
+limpa do HEAD deu `dd0875ae30`, a mesma do `index.html`. O conserto foi
+reescrever o arquivo a partir do git, **não** rodar `--escrever`, que teria
+carimbado uma versão que só existia nesta máquina.
+
+### ⚠ 2. `python3` no Windows é o atalho da Microsoft Store
+
+O `teste:verbetes` chama `python3`; o Python 3.12 estava instalado, mas o nome
+caía no alias da Store. Um `python3.cmd` ao lado do `python.exe` resolveu de vez.
+
+### ✅ O resultado
+
+`teste:tudo` verde em **9 min 33 s**: 1.947 ✓, 0 ✗, E2E 116 passos. O HANDOFF,
+seção "Rodar a suíte na máquina dela", ganhou o Python 3, o aviso de CRLF e o
+tempo medido — a seção que eu escrevi ontem dizia que o Windows não quebrava
+nada, e quebrava uma coisa.

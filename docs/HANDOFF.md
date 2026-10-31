@@ -4271,6 +4271,7 @@ tinha rodado inteira ali, e não escreveu como fazer rodar.
 | **Node 20 ou mais** | `package.json` declara `"engines": {"node": ">=20"}`. |
 | **`npm ci`** no clone | instala as duas dependências de desenvolvimento: `eslint` e `playwright` **fixado em 1.62.1**. Não há dependência de runtime: o app é JS puro. |
 | **`npx playwright install chromium`** | ⚠ **sem isso, 30 e tantas das 40 baterias nem abrem.** As baterias tentam um caminho fixo de Linux (`/opt/pw-browsers/...`) e, quando não acham, caem no navegador padrão do Playwright — que só existe depois deste comando. |
+| **Python 3, chamável como `python3`** | o `teste:verbetes` roda `python3 tools/montar-verbetes.py --conferir`, e o `teste:tudo` passa por ele. ⚠ **No Windows, `python3` cai no atalho da Microsoft Store** mesmo com o Python instalado, e a suíte para ali dizendo "Python não foi encontrado". Conserto da máquina dela (30/10/2026): um `python3.cmd` com `@"%~dp0python.exe" %*` ao lado do `python.exe`, numa pasta que vem antes do `WindowsApps` no PATH. Reinstalou o Python? Recriar. |
 | **O corpus do SRD 2.0** | veja abaixo. Sem ele, duas conferências PULAM dizendo isso alto; com ele, a suíte roda inteira. |
 
 ### 2. O corpus do SRD 2.0, em duas linhas
@@ -4291,11 +4292,23 @@ repositório, as ferramentas acham sozinhas; noutro lugar, aponte
 sha256 por registro. No `main` daquele repositório os hashes mudam e as 224
 fontes passam a acusar.
 
-### 3. Windows não quebra a conferência de gerados
+### 3. Windows: o que o `.gitattributes` resolve, e o que não resolve
 
 `.gitattributes` traz `* text=auto eol=lf`, então os arquivos chegam com LF mesmo
 no Windows. Sem isso, `teste:gerados` acusaria **todos** os arquivos gerados: os
 geradores escrevem LF e a comparação é byte a byte.
+
+⚠ **Mas um arquivo já com CRLF na cópia local quebra o `teste:cache-buster`.**
+Aconteceu na primeira rodada dela (30/10/2026): `js/config.js` estava com CRLF
+no disco. O git não acusa como modificado, porque normaliza na comparação, mas o
+cache-buster faz o hash sobre o arquivo **em disco**, a versão muda e ele acusa
+26 arquivos "sem a versão". O código estava certo: uma cópia limpa do HEAD deu
+`dd0875ae30`, a mesma do `index.html`.
+
+Para achar: `git ls-files --eol js css | grep crlf`.
+Para consertar: apagar o arquivo e `git checkout -- <arquivo>`.
+**Não rode `--escrever` nesse caso**: ele carimbaria uma versão que só existe
+na máquina dela.
 
 ### 4. A ordem para saber se está tudo de pé
 
@@ -4306,11 +4319,13 @@ npm run teste             # ~1 min   — 1309 testes de backend, sem navegador
 npm run teste:gerados     # ~1 min   — 16 geradores, byte a byte
 npm run teste:automacao   # segundos — a forma do campo `automacao`
 npm run teste:srd2        # ~1 min   — só passa inteiro COM o corpus
-npm run teste:tudo        # ~25 min  — as 40 baterias, com navegador
+npm run teste:tudo        # ~10–25 min — as 40 baterias, com navegador
 ```
 
 Os cinco primeiros respondem em poucos minutos e pegam quase tudo que é de regra
 ou de dado. O `teste:tudo` é o que abre Chromium em 360/390/430 e demora.
+Na máquina dela, a primeira rodada verde (30/10/2026) levou **9 min 33 s**:
+1.947 ✓, 0 ✗, E2E 116 passos.
 
 ⚠ **E o CI roda praticamente a suíte inteira a cada push** para `main` —
 incluindo as baterias de navegador e as do SRD com o corpus. Se algo passar aqui
