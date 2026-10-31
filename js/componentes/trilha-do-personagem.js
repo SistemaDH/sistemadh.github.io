@@ -12,7 +12,7 @@
  * recalcula avanço: o que a trilha mostra é o que o motor anotou.
  */
 
-import { el } from '../util.js?v=4fae3684ff';
+import { el } from '../util.js?v=027582ea87';
 
 const PATAMARES = [
   { numero: 1, niveis: [1], rotulo: 'Patamar 1 · nível 1' },

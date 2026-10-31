@@ -64,6 +64,22 @@ function personagemPublico(r: any, incluirFicha = false) {
     criadoEm: r.criadoEm, atualizadoEm: r.atualizadoEm,
   };
   if (incluirFicha) p.ficha = r.dados || {};
+  // O roster (proposta 4 de design, 31/10/2026) mostra cara e estado de cada
+  // ficha. A lista lê SÓ estes dois pedaços do JSON (ver o select), não a
+  // ficha inteira: o histórico de avanços sozinho pesa dezenas de KB.
+  if (r.recursos && typeof r.recursos === "object") {
+    const rec = r.recursos;
+    const n = (v: unknown) => Math.max(0, Math.trunc(Number(v)) || 0);
+    p.estado = {
+      pv: { marcados: n(rec.pontosDeVidaMarcados), maximo: n(rec.pontosDeVidaMaximos) },
+      estresse: { marcados: n(rec.estresseMarcado), maximo: n(rec.estresseMaximo) },
+      esperanca: { valor: n(rec.esperanca), maximo: n(rec.esperancaMaxima ?? 6) },
+    };
+  }
+  if (typeof r.foto === "string" && r.foto) p.foto = r.foto.slice(0, 300);
+  // A jornada encerrada viaja na lista, como no motor (30_Personagens.gs):
+  // sem ela o roster de produção mostrava a ficha encerrada como jogável.
+  if (r.encerrada) p.encerrada = r.encerrada;
   return p;
 }
 async function registrarLog(db: any, jogador: any, acao: string, detalhe = "") {
@@ -223,7 +239,7 @@ Deno.serve(async (req) => {
       return ok({ danoMassivo: mesa.danoMassivo });
     }
     if (acao === "listarPersonagens") {
-      let q = db.from("personagens").select("id,donoId,donoNome,nome,classe,subclasse,ancestralidade,comunidade,nivel,versao,schema,criadoEm,atualizadoEm,excluido").eq("excluido", false).order("atualizadoEm", { ascending: false });
+      let q = db.from("personagens").select("id,donoId,donoNome,nome,classe,subclasse,ancestralidade,comunidade,nivel,versao,schema,criadoEm,atualizadoEm,excluido,recursos:dados->recursos,foto:dados->identidade->>foto,encerrada:dados->encerrada").eq("excluido", false).order("atualizadoEm", { ascending: false });
       if (jogador.papel !== "mestre") q = q.eq("donoId", jogador.id);
       const { data, error } = await q;
       if (error) throw error;

@@ -6,10 +6,10 @@
  * "a ficha mudou mas o card do roster continuou velho".
  */
 
-import { api } from './api.js?v=4fae3684ff';
-import { CHAVES } from './config.js?v=4fae3684ff';
-import { guardado } from './util.js?v=4fae3684ff';
-import { enfileirar, marcarPendente } from './fila.js?v=4fae3684ff';
+import { api } from './api.js?v=027582ea87';
+import { CHAVES } from './config.js?v=027582ea87';
+import { guardado } from './util.js?v=027582ea87';
+import { enfileirar, marcarPendente } from './fila.js?v=027582ea87';
 
 const estado = {
   /** null enquanto não sabemos se há sessão válida. */
@@ -620,6 +620,12 @@ export const acoes = {
     return r;
   },
   adversariosDaMesa: () => api.adversariosDaMesa(estado.token),
+  medoDaJogada: () => api.medoDaJogada(estado.token),
+  teiaDaMesa: () => api.teiaDaMesa(estado.token),
+  salvarTeia: (teia) => api.salvarTeia(estado.token, teia),
+  chamarJogador: (dados) => api.chamarJogador(estado.token, dados),
+  chamadaDaMesa: () => api.chamadaDaMesa(estado.token),
+  responderChamada: (id) => api.responderChamada(estado.token, id),
   salvarAdversarioDaMesa: (ficha) => api.salvarAdversarioDaMesa(estado.token, ficha),
   excluirAdversarioDaMesa: (id) => api.excluirAdversarioDaMesa(estado.token, id),
 

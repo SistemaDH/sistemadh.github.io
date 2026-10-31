@@ -3245,3 +3245,44 @@ por cima do painel ao encerrar.
 
 Gate: `teste:tudo` verde (e2e reexecutado e as baterias seguintes rodadas
 depois do ajuste do teste).
+
+## 31/10/2026 (7) — Design, lote 5: o que precisava de servidor
+
+Propostas 4, 12 (a parte do Medo), 16 e 18. A Vanessa autorizou os deploys em
+31/10/2026 ("Sim, pode fazer" e "pode fazer").
+
+⚠ **As ações da mesa moram no motor.** O `mesa-api` não serve mais nada (o
+`ACOES_MESA` do `js/api.js` está vazio): quem responde é o `engine-api`, que roda
+o `backend/*.gs` fixado em `ENGINE_COMMIT`. As seis ações novas entraram no
+`99_Api.gs` (escrito à mão — não é gerado) e no `ACOES` do `engine-api`.
+
+- **Medo da jogada (12): `medoDaJogada`.** Qualquer sessão pode chamar, e ela só
+  soma 1 — valor e delta que vierem junto são ignorados. O teto de 12 é o de
+  `ajustarMedo_`. A ficha passou a mandar o Medo sozinha; se a rede falhar,
+  avisa para contar ao Mestre.
+- **Teia da campanha (16): `teiaDaMesa` e `salvarTeia`, só do Mestre.** Mora
+  numa chave própria de `config` (`teia`), não dentro da `mesa`, para nenhum
+  normalizador da mesa apagá-la. Sem migração. O servidor guarda só nomes,
+  tipos, notas e ligações válidas (`normalizarTeia_`); a posição na tela é
+  calculada a cada abertura. A tela abre pelo botão "Teia da campanha" na Mesa.
+- **Chamar o jogador (18): `chamarJogador` (Mestre), `chamadaDaMesa` e
+  `responderChamada`.** Uma chamada por vez, na chave `chamada`, válida por 10
+  minutos. A ficha aberta pergunta a cada 10 s (só com a tela à vista), acende e
+  vibra; só a dona da ficha chamada responde (`obterPersonagem_`). O painel vê
+  "✓ pronta" no holofote, pela mesma releitura de 15 s do grupo.
+- **Roster com cara e estado (4).** A lista traz um resumo leve — PV, Estresse,
+  Esperança e o id da foto — e o cartão mostra retrato (ou iniciais), a faixa
+  com as cores dos dois domínios e o estado. ⚠ São DUAS cópias do resumo: o
+  `30_Personagens.gs` (motor e suíte) e o `personagemPublico` do `app-api`
+  (produção), cada uma avisando da outra. O `app-api` lê só esses pedaços do
+  JSON (`dados->recursos`, `dados->identidade->>foto`), não a ficha inteira.
+  ⚠ **De quebra, um defeito antigo:** a lista de produção nunca mandava
+  `encerrada` — o motor mandava, o `app-api` não —, e o roster mostrava a ficha
+  que atravessou o véu como jogável. Agora manda.
+
+Testes novos de backend: só +1 de Medo e o teto; teia só do Mestre e
+normalizada; chamado de ida e volta, só a dona responde; chamada vencida não
+acende; a lista traz estado sem a ficha. As guardas do Medo e da dona do
+chamado foram quebradas de propósito e acusaram.
+
+Gate: `teste:tudo` verde. Deploys depois do push, na ordem do CLAUDE.md.

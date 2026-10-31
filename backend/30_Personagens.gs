@@ -71,6 +71,22 @@ function personagemDaLinha_(linha, incluirFicha) {
     try {
       const so = JSON.parse(linha.dados || '{}');
       if (so && so.encerrada) base.encerrada = so.encerrada;
+      /*
+       * CARA E ESTADO PARA O ROSTER (proposta 4 de design, 31/10/2026): o
+       * resumo das trilhas e o id da foto. ⚠ O `app-api` monta o MESMO
+       * resumo em TypeScript (`personagemPublico`) — mudou aqui, mude lá.
+       */
+      const rec = (so && so.recursos) || null;
+      if (rec && typeof rec === 'object') {
+        const n = function (v) { return Math.max(0, Math.trunc(Number(v)) || 0); };
+        base.estado = {
+          pv: { marcados: n(rec.pontosDeVidaMarcados), maximo: n(rec.pontosDeVidaMaximos) },
+          estresse: { marcados: n(rec.estresseMarcado), maximo: n(rec.estresseMaximo) },
+          esperanca: { valor: n(rec.esperanca), maximo: n(rec.esperancaMaxima === undefined ? 6 : rec.esperancaMaxima) }
+        };
+      }
+      const foto = so && so.identidade && so.identidade.foto;
+      if (typeof foto === 'string' && foto) base.foto = foto.slice(0, 300);
     } catch (e) { /* ficha ilegível: some da lista de encerradas, não quebra */ }
   }
 

@@ -2409,3 +2409,65 @@
 
 .cartaoPj { display: flex; flex-direction: column; gap: var(--e2); }
 .cartaoPj__imagem { width: 100%; height: auto; border-radius: var(--raio); }
+
+/* O chamado do Mestre, por cima de qualquer tela da ficha (proposta 18). */
+.chamado {
+  position: fixed;
+  left: var(--e3);
+  right: var(--e3);
+  top: max(var(--e4), env(safe-area-inset-top));
+  z-index: 250;
+  padding: var(--e4);
+  border-radius: var(--raio);
+  text-align: center;
+  background: linear-gradient(#2a2214, #18140c);
+  border: 2px solid var(--cor-ouro);
+  box-shadow: 0 0 0 3px rgba(217, 171, 91, .25), 0 0 40px rgba(217, 171, 91, .5);
+  animation: chamado-entra .45s cubic-bezier(.3, 1.4, .5, 1);
+}
+@keyframes chamado-entra { from { transform: translateY(-120%); } to { transform: none; } }
+.chamado__rotulo { font-size: var(--txt-xs); font-weight: 700; letter-spacing: .16em; color: var(--cor-ouro); }
+.chamado__titulo { display: block; margin: 4px 0; font-family: var(--fonte-titulo); font-size: var(--txt-2xl); color: var(--cor-ouro-claro); }
+.chamado__frase { margin: 0 0 var(--e3); font-size: var(--txt-sm); }
+.chamado__acoes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); }
+
+/* ==========================================================================
+   O ROSTER COM CARA E ESTADO (proposta 4, 31/10/2026)
+   ========================================================================== */
+
+.ficha-cartao--comRetrato {
+  /* A faixa dos domínios: o roster.js troca pela cor da classe. */
+  --faixa: transparent;
+  position: relative;
+  overflow: hidden;
+}
+/* ::after, e não ::before: o ::before é o filete dourado do .cartao--ornamentado. */
+.ficha-cartao--comRetrato::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--faixa);
+}
+.ficha-cartao--comRetrato .ficha-cartao__abrir { display: grid; grid-template-columns: 58px 1fr; column-gap: var(--e3); }
+.ficha-cartao--comRetrato .ficha-cartao__abrir > :not(.ficha-cartao__retrato) { grid-column: 2; }
+.ficha-cartao__retrato {
+  grid-column: 1;
+  grid-row: 1 / span 5;
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, #3a3c4c, #1a1b23);
+  border: 2px solid var(--cor-ouro-escuro);
+}
+.ficha-cartao__retrato img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ficha-cartao__iniciais { font-family: var(--fonte-titulo); font-weight: 700; font-size: var(--txt-lg); }
+.ficha-cartao__estado { display: flex; gap: var(--e3); margin: 4px 0 0; font-family: var(--fonte-mono); font-size: var(--txt-xs); color: var(--cor-texto-suave); }
+.ficha-cartao__estadoPv { color: #ff9a9a; }
+.ficha-cartao__estadoEsp { color: var(--cor-esperanca); }

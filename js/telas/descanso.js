@@ -16,12 +16,12 @@
  * discordar.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=4fae3684ff';
-import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=4fae3684ff';
-import { acoes } from '../estado.js?v=4fae3684ff';
-import { mensagemDoErro } from '../api.js?v=4fae3684ff';
-import { nomeComGlossa } from '../glossario.js?v=4fae3684ff';
-import { textoAnotado } from '../verbete.js?v=4fae3684ff';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=027582ea87';
+import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=027582ea87';
+import { acoes } from '../estado.js?v=027582ea87';
+import { mensagemDoErro } from '../api.js?v=027582ea87';
+import { nomeComGlossa } from '../glossario.js?v=027582ea87';
+import { textoAnotado } from '../verbete.js?v=027582ea87';
 
 /**
  * @param {{personagem:Object, aoAplicar?:Function}} opcoes

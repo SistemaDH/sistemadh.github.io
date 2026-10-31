@@ -21,24 +21,24 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=4fae3684ff';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=4fae3684ff';
-import { acoes, obterEstado } from '../estado.js?v=4fae3684ff';
-import { mensagemDoErro } from '../api.js?v=4fae3684ff';
-import { aguardar, temPendente } from '../fila.js?v=4fae3684ff';
-import * as dados from '../dados.js?v=4fae3684ff';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=4fae3684ff';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=4fae3684ff';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=4fae3684ff';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=4fae3684ff';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=4fae3684ff';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=4fae3684ff';
-import { botaoDeRegras } from './regras.js?v=4fae3684ff';
-import { abrirDescanso } from './descanso.js?v=4fae3684ff';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=4fae3684ff';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=4fae3684ff';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=4fae3684ff';
-import { icone } from '../componentes/icone.js?v=4fae3684ff';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=027582ea87';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=027582ea87';
+import { acoes, obterEstado } from '../estado.js?v=027582ea87';
+import { mensagemDoErro } from '../api.js?v=027582ea87';
+import { aguardar, temPendente } from '../fila.js?v=027582ea87';
+import * as dados from '../dados.js?v=027582ea87';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=027582ea87';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=027582ea87';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=027582ea87';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=027582ea87';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=027582ea87';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=027582ea87';
+import { botaoDeRegras } from './regras.js?v=027582ea87';
+import { abrirDescanso } from './descanso.js?v=027582ea87';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=027582ea87';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=027582ea87';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=027582ea87';
+import { icone } from '../componentes/icone.js?v=027582ea87';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -1348,6 +1348,46 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   desenhar();
+  ouvirChamado();
+
+  /*
+   * O CHAMADO DO MESTRE (proposta 18, 31/10/2026).
+   *
+   * A ficha aberta pergunta ao servidor, a cada 10 s e só com a tela à vista,
+   * se o Mestre chamou ESTE personagem. Se chamou, a tela acende e o celular
+   * vibra; "Estou pronta" responde, e o painel vê. Cada chamada acende uma
+   * vez só: a mesma chamada não volta depois de respondida ou dispensada.
+   * O relógio para sozinho quando a ficha fecha (ela sai do documento).
+   */
+  function ouvirChamado() {
+    const vistas = new Set();
+    const relogio = setInterval(async () => {
+      if (!document.body.contains(cabecalho)) { clearInterval(relogio); return; }
+      if (document.hidden || document.querySelector('.chamado')) return;
+      let c = null;
+      try { c = (await acoes.chamadaDaMesa()).chamada; } catch (e) { return; }
+      if (!c || c.pronto || vistas.has(c.id) || String(c.personagemId) !== String(p.id)) return;
+      vistas.add(c.id);
+      mostrarChamado(c);
+    }, 10000);
+  }
+
+  function mostrarChamado(c) {
+    if (navigator.vibrate) navigator.vibrate([220, 120, 220]);
+    const caixa = el('div', { class: 'chamado', role: 'alertdialog', 'aria-live': 'assertive' }, [
+      el('small', { class: 'chamado__rotulo', texto: 'O MESTRE CHAMOU' }),
+      el('strong', { class: 'chamado__titulo', texto: `Sua vez, ${(p.ficha && p.ficha.identidade && p.ficha.identidade.nome) || p.nome}` }),
+      c.frase ? el('p', { class: 'chamado__frase', texto: c.frase }) : null,
+      el('div', { class: 'chamado__acoes' }, [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => caixa.remove() }, 'Depois'),
+        el('button', {
+          type: 'button', class: 'btn btn--principal',
+          onClick: () => { caixa.remove(); acoes.responderChamada(c.id).catch(() => {}); }
+        }, 'Estou pronta')
+      ])
+    ].filter(Boolean));
+    document.body.append(caixa);
+  }
 
   /**
    * ACERTA O RELÓGIO DESTA FICHA COM A SESSÃO DA MESA.
@@ -3335,9 +3375,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    *   - Medo maior: o Mestre ganha 1 Medo.
    * Se passou da Dificuldade é o Mestre quem diz: a ficha não sabe o número.
    *
-   * ⚠ O MEDO NÃO VAI SOZINHO PARA O PAINEL. Só o Mestre mexe no Medo no
-   * servidor (`mesa-api` recusa jogador), e abrir isso é mudança de servidor —
-   * fica para quando a Vanessa autorizar o deploy. Por ora a ficha AVISA.
+   * O MEDO VAI SOZINHO PARA O PAINEL pela ação `medoDaJogada`, que só soma 1
+   * (deploy autorizado pela Vanessa em 31/10/2026). Se a rede falhar, a ficha
+   * avisa para contar ao Mestre — o Medo não pode sumir calado.
    */
   function botaoDeJogada(ficha) {
     return el('button', {
@@ -3426,8 +3466,11 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         enviar(ajustes, { soSeMudou: true });
         desenhar();
       }
-      if (r.tipo === 'medo') avisar('Jogada com Medo: avise o Mestre — ele ganha 1 Medo.', 'info', 5000);
-      else avisarSucesso(r.tipo === 'critico' ? 'Sucesso crítico: +1 Esperança e −1 Estresse.' : '+1 Esperança.');
+      if (r.tipo === 'medo') {
+        acoes.medoDaJogada()
+          .then((x) => avisar(`Jogada com Medo: o Mestre ganhou 1 Medo (agora ${x.medo.depois}).`, 'info', 5000))
+          .catch(() => avisar('Jogada com Medo: não consegui avisar o painel — conte ao Mestre.', 'alerta', 6000));
+      } else avisarSucesso(r.tipo === 'critico' ? 'Sucesso crítico: +1 Esperança e −1 Estresse.' : '+1 Esperança.');
     });
   }
 

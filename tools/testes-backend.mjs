@@ -6649,6 +6649,90 @@ teste('delta e valor funcionam nos dois sentidos', () => {
   igual(api('ajustarMedo', { token: tokenPainel, delta: -1 }).dados.medo.depois, 4);
 });
 
+/* --- lote 5 de design (31/10/2026): Medo da jogada, teia e chamado ------- */
+
+const fichaDoLote5 = (nome) => contexto.fichaRapida_({
+  nome, classe: 'Bardo', subclasse: 'Músico Errante', ancestralidade: 'Elfo', comunidade: 'Highborne',
+  cartas: ['grace-palavras-inspiradoras', 'codex-livro-de-ava'],
+  experiencias: [{ nome: 'A', bonus: 2 }, { nome: 'B', bonus: 2 }]
+});
+
+teste('a jogada com Medo da ficha soma 1 ao Medo do Mestre, e só 1', () => {
+  const token = api('registrar', { nome: 'Rolou Medo', codigo: 'senha-rolou-medo' }).dados.token;
+  api('ajustarMedo', { token: tokenPainel, valor: 4 });
+  // o jogador não escolhe quanto: valor e delta que vierem junto são ignorados
+  const r = api('medoDaJogada', { token, valor: 12, delta: 9 });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.medo.depois, 5);
+  igual(api('painelDoMestre', { token: tokenPainel }).dados.mesa.medo, 5);
+  api('ajustarMedo', { token: tokenPainel, valor: MEDO_MAXIMO });
+  igual(api('medoDaJogada', { token }).dados.medo.depois, MEDO_MAXIMO, 'o teto de 12 vale para a jogada também');
+  igual(api('medoDaJogada', {}).erro.codigo, 'NAO_AUTENTICADO');
+});
+
+teste('a teia é do Mestre e o servidor só guarda o que entende', () => {
+  const token = api('registrar', { nome: 'Bisbilhoteira', codigo: 'senha-bisbilhoteira' }).dados.token;
+  igual(api('teiaDaMesa', { token }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('salvarTeia', { token, teia: {} }).erro.codigo, 'SEM_PERMISSAO');
+  const r = api('salvarTeia', { token: tokenPainel, teia: {
+    nos: [
+      { id: 'a', nome: 'Irmã Vael', tipo: 'pessoa', nota: 'aliada' },
+      { id: 'b', nome: 'Guilda', tipo: 'invencao' },
+      { id: 'c', nome: '   ' }
+    ],
+    ligacoes: [
+      { de: 'grupo', para: 'a', relacao: 'aliado' },
+      { de: 'a', para: 'b', relacao: 'inimigo-mortal' },
+      { de: 'a', para: 'fantasma', relacao: 'rival' },
+      { de: 'a', para: 'a', relacao: 'rival' }
+    ]
+  } });
+  verdade(r.ok, JSON.stringify(r));
+  igual(r.dados.teia.nos.length, 2, 'nó sem nome cai fora');
+  igual(r.dados.teia.nos[1].tipo, 'pessoa', 'tipo desconhecido vira pessoa');
+  igual(r.dados.teia.ligacoes.length, 2, 'ligação com nó inexistente ou consigo mesmo cai fora');
+  igual(r.dados.teia.ligacoes[1].relacao, 'aliado', 'relação desconhecida vira aliado');
+  igual(api('teiaDaMesa', { token: tokenPainel }).dados.teia.nos[0].nome, 'Irmã Vael');
+});
+
+teste('o chamado vai do Mestre para a ficha e a resposta volta', () => {
+  const dona = api('registrar', { nome: 'Chamada', codigo: 'senha-chamada' }).dados.token;
+  const outra = api('registrar', { nome: 'Outra Pessoa', codigo: 'senha-outra-pessoa' }).dados.token;
+  const ficha = api('criarPersonagem', { token: dona, ficha: fichaDoLote5('Lyra Chamada') });
+  verdade(ficha.ok, JSON.stringify(ficha));
+  const id = ficha.dados.personagem.id;
+
+  igual(api('chamarJogador', { token: dona, personagemId: id }).erro.codigo, 'SEM_PERMISSAO');
+  const c = api('chamarJogador', { token: tokenPainel, personagemId: id, personagemNome: 'Lyra', frase: 'A ponte cede.' });
+  verdade(c.ok, JSON.stringify(c));
+  const lida = api('chamadaDaMesa', { token: dona }).dados.chamada;
+  igual(lida.personagemId, id);
+  igual(lida.frase, 'A ponte cede.');
+  igual(lida.pronto, false);
+
+  igual(api('responderChamada', { token: outra, id: lida.id }).erro.codigo, 'SEM_PERMISSAO',
+    'só a dona da ficha chamada responde');
+  igual(api('responderChamada', { token: dona, id: 'outra-chamada' }).erro.codigo, 'NAO_ENCONTRADO');
+  igual(api('responderChamada', { token: dona, id: lida.id }).dados.chamada.pronto, true);
+  igual(api('chamadaDaMesa', { token: tokenPainel }).dados.chamada.pronto, true, 'o painel vê a resposta');
+});
+
+teste('a chamada de mais de 10 minutos não acende ninguém', () => {
+  igual(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 11 * 60000).toISOString() }), null);
+  verdade(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 60000).toISOString() }));
+  igual(contexto.chamadaValida_(null), null);
+});
+
+teste('a lista do roster traz cara e estado sem mandar a ficha inteira', () => {
+  const token = api('registrar', { nome: 'Do Roster', codigo: 'senha-do-roster' }).dados.token;
+  verdade(api('criarPersonagem', { token, ficha: fichaDoLote5('Kess do Roster') }).ok);
+  const lista = api('listarPersonagens', { token }).dados.personagens;
+  const k = lista.find((x) => x.nome === 'Kess do Roster');
+  verdade(k && k.estado, 'faltou o estado na lista: ' + JSON.stringify(k));
+  verdade(k.estado.pv.maximo > 0, 'PV máximos deveriam vir do resumo');
+  igual(k.ficha, undefined, 'a lista não pode mandar a ficha inteira');
+});
+
 teste('o Medo inicial é um por personagem (livro p.154)', () => {
   igual(contexto.medoInicial_(4), 4);
   igual(contexto.medoInicial_(0), 0);

@@ -20,23 +20,24 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=4fae3684ff';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=4fae3684ff';
-import { CHAVES } from '../config.js?v=4fae3684ff';
-import { acoes } from '../estado.js?v=4fae3684ff';
-import { mensagemDoErro } from '../api.js?v=4fae3684ff';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=4fae3684ff';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=4fae3684ff';
-import { botaoDeRegras } from './regras.js?v=4fae3684ff';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=4fae3684ff';
-import { abrirTelaDaMesa } from './tela-da-mesa.js?v=4fae3684ff';
-import { relogioDeContagem } from '../componentes/relogio.js?v=4fae3684ff';
-import { secaoDoEncontro } from './encontro.js?v=4fae3684ff';
-import { icone } from '../componentes/icone.js?v=4fae3684ff';
-import * as dados from '../dados.js?v=4fae3684ff';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=027582ea87';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=027582ea87';
+import { CHAVES } from '../config.js?v=027582ea87';
+import { acoes } from '../estado.js?v=027582ea87';
+import { mensagemDoErro } from '../api.js?v=027582ea87';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=027582ea87';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=027582ea87';
+import { botaoDeRegras } from './regras.js?v=027582ea87';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=027582ea87';
+import { abrirTeia } from './teia.js?v=027582ea87';
+import { abrirTelaDaMesa } from './tela-da-mesa.js?v=027582ea87';
+import { relogioDeContagem } from '../componentes/relogio.js?v=027582ea87';
+import { secaoDoEncontro } from './encontro.js?v=027582ea87';
+import { icone } from '../componentes/icone.js?v=027582ea87';
+import * as dados from '../dados.js?v=027582ea87';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=4fae3684ff';
+} from '../componentes/carta.js?v=027582ea87';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -141,6 +142,8 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
   /** O relógio da releitura do grupo; nulo enquanto o painel não abriu. */
   let releitura = null;
   let relogioDoHolofote = null;
+  /** A última chamada lida do servidor — o holofote mostra "chamando…" e "✓ pronta". */
+  let chamadaAtual = null;
 
   try {
     // O glossário e os verbetes têm de estar prontos ANTES do primeiro desenho:
@@ -172,6 +175,13 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     if (document.hidden || document.querySelector('.modal')) return;
     if (abaAtual !== 'mesa' && abaAtual !== 'grupo') return;
     try {
+      // A resposta ao chamado vem junto com a releitura do grupo.
+      if (chamadaAtual && !chamadaAtual.pronto) {
+        try {
+          const c = (await acoes.chamadaDaMesa()).chamada;
+          if (c && c.id === chamadaAtual.id && c.pronto) { chamadaAtual = c; repintarHolofote(); }
+        } catch { /* a próxima volta tenta de novo */ }
+      }
       const novo = await acoes.painelDoMestre();
       if (JSON.stringify(novo.personagens) === JSON.stringify(painel.personagens)) return;
       anotarPvPerdidos(painel.personagens, novo.personagens);
@@ -356,6 +366,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     pai.append(resumoDaCena());
     pai.append(el('div', { class: 'mestre__atalhos' }, [
       botao('Tela da mesa (TV)', () => abrirTelaDaMesa(painel)),
+      botao('Teia da campanha', () => abrirTeia()),
       botao('Resumo da sessão', () => {
         if (!painel.mesa.sessao || !painel.mesa.sessao.aberta) {
           avisar('Nenhuma sessão aberta: o resumo começa a ser anotado quando a sessão abre.', 'info', 4000);
@@ -792,12 +803,47 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           frio ? el('i', { class: 'holofote__alerta', texto: '!' }) : null
         ].filter(Boolean)),
         el('strong', { class: 'holofote__nome', texto: p.nome }),
-        el('span', { class: 'holofote__quando', texto })
-      ]);
+        el('span', { class: 'holofote__quando', texto }),
+        chamadaAtual && String(chamadaAtual.personagemId) === String(p.id)
+          ? el('span', { class: `holofote__chamada ${chamadaAtual.pronto ? 'esta-pronta' : ''}`,
+            texto: chamadaAtual.pronto ? '✓ pronta' : 'chamando…' })
+          : null
+      ].filter(Boolean));
     })));
+    /*
+     * CHAMAR (proposta 18): o celular de quem foi chamado acende e vibra. O
+     * botão mora aqui porque o holofote já é a pergunta "de quem é a vez?".
+     */
+    bloco.append(el('div', { class: 'holofote__chamar' }, painel.personagens.map((p) => el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--pequeno',
+      onClick: () => chamar(p)
+    }, `Chamar ${p.nome}`))));
     bloco.append(el('p', { class: 'texto-xs texto-fraco', texto:
       `Fica vermelho depois de ${ALERTA_DO_HOLOFOTE_MIN} minutos sem a vez. É só um lembrete, guardado neste aparelho.` }));
     return bloco;
+  }
+
+  function chamar(p) {
+    const frase = el('input', semCorretor({ type: 'text', class: 'campo__entrada', maxlength: 140,
+      placeholder: 'ex.: A ponte está cedendo. O que você faz?' }));
+    const modal = abrirModal({
+      titulo: `Chamar ${p.nome}`,
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm texto-suave', texto: 'A ficha aberta no celular dela acende e vibra.' }),
+        el('label', { class: 'campo' }, [el('span', { class: 'campo__rotulo', texto: 'Frase da cena (opcional)' }), frase])
+      ]),
+      acoes: [el('button', {
+        type: 'button', class: 'btn btn--principal',
+        onClick: async () => {
+          modal.fechar();
+          try {
+            chamadaAtual = (await acoes.chamarJogador({ personagemId: p.id, personagemNome: p.nome, frase: frase.value })).chamada;
+            avisarSucesso(`${p.nome} foi chamada.`);
+            repintarHolofote();
+          } catch (e) { avisarErro(mensagemDoErro(e)); }
+        }
+      }, 'Chamar')]
+    });
   }
 
   function repintarHolofote() {

@@ -6,16 +6,18 @@
  * que segue as nove etapas do livro.
  */
 
-import { el, dataRelativa } from '../util.js?v=4fae3684ff';
-import { CONFIG } from '../config.js?v=4fae3684ff';
-import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=4fae3684ff';
-import { mensagemDoErro } from '../api.js?v=4fae3684ff';
-import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=4fae3684ff';
-import { abrirCriacao } from './criacao.js?v=4fae3684ff';
-import { abrirFichaEmJogo } from './ficha.js?v=4fae3684ff';
-import { abrirPainelDoMestre } from './mestre.js?v=4fae3684ff';
-import { icone } from '../componentes/icone.js?v=4fae3684ff';
-import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=4fae3684ff';
+import { el, dataRelativa } from '../util.js?v=027582ea87';
+import { CONFIG } from '../config.js?v=027582ea87';
+import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=027582ea87';
+import { mensagemDoErro } from '../api.js?v=027582ea87';
+import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=027582ea87';
+import { abrirCriacao } from './criacao.js?v=027582ea87';
+import { abrirFichaEmJogo } from './ficha.js?v=027582ea87';
+import { abrirPainelDoMestre } from './mestre.js?v=027582ea87';
+import { urlDaFoto } from './foto.js?v=027582ea87';
+import * as dados from '../dados.js?v=027582ea87';
+import { icone } from '../componentes/icone.js?v=027582ea87';
+import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=027582ea87';
 
 /** O nível em que a mesa está, para marcar quem ficou para trás. */
 function nivelDaMesa() {
@@ -137,6 +139,55 @@ export function telaRoster() {
     }[fim && fim.motivo] || 'Encerrada';
   }
 
+  /*
+   * CARA E ESTADO NO CARTÃO (proposta 4 de design, 31/10/2026).
+   *
+   * Retrato (ou as iniciais), uma faixa com as cores dos dois domínios da
+   * classe e como o personagem saiu da última sessão: PV, Estresse e
+   * Esperança. O servidor manda só o resumo (`estado`, `foto`); os domínios
+   * saem de `data/classes.json`, lido uma vez.
+   */
+  const COR_DO_DOMINIO = {
+    ARCANA: 'arcana', BLADE: 'lamina', BONE: 'osso', CODEX: 'codex', GRACE: 'graca',
+    MIDNIGHT: 'meianoite', SAGE: 'sabio', SPLENDOR: 'esplendor', VALOR: 'valor'
+  };
+  let dominiosPorClasse = null;
+  dados.carregar('classes').then((c) => {
+    dominiosPorClasse = new Map((c.classes || []).map((x) => [dados.chave(x.nome), x.dominios || []]));
+    document.querySelectorAll('.ficha-cartao[data-classe]').forEach(pintarFaixa);
+  }).catch(() => {});
+
+  function pintarFaixa(cartao) {
+    if (!dominiosPorClasse) return;
+    const doms = dominiosPorClasse.get(dados.chave(cartao.dataset.classe)) || [];
+    const cor = (d) => (COR_DO_DOMINIO[d] ? `var(--dom-${COR_DO_DOMINIO[d]})` : 'var(--cor-borda-forte)');
+    if (doms.length) cartao.style.setProperty('--faixa', `linear-gradient(${cor(doms[0])} 50%, ${cor(doms[1] || doms[0])} 50%)`);
+  }
+
+  function retratoDoCartao(p) {
+    const endereco = urlDaFoto(p.foto || '', 160);
+    const iniciais = String(p.nome || '?').split(/\s+/).map((x) => x[0]).join('').slice(0, 2).toUpperCase();
+    const caixa = el('span', { class: 'ficha-cartao__retrato', 'aria-hidden': 'true' }, [
+      el('span', { class: 'ficha-cartao__iniciais', texto: iniciais })
+    ]);
+    if (endereco) {
+      const img = el('img', { src: endereco, alt: '', loading: 'lazy', decoding: 'async' });
+      img.addEventListener('error', () => img.remove());
+      caixa.append(img);
+    }
+    return caixa;
+  }
+
+  function estadoDoCartao(p) {
+    const e = p.estado;
+    if (!e) return null;
+    return el('p', { class: 'ficha-cartao__estado' }, [
+      el('span', { class: 'ficha-cartao__estadoPv', texto: `PV ${e.pv.marcados}/${e.pv.maximo}` }),
+      el('span', { texto: `Estr ${e.estresse.marcados}/${e.estresse.maximo}` }),
+      el('span', { class: 'ficha-cartao__estadoEsp', texto: `Esp ${e.esperanca.valor}` })
+    ]);
+  }
+
   function cartaoPersonagem(p) {
     // A ficha encerrada fica em meio-tom: continua legível, deixa de competir.
     const encerrada = p.encerrada ? ' esta-encerrada' : '';
@@ -174,6 +225,7 @@ export function telaRoster() {
       ]),
       classe ? el('p', { class: 'ficha-cartao__linha', texto: classe }) : null,
       detalhes ? el('p', { class: 'ficha-cartao__linha', texto: detalhes }) : null,
+      estadoDoCartao(p),
       /*
        * DONO E HORA NUMA LINHA SÓ.
        *
@@ -195,9 +247,13 @@ export function telaRoster() {
       onClick: (ev) => { ev.stopPropagation(); pedirExclusao(p); }
     }, icone('lixeira'));
 
-    return el('div', {
-      class: `cartao cartao--clicavel cartao--ornamentado ficha-cartao${encerrada}`
+    abrir.prepend(retratoDoCartao(p));
+    const cartao = el('div', {
+      class: `cartao cartao--clicavel cartao--ornamentado ficha-cartao ficha-cartao--comRetrato${encerrada}`,
+      dataset: p.classe ? { classe: p.classe } : null
     }, [abrir, excluir]);
+    pintarFaixa(cartao);
+    return cartao;
   }
 
   async function pedirExclusao(p) {

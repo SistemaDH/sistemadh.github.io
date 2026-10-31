@@ -28,6 +28,49 @@ function erroApi_(codigo, mensagem, extra) {
   return e;
 }
 
+/* As chaves de `config` da teia (proposta 16) e da chamada (proposta 18). */
+const CHAVE_TEIA = 'teia';
+const CHAVE_CHAMADA = 'chamada';
+const TEIA_MAX_NOS = 60;
+const TEIA_MAX_LIGACOES = 150;
+const TEIA_TIPOS = ['pessoa', 'faccao', 'lugar'];
+const TEIA_RELACOES = ['aliado', 'rival', 'divida', 'segredo'];
+const CHAMADA_VALE_MS = 10 * 60 * 1000;
+
+/**
+ * A teia que o servidor aceita guardar: nós com nome, tipo e nota; ligações
+ * entre nós que existem, com uma das quatro relações. O resto cai fora.
+ */
+function normalizarTeia_(bruta) {
+  const t = (bruta && typeof bruta === 'object') ? bruta : {};
+  const nos = (Array.isArray(t.nos) ? t.nos : []).slice(0, TEIA_MAX_NOS).map(function (n) {
+    const nome = String((n && n.nome) || '').trim().slice(0, 50);
+    if (!nome) return null;
+    return {
+      id: String((n && n.id) || uuid_()).slice(0, 40),
+      nome: nome,
+      tipo: TEIA_TIPOS.indexOf(n.tipo) !== -1 ? n.tipo : 'pessoa',
+      nota: String(n.nota || '').slice(0, 400)
+    };
+  }).filter(function (n) { return n; });
+  const ids = nos.map(function (n) { return n.id; });
+  const ligacoes = (Array.isArray(t.ligacoes) ? t.ligacoes : []).slice(0, TEIA_MAX_LIGACOES).map(function (l) {
+    const de = String((l && l.de) || ''), para = String((l && l.para) || '');
+    if (!de || !para || de === para) return null;
+    if ((de !== 'grupo' && ids.indexOf(de) === -1) || (para !== 'grupo' && ids.indexOf(para) === -1)) return null;
+    return { de: de, para: para, relacao: TEIA_RELACOES.indexOf(l.relacao) !== -1 ? l.relacao : 'aliado' };
+  }).filter(function (l) { return l; });
+  return { nos: nos, ligacoes: ligacoes };
+}
+
+/** A chamada em vigor, ou null quando não há ou ela passou dos 10 minutos. */
+function chamadaValida_(c) {
+  if (!c || typeof c !== 'object' || !c.id || !c.em) return null;
+  const quando = new Date(c.em).getTime();
+  if (!isFinite(quando) || Date.now() - quando > CHAMADA_VALE_MS) return null;
+  return c;
+}
+
 /**
  * Exige uma sessão de MESTRE. Todo o painel passa por aqui.
  *
@@ -1447,6 +1490,95 @@ function executar_(p) {
           const r = ajustarMedo_(m, p);
           mesaGravar_(m);
           return ok_({ medo: r, mesa: m });
+        });
+      }
+
+      /*
+       * A JOGADA COM MEDO, VINDA DA FICHA (proposta 12 de design, 31/10/2026).
+       *
+       * "Sempre que um personagem rola com Medo, você ganha 1 Ponto de Medo"
+       * (livro p.154). O jogador registra a jogada na ficha dele, e o Medo do
+       * Mestre sobe sem ninguém precisar avisar.
+       *
+       * ⚠ SÓ +1, SEMPRE. O jogador não escolhe valor nem delta: esta ação não
+       * é o `ajustarMedo` aberto a todos — é o único ganho de Medo que a
+       * regra põe na mão da jogada. O teto de 12 continua sendo o de
+       * `ajustarMedo_`, aplicado aqui no servidor.
+       */
+      case 'medoDaJogada': {
+        const jogador = exigirSessao_(p.token);
+        return comTrava_(function () {
+          const m = mesaLer_();
+          const r = ajustarMedo_(m, { delta: 1, motivo: 'jogada com Medo · ' + String(jogador.nome || '').slice(0, 40) });
+          mesaGravar_(m);
+          return ok_({ medo: r });
+        });
+      }
+
+      /*
+       * A TEIA DA CAMPANHA (proposta 16, 31/10/2026): personagens do Mestre,
+       * facções e lugares, e as relações entre eles. Mora numa chave própria
+       * de `config` (`teia`), ao lado da `mesa` — não dentro dela, para que
+       * nenhum normalizador da mesa a apague sem querer. Só o Mestre lê e
+       * grava: é o caderno dele.
+       */
+      case 'teiaDaMesa': {
+        exigirMestre_(p.token);
+        return ok_({ teia: normalizarTeia_(configLer_(CHAVE_TEIA, null)) });
+      }
+
+      case 'salvarTeia': {
+        exigirMestre_(p.token);
+        return comTrava_(function () {
+          const teia = normalizarTeia_(p.teia);
+          configGravar_(CHAVE_TEIA, teia);
+          return ok_({ teia: teia });
+        });
+      }
+
+      /*
+       * CHAMAR O JOGADOR (proposta 18, 31/10/2026). O Mestre chama um
+       * personagem; a ficha dele, que relê a chamada de tempos em tempos,
+       * acende e vibra. A resposta "Estou pronta" volta para o painel.
+       *
+       * Uma chamada por vez, numa chave de `config` (`chamada`). Ela vale por
+       * 10 minutos: depois disso, quem lê recebe nada — uma chamada esquecida
+       * não pode acender a ficha de alguém na sessão seguinte.
+       */
+      case 'chamarJogador': {
+        exigirMestre_(p.token);
+        const id = String(p.personagemId || '').slice(0, 60);
+        if (!id) throw erroApi_(ERRO.DADOS_INVALIDOS, 'Diga quem o Mestre está chamando.');
+        const chamada = {
+          id: uuid_(), personagemId: id,
+          personagemNome: String(p.personagemNome || '').slice(0, 60),
+          frase: String(p.frase || '').slice(0, 140),
+          em: agoraIso_(), pronto: false, prontoEm: ''
+        };
+        return comTrava_(function () {
+          configGravar_(CHAVE_CHAMADA, chamada);
+          return ok_({ chamada: chamada });
+        });
+      }
+
+      case 'chamadaDaMesa': {
+        exigirSessao_(p.token);
+        return ok_({ chamada: chamadaValida_(configLer_(CHAVE_CHAMADA, null)) });
+      }
+
+      case 'responderChamada': {
+        const jogador = exigirSessao_(p.token);
+        return comTrava_(function () {
+          const chamada = chamadaValida_(configLer_(CHAVE_CHAMADA, null));
+          if (!chamada || chamada.id !== String(p.id || '')) {
+            throw erroApi_(ERRO.NAO_ENCONTRADO, 'Essa chamada já passou.');
+          }
+          // Só o dono da ficha chamada responde; `obterPersonagem_` recusa os outros.
+          obterPersonagem_(jogador, chamada.personagemId);
+          chamada.pronto = true;
+          chamada.prontoEm = agoraIso_();
+          configGravar_(CHAVE_CHAMADA, chamada);
+          return ok_({ chamada: chamada });
         });
       }
 

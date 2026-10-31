@@ -3,8 +3,8 @@
  * Backend 100% Supabase Edge Functions.
  */
 
-import { CONFIG, MENSAGENS_ERRO } from './config.js?v=4fae3684ff';
-import { esperar } from './util.js?v=4fae3684ff';
+import { CONFIG, MENSAGENS_ERRO } from './config.js?v=027582ea87';
+import { esperar } from './util.js?v=027582ea87';
 
 /*
  * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
@@ -89,7 +89,9 @@ const ACOES_ENGINE = new Set([
   // As dez da mesa, vindas do mesa-api — veja o comentário em ACOES_MESA.
   'ajustarMedo','criarContagem','avancarContagem','editarContagem','excluirContagem',
   'parearContagens','desparearContagem','avancarPerseguicao',
-  'previaDescansoDaMesa','aplicarDescansoDaMesa'
+  'previaDescansoDaMesa','aplicarDescansoDaMesa',
+  // Lote 5 de design (31/10/2026): o Medo da jogada, a teia e o chamado.
+  'medoDaJogada','teiaDaMesa','salvarTeia','chamarJogador','chamadaDaMesa','responderChamada'
 ]);
 
 export class ErroApi extends Error {
@@ -250,6 +252,12 @@ export const api = {
   limparEncontro: token => chamar('limparEncontro',{token}),
   definirDanoMassivo: (token,ligado) => chamar('definirDanoMassivo',{token,ligado}),
   adversariosDaMesa: token => chamar('adversariosDaMesa',{token}),
+  medoDaJogada: token => chamar('medoDaJogada',{token}),
+  teiaDaMesa: token => chamar('teiaDaMesa',{token}),
+  salvarTeia: (token,teia) => chamar('salvarTeia',{token,teia}),
+  chamarJogador: (token,dados) => chamar('chamarJogador',{token,...dados}),
+  chamadaDaMesa: token => chamar('chamadaDaMesa',{token}),
+  responderChamada: (token,id) => chamar('responderChamada',{token,id}),
   salvarAdversarioDaMesa: (token,ficha) => chamar('salvarAdversarioDaMesa',{token,ficha}),
   excluirAdversarioDaMesa: (token,id) => chamar('excluirAdversarioDaMesa',{token,id}),
 
