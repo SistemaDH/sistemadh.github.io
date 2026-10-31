@@ -44,11 +44,9 @@ pelo título — o arquivo é grande demais para ler inteiro.
   rolagem (decisão de mesa: só ficha, sem dados); I5–I8 são pontas sem ação.
 - **Repositório × Supabase (30/10/2026):** as 9 migrações do banco estão no
   repositório, cada uma com o mesmo md5 do banco. `mesa-api` e `player-api` foram
-  baixados e batem com o repositório (deixaram de ser transcrição); `app-api` já
-  era conferido. ⚠ `auth-api` e `photo-api` no repositório são uma versão
-  **compactada** do que está no ar — mesma lógica na leitura, mas não cópia fiel:
-  antes de qualquer redeploy dessas duas, substituir pelo download. Ver
-  `docs/arquitetura-supabase.md`.
+  baixados e batem com o repositório; `auth-api` e `photo-api`, que eram uma
+  versão compactada à mão, foram trocados pelo código do ar. **As 6 Edge Functions
+  ativas têm no repositório o código publicado.** Ver `docs/arquitetura-supabase.md`.
 
 ## Migração SRD 2.0 — HISTÓRICO (checkpoint de 11/09/2026, concluída)
 

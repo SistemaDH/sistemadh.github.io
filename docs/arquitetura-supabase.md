@@ -230,13 +230,14 @@ conferida.
 então o código morto continua publicado (e no repositório, porque o repositório é
 cópia fiel). Tirar exige redeploy — palavra dela.
 
-⚠ **`auth-api/index.ts` e `photo-api/index.ts` não são cópia fiel.** Baixados em
-30/10/2026, o código no ar está formatado em várias linhas, com indentação; o do
-repositório é uma versão **compactada** à mão (constantes juntas numa linha, nomes de
-variável encurtados). As ações, as mensagens e as checagens são as mesmas na leitura,
-mas isso não foi provado token a token. Antes de qualquer redeploy dessas duas,
-**substituir o arquivo pelo download** — implantar a versão compactada por cima pode
-mudar algo que ninguém viu.
+`auth-api/index.ts` (v3) e `photo-api/index.ts` (v1) **são cópia do download desde
+30/10/2026.** Até ali o repositório guardava uma versão compactada à mão das duas;
+foi trocada pelo código publicado. Antes da troca, as duas versões foram comparadas:
+os mesmos textos e mensagens, e o mesmo número de chamadas ao banco e ao bcrypt.
+
+Com isso, **as seis Edge Functions ativas têm no repositório o código que está no
+ar**: `engine-api` conferido no deploy da v27, `app-api` desde 18/09, e as outras
+quatro desde 30/10/2026.
 
 As funções `apps-script-db`, `character-api`, `rules-engine`, `game-api` e
 `runtime-test` continuam ACTIVE, mas são lápides: respondem `410 DESATIVADO` e não

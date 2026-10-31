@@ -3045,3 +3045,19 @@ liga-desliga, `apply_character_batch` criada e apagada).
 
 ⚠ E o arquivo antigo estava com **CRLF na cópia local** — a mesma pegadinha do
 `js/config.js` que parou a suíte hoje cedo.
+
+## 30/10/2026 (6) — `auth-api` e `photo-api` passam a ser o código do ar
+
+O lote anterior achou que as duas, no repositório, eram uma versão **compactada à
+mão** do que está publicado, e deixou registrado "substituir antes de redeploy".
+A Vanessa mandou trocar já — sem implantar nada.
+
+Os arquivos agora são o código baixado do Supabase (`auth-api` v3, `photo-api`
+v1). Antes da troca, as duas versões foram comparadas por máquina, não por olho:
+**o mesmo conjunto de textos e mensagens** (o `auth-api` do ar repete duas vezes o
+`j:${chave}` que a compactada guardava numa variável) e **o mesmo número de
+chamadas ao banco e ao bcrypt** (57 e 32). Ou seja: a compactação tinha mudado a
+forma, não o comportamento — e agora nem a forma diverge.
+
+Com isso as **seis Edge Functions ativas** têm no repositório o código publicado.
+Um redeploy feito a partir do repositório não muda mais nada sem querer.
