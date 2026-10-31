@@ -2985,3 +2985,32 @@ Por decisão dela: quando o lote fecha com a suíte verde, o próprio Claude Cod
 commita e empurra para a `main`, e acompanha o CI. **Continua exigindo a palavra
 dela:** implantar Edge Function, migração de banco, mesclar PR, `push --force` e
 apagar branch. O `CLAUDE.md` também passou a citar o Python 3 na suíte.
+
+## 30/10/2026 (4) — Três documentos, três versões do motor: agora uma só
+
+Montando o mapa do projeto no Obsidian, a leitura cruzada mostrou o que cada
+documento dizia da produção: o `CLAUDE.md` e o `index.ts` diziam **v27**, o
+`docs/arquitetura-supabase.md` dizia **v26**, o `README.md` dizia **v25**. O
+README já tinha um aviso de que aquele bloco "ficou para trás uma vez" — e ficou
+de novo, por duas versões inteiras.
+
+### ✅ O que mudou
+
+- **README:** produção v27 / `718ff59`; números de teste remedidos (1.309 do
+  motor, 116 E2E — eram 1.249 e 115); o fluxo de lote com o push direto na `main`.
+- **arquitetura-supabase:** "Produção atual" passou para a v27, com o que ela
+  trouxe; a v26 virou subseção; v25–v27 entraram no histórico. O
+  `teste:motor-simbolos` não caminha mais "42 ações": são 50, e 453 funções.
+- **Topo do HANDOFF:** um bloco "ESTADO ATUAL" antes de tudo. A primeira seção
+  ainda dizia "Migração SRD 2.0 — EM ANDAMENTO", de 11/09, com motor v10 — quem
+  lia só o começo, como o `CLAUDE.md` manda, saía com o retrato de seis semanas
+  atrás. Ela agora se chama HISTÓRICO e avisa que os números são daquele dia.
+
+### ⚠ A errata de *Hope & Fear* tem ONZE entradas, não dez
+
+Conferindo o PDF (hash `0c7cb943…`, o mesmo registrado): são 11 linhas —
+Lobisomem, sete adversários e quatro cartas do Pavor. O
+`docs/varredura-100-por-cento.md` já dizia "11/11 aplicadas"; o
+`docs/srd2-conformidade.md`, o checkpoint do HANDOFF e o
+`data/srd2-fonte.json` diziam 10. Corrigidos os três. Nenhuma conferência lia o
+número, então nada quebrava — o que é justamente o motivo de ter sobrevivido.

@@ -27,11 +27,38 @@ As tabelas expostas têm RLS habilitado e não possuem policies públicas para `
 Produção atual:
 
 ```text
-engine-api: v26 ACTIVE (deploy conferido em 09/10/2026)
+engine-api: v27 ACTIVE (deploy conferido em 26/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: 6df90df855ff48647229c31bb704b07688d4216d
-bundle: 05021579fb0ed77d77156422bbce27cd6a5376c599a64cddbf2dd4319f6f3514
+ENGINE_COMMIT: 718ff59774388fd33c160525e1c73a5451512d3b
 ```
+
+⚠ **A v27 NÃO É REPIN.** O `ACOES` da função ganhou **`anotarCampanha`** (50
+ações). Sem ela, tudo que grava anotação de campanha — o caderno da campanha, a
+Leitura do Céu Noturno, a trilha da Caçada, as pistas, a Trilha da Ruína, os nove
+Ecos, a marca de lugar da Jornada — bateria num 404 mudo com o frontend novo já
+no ar.
+
+O que o commit `718ff59` traz, em relação ao `6df90df` da v26: os lotes de 14 a
+25/10/2026 — os cenários (molduras de campanha) na criação de ficha e o conteúdo
+deles, o estado de campanha, Castle High, a herança de apêndice, as três
+proibições de origem, movimento e aviso de descanso vindos da moldura, a Trilha
+da Ruína e os nove Ecos, o censo da automação, a forma única do rótulo
+`automacao` e as duas maldições. Detalhe de cada um no `docs/HANDOFF.md` e no
+`docs/diario-dos-commits.md`.
+
+Os 24 `SOURCE_FILES` foram baixados do GitHub naquele commit e conferidos por md5
+contra o que a suíte testou: **24 iguais, 0 diferentes**. O `ENGINE_COMMIT` foi
+atualizado com o diff conferido — uma linha só. Relido depois:
+v27, ACTIVE, `verify_jwt: false`, pino `718ff59`, `anotarCampanha` presente.
+Advisors: só o `rls_enabled_no_policy` esperado.
+
+⚠ **O deploy foi bloqueado pelo classificador do modo automático na primeira
+tentativa.** Não se contorna: parar, explicar e pedir a palavra dela. E o projeto
+estava **hibernado** — não é erro; acorda na primeira requisição real.
+
+⚠ O hash do pacote (`bundle`) da v27 não foi registrado no deploy.
+
+### A v26 (09/10/2026) — pino `6df90df`
 
 ⚠ **A v26 NÃO É REPIN.** A fonte mudou em duas frentes: quatro `.gs` do motor
 (`99_Api.gs`, `40_Regras.gs`, `4C_Ajustes.gs`, `47_Contadores.gs`) e o `ACOES`
@@ -111,6 +138,12 @@ movimentos somem, entra "Preparar um Banquete"); e, em Era da Umbra, o botão
 **Acender o ramo sacro** no cartão das Chamas Sagradas.
 
 ### Histórico
+
+A v27 (26/10/2026) pinou `718ff59774388fd33c160525e1c73a5451512d3b` e acrescentou
+`anotarCampanha` ao `ACOES` — não foi repin. A v26 (09/10/2026) pinou
+`6df90df855ff48647229c31bb704b07688d4216d` e trouxe `aliadosDaMesa` do
+`player-api` para o motor — não foi repin. A v25 (08/10/2026) pinou
+`b2a2eae132121d9628ff1b35f518586814b4e1a7` — repin do conserto do Anfíbio.
 
 A v24 (03/10/2026) pinou `47fcbffa9c508c9b03ef2716521b2bea6be234af` e
 acrescentou `acenderRamoSacro` e `definirBanquetes` ao `ACOES` — não foi repin.
@@ -204,8 +237,8 @@ Se o frontend novo depende de novos ajustes, contadores ou campos publicados pel
 3. fixar `ENGINE_COMMIT` num commit imutável revisado;
 4. implantar `engine-api` com esse pin;
 5. conferir que `SOURCE_FILES` contém todos os módulos globais usados pelo backend
-   — isso agora é automático: `npm run teste:motor-simbolos` caminha as 42 ações
-   roteadas e falha se qualquer nome chamado no caminho não existir no motor;
+   — isso agora é automático: `npm run teste:motor-simbolos` caminha todas as ações
+   roteadas (50 ações e 453 funções alcançadas em 30/10/2026) e falha se qualquer nome chamado no caminho não existir no motor;
 6. conferir versão, status, `verify_jwt`, `ENGINE_COMMIT` e código efetivamente implantado;
 7. alinhar `supabase/functions/engine-api/index.ts` ao mesmo pin;
 8. só então promover o frontend para `main`.

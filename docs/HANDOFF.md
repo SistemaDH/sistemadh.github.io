@@ -16,14 +16,38 @@ Leia nesta ordem:
 
 - antes de mudança relevante, informar arquivos que pretende alterar;
 - não colocar dois agentes alterando os mesmos arquivos simultaneamente;
-- código/backend relevante vai por branch e PR;
-- atualizar este HANDOFF após etapa grande;
+- lote que fecha com a suíte verde vai direto para a `main` (commit e push pelo Claude Code, autorizado em 30/10/2026); lote que exige deploy do motor segue a ordem de implantação, com a palavra dela;
+- atualizar este HANDOFF após etapa grande — **e este topo, a cada deploy**;
 - mudança de regra de Daggerheart deve registrar a fonte;
 - nunca sobrescrever mudança recente de outro agente sem entender o estado atual.
 
-## Migração SRD 2.0 — EM ANDAMENTO
+## ESTADO ATUAL — 30/10/2026
 
-Checkpoint de **11/09/2026**. Este é o trabalho ativo; os lotes Core abaixo permanecem como histórico e como regressão obrigatória.
+⚠ **Este documento é cronológico: o mais novo está no FIM.** O que vem logo
+abaixo deste bloco é história (a migração SRD 2.0 começou em 11/09 e está
+concluída). Para o estado de hoje, leia este bloco; para o porquê, busque o lote
+pelo título — o arquivo é grande demais para ler inteiro.
+
+- **Produção:** `engine-api` **v27** ACTIVE, `verify_jwt: false`,
+  `ENGINE_COMMIT = 718ff59774388fd33c160525e1c73a5451512d3b` (26/10/2026). O
+  `supabase/functions/engine-api/index.ts` aponta para o mesmo commit. Seção
+  "Deploy da v27", perto do fim.
+- **SRD 2.0 concluído:** 1.539 registros (1 fonte conferida + 1.538 mecânicas
+  implementadas), 16/16 coleções, 224/224 fontes de regra, 8/8 campanhas.
+- **Suíte:** `teste:tudo` verde em 30/10/2026, na máquina dela e no CI — 1.309
+  testes do motor, 116 passos E2E, 40 baterias. Como pôr de pé: seção "RODAR A
+  SUÍTE NA MÁQUINA DELA", no fim.
+- **Trabalho mais recente:** os lotes de 14 a 25/10 (molduras de campanha na
+  criação e em jogo, caderno de campanha, censo da automação) e a migração para o
+  Claude Code (30/10, `CLAUDE.md` na raiz).
+- **Em aberto:** quase nada no `docs/BACKLOG.md` — D4–D6 e H6 dependem de
+  rolagem (decisão de mesa: só ficha, sem dados); I5–I8 são pontas sem ação.
+  `mesa-api/index.ts` e `player-api/index.ts` continuam transcrição: baixar e
+  comparar antes de qualquer redeploy.
+
+## Migração SRD 2.0 — HISTÓRICO (checkpoint de 11/09/2026, concluída)
+
+Checkpoint de **11/09/2026**, preservado como registro. ⚠ **Os números e o estado desta seção são daquele dia** — a migração foi concluída e publicada depois (v11 em diante). Os lotes Core abaixo permanecem como histórico e como regressão obrigatória.
 
 - branch: `srd2-conformidade`;
 - base funcional da Fase 1: `cafb688c4b7d37e9091227a207224bd7537498db`;
@@ -32,7 +56,7 @@ Checkpoint de **11/09/2026**. Este é o trabalho ativo; os lotes Core abaixo per
 - autoridade mecânica: SRD 2.0 oficial de 25/08/2026, PDF SHA-256 `55d8b92b7e58aa1da99a4a59aa77352483ef4fbda71baddb9af9bfc1f333bd2a`;
 - corpus auxiliar auditável: `klrkdekira/daggerheart-system-json@7677b0c28f2efb12bba4a29f23d8068d47f37d64`, 1.539 registros em 16 coleções;
 - errata Core de 09/09/2025: SHA-256 `91bfce0cf9ba8dcd362dd5b907891636080902309decfee7d3cba137277f5263`;
-- errata *Hope & Fear* de 25/08/2026: SHA-256 `0c7cb94343e6450668fa24641007494a841af31a17b0f39dfa67cf2e7153e311`; dez entradas conferidas, todas já incorporadas ao SRD 2.0, zero divergências pendentes.
+- errata *Hope & Fear* de 25/08/2026: SHA-256 `0c7cb94343e6450668fa24641007494a841af31a17b0f39dfa67cf2e7153e311`; onze entradas conferidas (o checkpoint dizia "dez"; o PDF tem 11 — corrigido em 30/10/2026), todas já incorporadas ao SRD 2.0, zero divergências pendentes.
 
 ### Fase 1 concluída na branch — avanço 1–10
 

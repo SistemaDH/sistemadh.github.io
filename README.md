@@ -8,7 +8,7 @@ O frontend é publicado pelo GitHub Pages e o backend oficial é Supabase: Edge 
 
 ## Estado atual
 
-> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Último deploy do motor: **v25, em 08/10/2026**.
+> **Produção:** sistema SRD 2.0 publicado no GitHub Pages e motor implantado no Supabase. Último deploy do motor: **v27, em 26/10/2026**.
 
 O estado atual inclui:
 
@@ -37,7 +37,7 @@ O estado atual inclui:
 - seleção focada das Formas de Fera compostas, preservando a posição da tela no celular;
 - índice de regras identificado e atualizado para o SRD 2.0.
 
-O Lote 9 está fechado. Novas mudanças devem partir de uma branch criada a partir da `main` atual e seguir por PR com CI verde; não existe uma branch de desenvolvimento persistente obrigatória.
+O Lote 9 está fechado. Desde 30/10/2026, um lote que fecha com a suíte verde vai direto para a `main` (commit e push pelo Claude Code, ver `CLAUDE.md`); quando o lote exige deploy do motor, ele segue a ordem de implantação — branch, pin, deploy com a palavra dela, e só então a `main`. Não existe uma branch de desenvolvimento persistente obrigatória.
 
 ## Arquitetura
 
@@ -68,15 +68,14 @@ O navegador não acessa diretamente as tabelas PostgreSQL. `js/api.js` distribui
 Produção atual:
 
 ```text
-engine-api: v25 ACTIVE (deploy conferido em 08/10/2026)
+engine-api: v27 ACTIVE (deploy conferido em 26/10/2026)
 verify_jwt: false
-ENGINE_COMMIT: b2a2eae132121d9628ff1b35f518586814b4e1a7
-bundle: 3d184dfd79c10d677de9c73c7730e13ec57677b8a6a7692c478829a240fc2796
+ENGINE_COMMIT: 718ff59774388fd33c160525e1c73a5451512d3b
 ```
 
 O arquivo versionado `supabase/functions/engine-api/index.ts` usa o mesmo `ENGINE_COMMIT` do deploy ativo. Esse alinhamento é deliberado para impedir regressão em futuros redeploys.
 
-⚠ **Este bloco já ficou para trás uma vez** — dizia `v17` / `7424846` enquanto o arquivo versionado apontava para outro commit, que é exatamente a regressão que o parágrafo acima promete impedir. O histórico completo dos pins está em `docs/arquitetura-supabase.md`, que é o documento a atualizar a cada deploy; aqui fica só o estado atual.
+⚠ **Este bloco já ficou para trás duas vezes** — dizia `v17` / `7424846` enquanto o arquivo versionado apontava para outro commit, e depois ficou em `v25` / `b2a2eae` durante a v26 e a v27 inteiras (corrigido em 30/10/2026). É exatamente a regressão que o parágrafo acima promete impedir: **atualizar este bloco é passo do deploy**. O histórico completo dos pins está em `docs/arquitetura-supabase.md`, que é o documento a atualizar a cada deploy; aqui fica só o estado atual.
 
 `verify_jwt=false` é intencional nesta função porque o handler valida o token customizado de sessão antes de operar com privilégios de serviço.
 
@@ -127,7 +126,7 @@ O SRD 2.0 foi integralmente inventariado e conferido: 1.539 registros, 1.538 mec
 
 ## Testes
 
-Estado validado em 08/10/2026: **1.249 testes do motor** e **115 passos de ponta a ponta**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera.
+Estado validado em 30/10/2026 (`teste:tudo` verde, Windows, e CI verde no mesmo dia): **1.309 testes do motor** e **116 passos de ponta a ponta**, 3 jornadas completas do nível 1 ao 10, 224/224 fontes de regras SRD2 e 24/24 Formas de Fera — 40 baterias, 1.947 conferências, 0 falhas.
 
 ⚠ **Os números abaixo são um instantâneo DATADO, não o estado de hoje** — eram o gate do fechamento funcional do Lote 9 (**CI #63**, 11/09/2026) e ficam aqui como registro. Para o estado atual, rode `npm run teste:tudo`.
 
