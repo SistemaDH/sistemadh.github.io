@@ -1845,3 +1845,123 @@
   font-size: var(--txt-sm);
   margin: 0;
 }
+
+/* Os atalhos do topo da Mesa: tela para a TV e resumo da sessão. */
+.mestre__atalhos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--e2);
+  margin-bottom: var(--e3);
+}
+
+/* ==========================================================================
+   A TELA DA MESA (proposta 14, 31/10/2026) — virada para os jogadores.
+   ========================================================================== */
+
+.telaMesa {
+  position: fixed;
+  inset: 0;
+  /* Por cima do painel do Mestre (150), que é de onde ela abre. */
+  z-index: 160;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background: radial-gradient(ellipse at 50% -10%, #2a1650, var(--cor-fundo) 65%);
+  color: var(--cor-texto);
+}
+.telaMesa__barra {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  padding: var(--e2) var(--e3);
+}
+.telaMesa__marca {
+  flex: 1;
+  font-size: var(--txt-xs);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+.telaMesa__corpo {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(16px, 3vw, 40px);
+  padding: clamp(12px, 3vw, 40px);
+}
+.telaMesa__coluna { display: flex; flex-direction: column; gap: var(--e4); }
+.telaMesa__titulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(16px, 2vw, 24px);
+  letter-spacing: .16em;
+  color: #c9b3ff;
+}
+.telaMesa__medo { display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(8px, 1.4vw, 18px); }
+.telaMesa__ficha { aspect-ratio: 1; border-radius: 50%; border: 2px dashed var(--cor-medo-apagado); }
+.telaMesa__ficha.esta-cheia {
+  border: 2px solid #c4a8ff;
+  background: radial-gradient(circle at 35% 30%, #b996ff, #6a3fd1 60%, #3d1f86);
+  box-shadow: 0 0 18px rgba(139, 92, 246, .6);
+}
+.telaMesa__cena {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--e3) var(--e4);
+  border: 1px solid rgba(139, 92, 246, .45);
+  border-radius: var(--raio);
+  background: rgba(22, 11, 43, .8);
+}
+.telaMesa__cena strong { font-family: var(--fonte-titulo); font-size: clamp(18px, 2.4vw, 30px); }
+.telaMesa__cena span { color: #cbb8f5; }
+.telaMesa__vez { display: flex; flex-direction: column; gap: var(--e2); }
+.telaMesa__pessoas { display: flex; flex-wrap: wrap; gap: var(--e4); margin-top: var(--e2); }
+.telaMesa__pessoa { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--cor-texto-suave); }
+.telaMesa__medalhao {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 20px;
+  background: var(--cor-superficie-alta);
+  border: 3px solid var(--cor-borda-forte);
+}
+.telaMesa__pessoa.esta-agora .telaMesa__medalhao { border-color: var(--cor-ouro); box-shadow: 0 0 22px rgba(217, 171, 91, .6); color: var(--cor-ouro-claro); }
+.telaMesa__relogios { display: flex; flex-wrap: wrap; gap: var(--e4); }
+.telaMesa__relogio { display: flex; flex-direction: column; align-items: center; gap: var(--e2); font-family: var(--fonte-titulo); }
+.telaMesa__relogioDesenho { position: relative; width: 150px; height: 150px; }
+.telaMesa__relogioValor {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-size: 44px;
+}
+.telaMesa__vazio { color: var(--cor-texto-fraco); }
+
+/* ==========================================================================
+   O RESUMO DA SESSÃO (proposta 15, 31/10/2026)
+   ========================================================================== */
+
+.resumo { display: flex; flex-direction: column; gap: var(--e2); }
+.resumo__numeros { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); }
+.resumo__numero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--e2) 0;
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+}
+.resumo__numero strong { font-family: var(--fonte-titulo); font-size: var(--txt-2xl); color: #c9b3ff; }
+.resumo__numero span { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+.resumo__barras { display: flex; flex-direction: column; gap: 6px; }
+.resumo__barra { display: grid; grid-template-columns: 80px 1fr 24px; gap: var(--e2); align-items: center; font-size: var(--txt-sm); }
+.resumo__barraNome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cor-texto-suave); }
+.resumo__barraFundo { height: 10px; border-radius: 5px; background: var(--cor-superficie-alta); overflow: hidden; }
+.resumo__barraCheia { display: block; height: 100%; background: var(--cor-perigo); }

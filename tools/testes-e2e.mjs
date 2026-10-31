@@ -2333,6 +2333,14 @@ try {
     await pagina.getByRole('button', { name: 'Encerrar sessão 1' }).click();
     await pagina.getByRole('button', { name: 'Encerrar', exact: true }).click();
     await esperarSituacao('Sessão 1 encerrada');
+    /*
+     * Desde a proposta 15 (31/10/2026), encerrar abre o resumo da sessão por
+     * cima do painel. Ele tem de aparecer — e de sair do caminho no "Fechar".
+     */
+    const resumo = pagina.locator('.modal__caixa').filter({ hasText: 'Fim da sessão 1' });
+    await resumo.waitFor({ timeout: 15000 });
+    await resumo.getByRole('button', { name: 'Fechar' }).click();
+    await pagina.waitForSelector('.modal__caixa', { state: 'detached', timeout: 10000 });
 
     await abrirDobra('Sessão e nível');
     await pagina.getByRole('button', { name: 'Abrir sessão 2' }).click();

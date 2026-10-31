@@ -3222,3 +3222,26 @@ A bateria de criação recusou a vitrine ("controles fora da largura"): ela põe
 classes seguintes fora da tela de propósito. Ganhou a mesma exceção que as
 pílulas do bestiário já têm no painel — só dentro de um scroller horizontal de
 verdade. Depois disso a bateria e as que vinham depois rodaram verdes.
+
+## 31/10/2026 (6) — Design, lote 4: tela da mesa e resumo da sessão
+
+Propostas 14 e 15, aprovadas pela Vanessa:
+
+- **Tela da mesa para a TV (14).** Botão na Mesa que abre uma tela virada para
+  os jogadores: Medo em fichas grandes, contagens em relógio, a cena (quantos
+  em cena, nunca os PV) e o holofote. Relê o painel a cada 10 s e tem botão de
+  tela cheia — serve espelhada na TV ou aberta num segundo aparelho com o login
+  do Mestre. O relógio das contagens saiu do `mestre.js` para
+  `js/componentes/relogio.js`: um desenho só para as duas telas.
+- **Resumo da sessão (15).** O painel anota a sessão enquanto ela corre — Medo
+  ganho e gasto, PV que cada personagem marcou (visto pela releitura de 15 s) e
+  as contagens que chegaram a 0 — e abre o resumo ao encerrar, com Compartilhar
+  (ou Copiar). ⚠ É anotação DESTE aparelho (`dh:resumoDaSessao`): o que
+  aconteceu com o painel fechado não entra, e o próprio resumo diz isso. Sem
+  sessão aberta, o botão avisa em vez de mostrar uma "sessão 0".
+
+O e2e "encerrar e abrir a sessão 2" passou a fechar o resumo, que agora abre
+por cima do painel ao encerrar.
+
+Gate: `teste:tudo` verde (e2e reexecutado e as baterias seguintes rodadas
+depois do ajuste do teste).

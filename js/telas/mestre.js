@@ -20,21 +20,23 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=6b5cf94111';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=6b5cf94111';
-import { CHAVES } from '../config.js?v=6b5cf94111';
-import { acoes } from '../estado.js?v=6b5cf94111';
-import { mensagemDoErro } from '../api.js?v=6b5cf94111';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=6b5cf94111';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=6b5cf94111';
-import { botaoDeRegras } from './regras.js?v=6b5cf94111';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=6b5cf94111';
-import { secaoDoEncontro } from './encontro.js?v=6b5cf94111';
-import { icone } from '../componentes/icone.js?v=6b5cf94111';
-import * as dados from '../dados.js?v=6b5cf94111';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=4fae3684ff';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=4fae3684ff';
+import { CHAVES } from '../config.js?v=4fae3684ff';
+import { acoes } from '../estado.js?v=4fae3684ff';
+import { mensagemDoErro } from '../api.js?v=4fae3684ff';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=4fae3684ff';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=4fae3684ff';
+import { botaoDeRegras } from './regras.js?v=4fae3684ff';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=4fae3684ff';
+import { abrirTelaDaMesa } from './tela-da-mesa.js?v=4fae3684ff';
+import { relogioDeContagem } from '../componentes/relogio.js?v=4fae3684ff';
+import { secaoDoEncontro } from './encontro.js?v=4fae3684ff';
+import { icone } from '../componentes/icone.js?v=4fae3684ff';
+import * as dados from '../dados.js?v=4fae3684ff';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=6b5cf94111';
+} from '../componentes/carta.js?v=4fae3684ff';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -103,6 +105,9 @@ async function carregarBaralhoDaMesa() {
 /** Minutos sem a vez até o medalhão do holofote ficar vermelho. */
 const ALERTA_DO_HOLOFOTE_MIN = 15;
 
+/** Onde o painel anota a sessão em curso para o resumo (proposta 15). Só no aparelho. */
+const CHAVE_DO_RESUMO = 'dh:resumoDaSessao';
+
 const ABAS = [
   { id: 'mesa', rotulo: 'Mesa', icone: 'mesa' },
   { id: 'contagens', rotulo: 'Contagens', icone: 'contagens' },
@@ -169,6 +174,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     try {
       const novo = await acoes.painelDoMestre();
       if (JSON.stringify(novo.personagens) === JSON.stringify(painel.personagens)) return;
+      anotarPvPerdidos(painel.personagens, novo.personagens);
       painel.personagens = novo.personagens;
       if (abaAtual === 'mesa') {
         const velho = corpo.querySelector('.mestre__blocoDoGrupo');
@@ -348,6 +354,16 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     pai.append(blocoDoHolofote());
     pai.append(resumoDasContagens());
     pai.append(resumoDaCena());
+    pai.append(el('div', { class: 'mestre__atalhos' }, [
+      botao('Tela da mesa (TV)', () => abrirTelaDaMesa(painel)),
+      botao('Resumo da sessão', () => {
+        if (!painel.mesa.sessao || !painel.mesa.sessao.aberta) {
+          avisar('Nenhuma sessão aberta: o resumo começa a ser anotado quando a sessão abre.', 'info', 4000);
+          return;
+        }
+        abrirResumoDaSessao(lerRegistro(), { final: false });
+      })
+    ]));
     pai.append(secao('Descanso do grupo', blocoDeDescanso()));
     pai.append(dobraDoMestre('Sessão e nível', `Sessão ${painel.mesa.sessao.numero || '—'}`,
       blocoDeSessao()));
@@ -645,6 +661,95 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     });
   }
 
+  /* --- o resumo da sessão (proposta 15, 31/10/2026) ----------------------- */
+
+  /*
+   * O PAINEL ANOTA A SESSÃO ENQUANTO ELA CORRE: Medo ganho e gasto, PV que
+   * cada personagem marcou (visto pela releitura de 15 s) e as contagens que
+   * chegaram a 0. Ao encerrar a sessão, o resumo abre pronto para mandar no
+   * grupo — e serve de "da última vez…" na sessão seguinte.
+   *
+   * ⚠ É ANOTAÇÃO DESTE APARELHO (`CHAVE_DO_RESUMO`), não registro da mesa: o
+   * que aconteceu com o painel fechado não entra, e o próprio resumo diz isso.
+   * Guardar na campanha pediria mudança no servidor.
+   */
+  function registroVazio(numero) {
+    return { sessao: numero, inicio: Date.now(), medoGanho: 0, medoGasto: 0, pv: {}, contagens: [] };
+  }
+
+  function lerRegistro() {
+    const numero = painel.mesa.sessao.numero || 0;
+    const reg = guardado.ler(CHAVE_DO_RESUMO, null);
+    return reg && reg.sessao === numero ? reg : registroVazio(numero);
+  }
+
+  function anotarNaSessao(mudar) {
+    if (!painel.mesa.sessao || !painel.mesa.sessao.aberta) return;
+    const reg = lerRegistro();
+    mudar(reg);
+    guardado.gravar(CHAVE_DO_RESUMO, reg);
+  }
+
+  function anotarPvPerdidos(antes, depois) {
+    const porId = new Map((antes || []).map((x) => [x.id, x]));
+    anotarNaSessao((reg) => {
+      (depois || []).forEach((x) => {
+        const velho = porId.get(x.id);
+        if (!velho) return;
+        const delta = (x.pontosDeVida.marcados || 0) - (velho.pontosDeVida.marcados || 0);
+        if (delta > 0) reg.pv[x.nome] = (reg.pv[x.nome] || 0) + delta;
+      });
+    });
+  }
+
+  function textoDoResumo(reg) {
+    const linhas = [`Resumo da sessão ${reg.sessao}`];
+    linhas.push(`Medo: ${reg.medoGanho} ganho, ${reg.medoGasto} gasto.`);
+    const pv = Object.entries(reg.pv);
+    if (pv.length) linhas.push('PV marcados: ' + pv.map(([n, v]) => `${n} ${v}`).join(', ') + '.');
+    if (reg.contagens.length) linhas.push('Contagens que chegaram a 0: ' + reg.contagens.join(', ') + '.');
+    return linhas.join('\n');
+  }
+
+  function abrirResumoDaSessao(reg, { final }) {
+    const minutos = Math.max(0, Math.round((Date.now() - reg.inicio) / 60000));
+    const pv = Object.entries(reg.pv).sort((a, b) => b[1] - a[1]);
+    const maior = pv.length ? pv[0][1] : 1;
+    const numero = (rotulo, valor) => el('div', { class: 'resumo__numero' }, [
+      el('strong', { texto: String(valor) }), el('span', { texto: rotulo })
+    ]);
+    const texto = textoDoResumo(reg);
+    const modal = abrirModal({
+      titulo: `${final ? 'Fim da' : 'Até agora na'} sessão ${reg.sessao}`,
+      conteudo: el('div', { class: 'resumo' }, [
+        el('p', { class: 'texto-xs texto-fraco', texto: `Anotado por este aparelho há ${minutos} min.` +
+          ' O que aconteceu com o painel fechado não entra aqui.' }),
+        el('h4', { class: 'mestre__subsecao', texto: 'Medo' }),
+        el('div', { class: 'resumo__numeros' }, [numero('ganho', reg.medoGanho), numero('gasto', reg.medoGasto)]),
+        el('h4', { class: 'mestre__subsecao', texto: 'PV marcados' }),
+        pv.length
+          ? el('div', { class: 'resumo__barras' }, pv.map(([nome, v]) => el('div', { class: 'resumo__barra' }, [
+            el('span', { class: 'resumo__barraNome', texto: nome }),
+            el('span', { class: 'resumo__barraFundo' }, [el('span', { class: 'resumo__barraCheia', style: `width:${Math.round((v / maior) * 100)}%` })]),
+            el('strong', { texto: String(v) })
+          ])))
+          : el('p', { class: 'texto-sm texto-fraco', texto: 'Ninguém marcou PV enquanto o painel estava aberto.' }),
+        reg.contagens.length ? el('h4', { class: 'mestre__subsecao', texto: 'Contagens que chegaram a 0' }) : null,
+        reg.contagens.length ? el('p', { class: 'texto-sm', texto: reg.contagens.join(', ') }) : null
+      ].filter(Boolean)),
+      acoes: [
+        navigator.share ? el('button', {
+          type: 'button', class: 'btn btn--principal',
+          onClick: () => navigator.share({ title: `Sessão ${reg.sessao}`, text: texto }).catch(() => {})
+        }, 'Compartilhar') : el('button', {
+          type: 'button', class: 'btn btn--principal',
+          onClick: () => navigator.clipboard.writeText(texto).then(() => avisarSucesso('Resumo copiado.')).catch(() => {})
+        }, 'Copiar o texto'),
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')
+      ]
+    });
+  }
+
   /* --- holofote ----------------------------------------------------------- */
 
   /*
@@ -744,6 +849,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * via o número parar sem explicação. O conserto foi no roster.js.
    */
   async function mexerNoMedo(pedido) {
+    const medoAntes = Number(painel.mesa.medo) || 0;
     const alvo = (pedido && pedido.valor !== undefined)
       ? Math.max(0, Math.min(painel.medoRegras.maximo, pedido.valor))
       : null;
@@ -757,6 +863,11 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     try {
       const r = await acoes.ajustarMedo(pedido);
       painel.mesa = r.mesa;
+      anotarNaSessao((reg) => {
+        const delta = (Number(r.medo.depois) || 0) - medoAntes;
+        if (delta > 0) reg.medoGanho += delta;
+        if (delta < 0) reg.medoGasto -= delta;
+      });
       if (r.medo.aviso) avisar(r.medo.aviso, 'info', 4000);
       if (JSON.stringify(painel.mesa) === esperado) {
         // O servidor confirmou o que já está na tela: só o cabeçalho, que é
@@ -827,7 +938,9 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         try {
           const r = await acoes.encerrarSessaoDaMesa();
           avisarSucesso(`Sessão ${r.sessao.numero} encerrada. Medo em ${r.sessao.medo}.`);
+          const encerrada = lerRegistro();
           recarregar();
+          abrirResumoDaSessao(encerrada, { final: true });
         } catch (e) { avisarErro(mensagemDoErro(e)); }
       }));
     } else {
@@ -2707,6 +2820,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     try {
       const r = await acoes.avancarContagem(id, dados);
       painel.mesa = r.mesa;
+      if (r.avanco.acionou) anotarNaSessao((reg) => { reg.contagens.push(r.avanco.nome); });
       if (r.avanco.acionou) {
         const etapa = r.avanco.etapa ? ` ${r.avanco.etapa.texto}` : '';
         avisar(r.avanco.reiniciou
@@ -3318,43 +3432,4 @@ function caixinha(rotulo, valor) {
 
 function botao(texto, aoTocar) {
   return el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: aoTocar }, texto);
-}
-
-/*
- * O RELÓGIO DA CONTAGEM (proposta 8, 31/10/2026).
- *
- * Cada fatia é um passo; as acesas são o que FALTA. Os quadradinhos davam a
- * mesma informação, mas só de perto: o relógio que vai se fechando se lê do
- * outro lado da mesa. Desenhado em SVG aqui mesmo, sem imagem.
- */
-const SVG = 'http://www.w3.org/2000/svg';
-function relogioDeContagem(falta, total, tamanho, classe) {
-  const n = Math.max(1, Math.min(total, 24));
-  const f = Math.max(0, Math.min(falta, n));
-  const r = tamanho / 2 - 2, c = tamanho / 2, folga = n > 1 ? 0.06 : 0;
-  const svg = document.createElementNS(SVG, 'svg');
-  svg.setAttribute('viewBox', `0 0 ${tamanho} ${tamanho}`);
-  svg.setAttribute('width', String(tamanho));
-  svg.setAttribute('height', String(tamanho));
-  svg.setAttribute('class', `relogio relogio--${classe}`);
-  svg.setAttribute('aria-hidden', 'true');
-  for (let i = 0; i < n; i++) {
-    const a0 = (i / n) * 2 * Math.PI - Math.PI / 2 + folga;
-    const a1 = ((i + 1) / n) * 2 * Math.PI - Math.PI / 2 - folga;
-    const fatia = document.createElementNS(SVG, 'path');
-    fatia.setAttribute('d', n === 1
-      ? `M${c},${c - r} A${r},${r} 0 1 1 ${c - 0.01},${c - r} Z`
-      : `M${c},${c} L${c + r * Math.cos(a0)},${c + r * Math.sin(a0)} ` +
-        `A${r},${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${c + r * Math.cos(a1)},${c + r * Math.sin(a1)} Z`);
-    fatia.setAttribute('class', `relogio__fatia ${i < f ? 'esta-acesa' : ''}`);
-    svg.append(fatia);
-  }
-  if (tamanho > 40) {
-    const furo = document.createElementNS(SVG, 'circle');
-    furo.setAttribute('cx', String(c)); furo.setAttribute('cy', String(c));
-    furo.setAttribute('r', String(r * 0.62));
-    furo.setAttribute('class', 'relogio__furo');
-    svg.append(furo);
-  }
-  return svg;
 }

@@ -21,24 +21,24 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=6b5cf94111';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=6b5cf94111';
-import { acoes, obterEstado } from '../estado.js?v=6b5cf94111';
-import { mensagemDoErro } from '../api.js?v=6b5cf94111';
-import { aguardar, temPendente } from '../fila.js?v=6b5cf94111';
-import * as dados from '../dados.js?v=6b5cf94111';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=6b5cf94111';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=6b5cf94111';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=6b5cf94111';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=6b5cf94111';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=6b5cf94111';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=6b5cf94111';
-import { botaoDeRegras } from './regras.js?v=6b5cf94111';
-import { abrirDescanso } from './descanso.js?v=6b5cf94111';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=6b5cf94111';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=6b5cf94111';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=6b5cf94111';
-import { icone } from '../componentes/icone.js?v=6b5cf94111';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=4fae3684ff';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=4fae3684ff';
+import { acoes, obterEstado } from '../estado.js?v=4fae3684ff';
+import { mensagemDoErro } from '../api.js?v=4fae3684ff';
+import { aguardar, temPendente } from '../fila.js?v=4fae3684ff';
+import * as dados from '../dados.js?v=4fae3684ff';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=4fae3684ff';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=4fae3684ff';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=4fae3684ff';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=4fae3684ff';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=4fae3684ff';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=4fae3684ff';
+import { botaoDeRegras } from './regras.js?v=4fae3684ff';
+import { abrirDescanso } from './descanso.js?v=4fae3684ff';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=4fae3684ff';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=4fae3684ff';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=4fae3684ff';
+import { icone } from '../componentes/icone.js?v=4fae3684ff';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).

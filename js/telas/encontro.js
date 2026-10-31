@@ -20,11 +20,11 @@
  * a causar o dano reduzido quando marca metade dos PV.
  */
 
-import { el, limpar, travarBotao, guardarRolagem } from '../util.js?v=6b5cf94111';
-import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js?v=6b5cf94111';
-import { acoes } from '../estado.js?v=6b5cf94111';
-import { mensagemDoErro } from '../api.js?v=6b5cf94111';
-import { nomeComGlossa } from '../glossario.js?v=6b5cf94111';
+import { el, limpar, travarBotao, guardarRolagem } from '../util.js?v=4fae3684ff';
+import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js?v=4fae3684ff';
+import { acoes } from '../estado.js?v=4fae3684ff';
+import { mensagemDoErro } from '../api.js?v=4fae3684ff';
+import { nomeComGlossa } from '../glossario.js?v=4fae3684ff';
 
 /** As condições que se põem num adversário com um toque (livro p.102). */
 const CONDICOES_RAPIDAS = ['Vulnerável', 'Restrito', 'Oculto'];
