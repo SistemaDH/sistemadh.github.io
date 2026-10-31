@@ -20,20 +20,20 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=dd0875ae30';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=dd0875ae30';
-import { acoes } from '../estado.js?v=dd0875ae30';
-import { mensagemDoErro } from '../api.js?v=dd0875ae30';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=dd0875ae30';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=dd0875ae30';
-import { botaoDeRegras } from './regras.js?v=dd0875ae30';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=dd0875ae30';
-import { secaoDoEncontro } from './encontro.js?v=dd0875ae30';
-import { icone } from '../componentes/icone.js?v=dd0875ae30';
-import * as dados from '../dados.js?v=dd0875ae30';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0ebcd032a7';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=0ebcd032a7';
+import { acoes } from '../estado.js?v=0ebcd032a7';
+import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=0ebcd032a7';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=0ebcd032a7';
+import { botaoDeRegras } from './regras.js?v=0ebcd032a7';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=0ebcd032a7';
+import { secaoDoEncontro } from './encontro.js?v=0ebcd032a7';
+import { icone } from '../componentes/icone.js?v=0ebcd032a7';
+import * as dados from '../dados.js?v=0ebcd032a7';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=dd0875ae30';
+} from '../componentes/carta.js?v=0ebcd032a7';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -2576,7 +2576,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           painel.mesa = r.mesa;
           modal.fechar();
           desenhar();
-          avisarSucesso('Perseguição montada — um teste agora avança as duas.');
+          avisarSucesso('Perseguição montada — uma jogada agora avança as duas.');
         } catch (e) { avisarErro(mensagemDoErro(e)); }
       })());
     });
@@ -2585,7 +2585,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       titulo: 'Montar uma perseguição',
       conteudo: el('div', { class: 'pilha' }, [
         el('p', { class: 'texto-sm' }, textoAnotado(
-          'Numa perseguição o mesmo teste avança as DUAS contagens: uma dos perseguidores e ' +
+          'Numa perseguição a mesma jogada avança as DUAS contagens: uma dos perseguidores e ' +
           'outra dos fugitivos. Um sucesso aproxima quem persegue; uma falha aproxima a fuga.')),
         el('p', { class: 'campo__ajuda', texto:
           'A vantagem de quem foge entra no valor inicial: −1 para uma pequena vantagem, ' +
@@ -2800,7 +2800,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       el('summary', { class: 'mestre__tabelaTitulo', texto: 'Avanço de Contagens Dinâmicas (p.163)' }),
       el('p', { class: 'campo__ajuda', texto:
         'Vale para as contagens de progresso e de consequência. A contagem padrão anda 1 a cada ' +
-        'teste, qualquer que seja o resultado.' }),
+        'jogada, qualquer que seja o resultado.' }),
       el('div', { class: 'mestre__tabelaLinhas' }, painel.tabelaDinamica.map((l) =>
         el('div', { class: 'mestre__tabelaLinha' }, [
           el('span', { class: 'crescer', texto: l.resultado }),

@@ -16,12 +16,12 @@
  * discordar.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=dd0875ae30';
-import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=dd0875ae30';
-import { acoes } from '../estado.js?v=dd0875ae30';
-import { mensagemDoErro } from '../api.js?v=dd0875ae30';
-import { nomeComGlossa } from '../glossario.js?v=dd0875ae30';
-import { textoAnotado } from '../verbete.js?v=dd0875ae30';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0ebcd032a7';
+import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=0ebcd032a7';
+import { acoes } from '../estado.js?v=0ebcd032a7';
+import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
+import { nomeComGlossa } from '../glossario.js?v=0ebcd032a7';
+import { textoAnotado } from '../verbete.js?v=0ebcd032a7';
 
 /**
  * @param {{personagem:Object, aoAplicar?:Function}} opcoes
@@ -286,7 +286,7 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       selProjeto.append(el('option', { value: '' }, '— só anotar, sem mexer na contagem —'));
       projetos.forEach((x) => selProjeto.append(
         el('option', { value: x.id }, `${x.nome} (${x.valor})`)));
-      selResultado.append(el('option', { value: '' }, 'sem teste — anda 1'));
+      selResultado.append(el('option', { value: '' }, 'sem jogada — anda 1'));
       tabelaDeProjeto.forEach((l) => selResultado.append(
         el('option', { value: l.resultado }, `${l.resultado} — anda ${l.avanca}`)));
     }
@@ -340,11 +340,11 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
           el('span', { class: 'campo__rotulo', texto: 'Contagem de projeto a avançar' }), selProjeto
         ]),
         el('label', { class: 'campo' }, [
-          el('span', { class: 'campo__rotulo', texto: 'Resultado do teste' }),
+          el('span', { class: 'campo__rotulo', texto: 'Resultado da jogada' }),
           selResultado,
           el('span', { class: 'campo__ajuda', texto:
             'No projeto, até a falha avança 1 — passar o repouso trabalhando rende alguma coisa ' +
-            'mesmo quando o teste dá errado (livro p.181).' })
+            'mesmo quando a jogada dá errado (livro p.181).' })
         ])
       );
     }

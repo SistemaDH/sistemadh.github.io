@@ -6,10 +6,10 @@
  * continuam sendo reconhecidos para não quebrar fichas já existentes.
  */
 
-import { el, travarBotao } from '../util.js?v=dd0875ae30';
-import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=dd0875ae30';
-import { acoes } from '../estado.js?v=dd0875ae30';
-import { mensagemDoErro } from '../api.js?v=dd0875ae30';
+import { el, travarBotao } from '../util.js?v=0ebcd032a7';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=0ebcd032a7';
+import { acoes } from '../estado.js?v=0ebcd032a7';
+import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
 
 export const FOTO_LARGURA = 480;
 export const FOTO_ALTURA = 600;

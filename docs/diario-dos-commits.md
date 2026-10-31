@@ -3091,3 +3091,24 @@ dentro da `main`.
 
 As duas branches de arquivo (`archive/docs-fechamento-lote9-2026-09-11` e
 `backup-main-2026-09-10-pre-newedit`) ficaram — são registro, não trabalho.
+
+## 31/10/2026 (2) — Seis "teste" que o app ainda dizia
+
+Uma varredura de escrita em todo texto que o jogador lê (strings de `js/` e
+campos de exibição de `data/`) achou **6 lugares** em que a tela dizia "teste"
+— a regra do projeto é "jogada":
+
+- **descanso**, projeto no repouso: "sem teste — anda 1", "Resultado do teste" e
+  "mesmo quando o teste dá errado";
+- **painel do Mestre**, contagens e perseguição: "um teste agora avança as duas",
+  "o mesmo teste avança as DUAS contagens" e "anda 1 a cada teste".
+
+⚠ Escaparam porque a conferência de vocabulário (E114) mede só o equipamento.
+Fica proposta uma guarda nas telas — não feita sem a palavra dela.
+
+O resto da varredura foi alarme falso medido: classes CSS repetidas
+(`btn btn`), variáveis dentro de template, e inglês em campos de **registro**
+(`doLivro`, `caracteristicaNoLivro`) que nenhuma tela mostra. A dica de busca
+de `regras.js` cita "teste" de propósito — é o termo da Jambô.
+
+Gate: `teste:tudo` verde (1.947 ✓, 0 ✗), cache-buster `0ebcd032a7`.
