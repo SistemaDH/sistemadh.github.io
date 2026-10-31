@@ -196,7 +196,7 @@ Dentro da função, as diferenças são persistidas pela RPC `apply_engine_mutat
 app-api:    v6 ACTIVE (implantada e relida em 18/09/2026)
 auth-api:   v3 ACTIVE
 photo-api:  v1 ACTIVE
-player-api: v1 ACTIVE — só `meusProjetos` desde a v26 do engine-api
+player-api: v2 ACTIVE (31/10/2026) — só `meusProjetos`
 mesa-api:   v2 ACTIVE — implantada, mas sem trânsito desde a v15 do engine-api
 ```
 
@@ -219,16 +219,19 @@ a v6 foi relida e bate **byte a byte** (md5 `049cc683…`) com
 `supabase/functions/app-api/index.ts` na `main`. Esse arquivo deixou de ser
 transcrição e passou a ser fonte conferida.
 
-`mesa-api/index.ts` (v2) e `player-api/index.ts` (v1) **foram conferidos contra o
+`mesa-api/index.ts` (v2) e `player-api/index.ts` (v1, hoje v2) **foram conferidos contra o
 download em 30/10/2026**: o código no ar bate com o do repositório, linha a linha — a
 única diferença é a quebra de linha no fim do arquivo, que o repositório tem e o
 pacote publicado não. Os dois deixaram de ser transcrição e passaram a ser fonte
 conferida.
 
-⚠ O `player-api` no ar **ainda tem** o ramo `aliadosDaMesa`: desde a v26 do
-`engine-api` o app não chama mais essa ação lá, mas a função nunca foi reimplantada,
-então o código morto continua publicado (e no repositório, porque o repositório é
-cópia fiel). Tirar exige redeploy — palavra dela.
+**A v2 do `player-api` (31/10/2026) tirou o ramo `aliadosDaMesa`**, morto desde a v26
+do `engine-api` (o app manda essa ação para o motor; `js/api.js` só roteia
+`meusProjetos` para cá). Ordem cumprida: o arquivo do repositório foi preparado e
+testado primeiro (`teste:funcoes`, `teste:motor-mesa`, 1.309 testes), a v1 no ar foi
+conferida como a mesma de antes, o deploy passou `verify_jwt: false` explícito, a v2
+foi relida do servidor e bate com o repositório, e os advisors seguem só com o aviso
+esperado.
 
 `auth-api/index.ts` (v3) e `photo-api/index.ts` (v1) **são cópia do download desde
 30/10/2026.** Até ali o repositório guardava uma versão compactada à mão das duas;

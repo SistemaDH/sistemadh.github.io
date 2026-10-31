@@ -3061,3 +3061,33 @@ forma, não o comportamento — e agora nem a forma diverge.
 
 Com isso as **seis Edge Functions ativas** têm no repositório o código publicado.
 Um redeploy feito a partir do repositório não muda mais nada sem querer.
+
+## 31/10/2026 — `player-api` v2: sai o ramo que ninguém chamava, e a `newedit` vai embora
+
+### ✅ `player-api` v2
+
+Desde a v26 do `engine-api`, `aliadosDaMesa` é do motor — o `js/api.js` só roteia
+`meusProjetos` para o `player-api`. Mas a função nunca foi reimplantada, e o ramo
+continuava publicado. Com a palavra dela ("pode fazer"), a ordem foi:
+
+1. tirar a linha do `supabase/functions/player-api/index.ts` e rodar
+   `teste:funcoes`, `teste:motor-mesa`, lint e os 1.309 testes **antes** do deploy;
+2. conferir que o que estava no ar ainda era a v1 comparada ontem (mesmo hash de
+   pacote);
+3. implantar com **`verify_jwt: false` explícito** — a lição da v16;
+4. reler do servidor: **v2**, ACTIVE, `verify_jwt: false`, conteúdo igual ao do
+   repositório;
+5. advisors: só o `rls_enabled_no_policy` esperado.
+
+O deploy veio antes do commit, como a ordem manda: o repositório só passa a dizer
+v2 depois que a v2 existe.
+
+### ✅ A branch `newedit` foi apagada
+
+Local e no GitHub. Antes de apagar: **zero commits** fora da `main` (parada desde
+18/09), o único PR dela (#8) já mesclado, o Pages publica da `main` e a branch não
+era protegida. Se um dia precisar: o último commit dela é `50f63f2`, que continua
+dentro da `main`.
+
+As duas branches de arquivo (`archive/docs-fechamento-lote9-2026-09-11` e
+`backup-main-2026-09-10-pre-newedit`) ficaram — são registro, não trabalho.

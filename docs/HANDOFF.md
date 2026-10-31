@@ -47,6 +47,8 @@ pelo título — o arquivo é grande demais para ler inteiro.
   baixados e batem com o repositório; `auth-api` e `photo-api`, que eram uma
   versão compactada à mão, foram trocados pelo código do ar. **As 6 Edge Functions
   ativas têm no repositório o código publicado.** Ver `docs/arquitetura-supabase.md`.
+- **`player-api` v2 (31/10/2026):** saiu o ramo morto `aliadosDaMesa`. A branch
+  `newedit` (já contida na `main`) foi apagada.
 
 ## Migração SRD 2.0 — HISTÓRICO (checkpoint de 11/09/2026, concluída)
 
