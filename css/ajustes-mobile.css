@@ -149,10 +149,11 @@
     gap: var(--e1);
   }
 
+  /* As fichas são círculos (proposta 7): a altura sai da largura. */
   .trilha--medoMesa .medo__chama {
     width: 100%;
     min-width: var(--alvo-min);
-    height: var(--alvo-min);
+    height: auto;
     flex: none;
   }
 
@@ -210,6 +211,11 @@
     min-height: 48px;
     background: var(--cor-fundo-2);
     box-shadow: 0 8px 12px rgba(0, 0, 0, .32);
+  }
+
+  /* O cabeçalho da tabela gruda logo abaixo da busca, que tem 48px. */
+  .bestiario__cabecalho {
+    top: calc(48px - var(--e4));
   }
 }
 

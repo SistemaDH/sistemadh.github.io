@@ -3112,3 +3112,39 @@ O resto da varredura foi alarme falso medido: classes CSS repetidas
 de `regras.js` cita "teste" de propósito — é o termo da Jambô.
 
 Gate: `teste:tudo` verde (1.947 ✓, 0 ✗), cache-buster `0ebcd032a7`.
+
+## 31/10/2026 (3) — Design, lote 1: bestiário, grupo, Medo e contagens
+
+A Vanessa viu as propostas de design em imagem e em vídeo e aprovou as de 2 a
+19 ("pode fazer 2 a 19"). Este é o primeiro lote, só do painel do Mestre:
+
+- **Bestiário em tabela (proposta 2).** Uma linha por adversário, com Dif,
+  limiares, PV, Estresse e ataque em colunas fixas e cabeçalho preso abaixo da
+  busca: cabem uns 11 por tela (eram 2). Tocar na linha abre o detalhe ali
+  mesmo; o visor de folhear, que ela pediu para comparar, continua em "Ficha
+  inteira". Abrir e fechar não redesenha a lista, senão a rolagem voltava ao topo.
+- **Grupo em tabela (proposta 3).** Barras de PV e Estresse com o número ao
+  lado, aviso escrito "FALTA 1 PV" (e "SEM PV · movimento de morte"), e tocar
+  no nome abre o cartão da ficha numa janela. ⚠ O painel só lia o grupo ao
+  abrir: agora relê o servidor a cada 15 s, com a tela à vista e sem janela
+  aberta, e troca **só a lista de personagens** — Medo, contagens e cena
+  continuam sendo o que a Mestre mexeu.
+- **Medo em fichas e holofote (proposta 7).** As 12 caveiras viraram fichas
+  redondas (a caveira dela continua dentro). Botões "+1 rolou com Medo" e
+  "− Gastar Medo", que lista os usos de `comoGasta`: o que custa 1 desconta ali;
+  o que custa "o da ficha" fica só como lembrete, porque quem cobra a
+  habilidade do adversário é a Cena. O **holofote** é lembrete, não regra: um
+  medalhão por personagem, vermelho depois de 15 min sem a vez, guardado só no
+  aparelho (`dh:holofote`).
+- **Contagens como relógios (proposta 8).** SVG desenhado no app: as fatias
+  acesas são o que falta, vermelho a 1 ou 2 do fim. Duas por linha (a dinâmica,
+  com botões longos, ocupa a linha), Editar e Excluir no "⋯", e uma faixa de
+  contagens ativas abaixo do topo nas outras abas.
+
+Testes ajustados ao gesto novo: o e2e abre a linha antes do "+ Pôr em cena" e
+usa "Ficha inteira" para o visor; a exclusão de contagem abre o "⋯" antes. A
+bateria de layout do Mestre pegou a faixa e o "⋯" com 32–36 px — subiram para
+os 44 px do alvo mínimo.
+
+Gate: `teste:tudo` verde até a bateria do Mestre; depois do ajuste de 44 px (só
+CSS) as baterias de layout restantes rodaram verdes. Cache-buster `a65b2e8b2b`.

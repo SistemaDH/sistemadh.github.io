@@ -21,21 +21,21 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=0ebcd032a7';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=0ebcd032a7';
-import { acoes, obterEstado } from '../estado.js?v=0ebcd032a7';
-import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
-import { aguardar, temPendente } from '../fila.js?v=0ebcd032a7';
-import * as dados from '../dados.js?v=0ebcd032a7';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=0ebcd032a7';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=0ebcd032a7';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=0ebcd032a7';
-import { botaoDeRegras } from './regras.js?v=0ebcd032a7';
-import { abrirDescanso } from './descanso.js?v=0ebcd032a7';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=0ebcd032a7';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=0ebcd032a7';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=0ebcd032a7';
-import { icone } from '../componentes/icone.js?v=0ebcd032a7';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=a65b2e8b2b';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=a65b2e8b2b';
+import { acoes, obterEstado } from '../estado.js?v=a65b2e8b2b';
+import { mensagemDoErro } from '../api.js?v=a65b2e8b2b';
+import { aguardar, temPendente } from '../fila.js?v=a65b2e8b2b';
+import * as dados from '../dados.js?v=a65b2e8b2b';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=a65b2e8b2b';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=a65b2e8b2b';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=a65b2e8b2b';
+import { botaoDeRegras } from './regras.js?v=a65b2e8b2b';
+import { abrirDescanso } from './descanso.js?v=a65b2e8b2b';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=a65b2e8b2b';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=a65b2e8b2b';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=a65b2e8b2b';
+import { icone } from '../componentes/icone.js?v=a65b2e8b2b';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).

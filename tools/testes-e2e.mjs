@@ -2214,6 +2214,8 @@ try {
 
   await passo('a contagem some ao ser excluída', async () => {
     // Escopo no cartão da contagem: o roster atrás também tem "Excluir".
+    // Desde a proposta 8 (31/10/2026), Editar e Excluir moram no "⋯" do cartão.
+    await pagina.locator('.mestre__contagem').first().locator('.mestre__contagemMenu > summary').click();
     await pagina.locator('.mestre__contagem').first()
       .getByRole('button', { name: 'Excluir' }).click();
     await pagina.locator('.modal__caixa').getByRole('button', { name: 'Excluir' }).click();
@@ -2413,7 +2415,13 @@ try {
     await pagina.locator('.bestiario__pilulas').last().getByRole('button', { name: 'Todo tipo' }).click();
     await pagina.fill('.bestiario input[type="search"]', 'urso');
     await pagina.waitForTimeout(400);
-    await pagina.locator('.bestiario__linha').first().click();
+    /*
+     * Desde a tabela (proposta 2, 31/10/2026), tocar na linha abre o detalhe
+     * NA PRÓPRIA LINHA, com as habilidades; o visor sai de "Ficha inteira".
+     */
+    await pagina.locator('.bestiario__linha').first().locator('.bestiario__celulas').click();
+    await pagina.waitForSelector('.bestiario__detalhe .habilidade', { timeout: 10000 });
+    await pagina.locator('.bestiario__fichaInteira').click();
     await pagina.waitForSelector('.ficha-adversario', { timeout: 10000 });
     const habilidades = await pagina.locator('.ficha-adversario .habilidade').count();
     if (habilidades < 1) throw new Error('a ficha abriu sem habilidade nenhuma');
@@ -2442,7 +2450,8 @@ try {
     await pagina.waitForTimeout(250);
     const naLista = await pagina.locator('.bestiario__linha').count();
     if (naLista < 2) throw new Error(`o filtro deixou ${naLista} ficha(s) — nada a folhear`);
-    await pagina.locator('.bestiario__linha').first().click();
+    await pagina.locator('.bestiario__linha').first().locator('.bestiario__celulas').click();
+    await pagina.locator('.bestiario__fichaInteira').click();
     await pagina.waitForSelector('.modal__caixa--carta .ficha-adversario', { timeout: 10000 });
     const visor = pagina.locator('.modal__caixa--carta').last();
     const marca = (await visor.locator('.carta-visor__contador').textContent()).trim();
@@ -2515,9 +2524,10 @@ try {
     await pagina.waitForSelector('.bestiario__lista', { timeout: 15000 });
     // o passo anterior deixou a tela nos Ambientes
     await pagina.getByRole('tab', { name: /Adversários/ }).click();
-    await pagina.waitForSelector('.bestiario__porEmCena', { timeout: 15000 });
+    await pagina.waitForSelector('.bestiario__celulas', { timeout: 15000 });
     await pagina.fill('.bestiario input[type="search"]', 'urso');
     await pagina.waitForTimeout(400);
+    await pagina.locator('.bestiario__linha').first().locator('.bestiario__celulas').click();
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
@@ -2673,9 +2683,10 @@ try {
     // O catálogo mora no Bestiário; a cena é outra aba desde o Lote 4.
     await pagina.getByRole('tab', { name: 'Bestiário' }).click();
     await pagina.getByRole('tab', { name: /Adversários/ }).click();
-    await pagina.waitForSelector('.bestiario__porEmCena', { timeout: 15000 });
+    await pagina.waitForSelector('.bestiario__celulas', { timeout: 15000 });
     await pagina.fill('.bestiario input[type="search"]', 'guarda chefe');
     await pagina.waitForTimeout(400);
+    await pagina.locator('.bestiario__linha').first().locator('.bestiario__celulas').click();
     await pagina.locator('.bestiario__linha').first().locator('.bestiario__porEmCena').click();
     await pagina.waitForTimeout(700);
     await pagina.getByRole('tab', { name: 'Cena' }).click();

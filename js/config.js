@@ -20,7 +20,9 @@ export const CHAVES = {
   BASE_API: 'dh:baseApi',
   TOKEN: 'dh:token',
   JOGADOR: 'dh:jogador',
-  ULTIMO_PERSONAGEM: 'dh:ultimoPersonagem'
+  ULTIMO_PERSONAGEM: 'dh:ultimoPersonagem',
+  /** Holofote do painel do Mestre: quando cada personagem teve a vez. Só no aparelho. */
+  HOLOFOTE: 'dh:holofote'
 };
 
 /**

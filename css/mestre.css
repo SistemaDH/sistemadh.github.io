@@ -208,38 +208,106 @@
 
 .mestre__contagem.esta-encerrada { opacity: .6; }
 
+
+/*
+ * O RELÓGIO NO LUGAR DOS QUADRADINHOS (proposta 8, 31/10/2026). O número do
+ * que falta fica no furo do meio; cada tipo acende na cor da borda do cartão,
+ * e o que está a 1 ou 2 do fim acende em vermelho.
+ */
 .mestre__contagemTopo {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--e2);
+  text-align: center;
 }
+.mestre__contagemTopo .cartao__titulo { margin: 0; }
+.mestre__contagemRelogio { position: relative; width: 84px; height: 84px; }
+.mestre__contagemRelogio .relogio { display: block; }
 
 .mestre__contagemValor {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
   font-family: var(--fonte-titulo);
   font-size: var(--txt-2xl);
   color: var(--cor-titulo);
   line-height: 1;
-  min-width: 1.5em;
-  text-align: right;
 }
 
-.mestre__trilha {
+.relogio__fatia { fill: var(--cor-superficie-alta); stroke: var(--cor-fundo); stroke-width: 1.5; }
+.relogio__furo { fill: var(--cor-superficie); }
+.relogio--padrao .relogio__fatia.esta-acesa { fill: var(--cor-info); }
+.relogio--progresso .relogio__fatia.esta-acesa { fill: var(--cor-sucesso); }
+.relogio--consequencia .relogio__fatia.esta-acesa { fill: var(--cor-alerta); }
+.relogio--longo-prazo .relogio__fatia.esta-acesa { fill: var(--cor-medo); }
+.relogio--perto .relogio__fatia.esta-acesa { fill: var(--cor-perigo); }
+
+.mestre__contagem.esta-perto {
+  border-color: var(--cor-perigo);
+  box-shadow: 0 0 0 1px rgba(224, 82, 82, .35), 0 0 18px rgba(224, 82, 82, .2);
+}
+
+/* Duas por linha quando cabem; a dinâmica, com os botões longos de resultado,
+   ocupa a linha inteira. */
+.mestre__gradeDeContagens {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--e3);
+}
+.mestre__gradeDeContagens > .mestre__contagem:not(.mestre__contagem--simples) { grid-column: 1 / -1; }
+
+.mestre__contagemMenos { flex: 1 1 auto; min-height: var(--alvo-min); font-size: var(--txt-md); }
+
+.mestre__contagemMenu { align-self: stretch; }
+.mestre__contagemMenu > summary {
+  list-style: none;
+  min-height: var(--alvo-min);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  color: var(--cor-texto-suave);
+  font-size: var(--txt-lg);
+  cursor: pointer;
+}
+.mestre__contagemMenu > summary::-webkit-details-marker { display: none; }
+.mestre__contagemMenu[open] > summary { border-color: var(--cor-borda-forte); }
+.mestre__contagemMenu .mestre__botoes { margin-top: var(--e2); }
+
+/* A faixa de contagens ativas, logo abaixo do topo do painel. */
+.mestre__faixaDeContagens {
   display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
+  align-items: center;
+  gap: var(--e3);
+  padding: 0 var(--e3);
+  overflow-x: auto;
+  background: rgba(23, 13, 44, .85);
+  border-top: 1px solid rgba(139, 92, 246, .35);
 }
-
-.mestre__quadradinho {
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--cor-borda-forte);
-  border-radius: 3px;
-  background: var(--cor-fundo-2);
+.mestre__faixaRotulo {
+  flex: 0 0 auto;
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #a995d6;
 }
-
-.mestre__quadradinho.esta-marcado {
-  background: var(--cor-medo);
-  border-color: var(--cor-medo);
+.mestre__faixaItem {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: var(--alvo-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #d9c9ff;
+  font: inherit;
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .mestre__etapa {
@@ -383,13 +451,6 @@
   flex: 1 1 auto;
 }
 
-/*
- * Na linha de resumo os pontinhos NÃO esticam: duas trilhas lado a lado com
- * `flex: 1` acabavam nas duas pontas da tela, e o olho lia duas coisas
- * separadas em vez de "PV e Estresse desta pessoa".
- */
-.mestre__linhaTrilhas .mestre__miniPontos { flex: 0 0 auto; }
-
 /* ==========================================================================
    OS BLOCOS-RESUMO DA PÁGINA DA MESA
 
@@ -459,112 +520,105 @@
 }
 
 /*
- * Uma ficha por linha: nome e nível em cima, as duas trilhas embaixo, a
- * Esperança à direita. Duas fileiras, e não uma, porque nome de personagem
- * mais duas trilhas não cabem lado a lado em 390px sem espremer as trilhas —
- * e a trilha espremida é justamente o que se veio olhar.
+ * O GRUPO EM TABELA (proposta 3, 31/10/2026): nome, barra de PV, barra de
+ * Estresse e Esperança, em colunas fixas que o cabeçalho repete. As duas
+ * grades andam juntas — mude as duas.
  */
+.mestre__tabelaGrupo { display: flex; flex-direction: column; }
+/* Gancho da releitura de 15 s: é este bloco que ela troca. */
+.mestre__blocoDoGrupo { scroll-margin-top: var(--e3); }
+
+.mestre__tabelaGrupoCab,
 .mestre__linhaDoGrupo {
   display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas: 'nome esperanca' 'trilhas esperanca';
+  grid-template-columns: minmax(0, 1fr) 82px 82px 34px;
+  gap: var(--e2);
   align-items: center;
-  gap: 2px var(--e3);
+}
+
+.mestre__tabelaGrupoCab {
+  padding-bottom: 6px;
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+}
+.mestre__tabelaGrupoCab span:last-child { text-align: center; }
+
+.mestre__linhaDoGrupo {
   padding: var(--e2) 0;
   border-top: 1px solid var(--cor-borda);
 }
-
-.mestre__resumoLista > :first-child { border-top: 0; }
+.mestre__linhaDoGrupo.esta-em-perigo { background: rgba(224, 82, 82, .09); }
 
 .mestre__linhaNome {
-  grid-area: nome;
   display: flex;
-  align-items: baseline;
-  gap: var(--e2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   min-width: 0;
-  font-size: var(--txt-sm);
-  font-weight: 600;
+  min-height: 44px;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
+.mestre__linhaNome:focus-visible { outline: 2px solid var(--cor-foco); outline-offset: 2px; }
 
-.mestre__linhaNome .crescer {
+.mestre__linhaNomeTexto {
+  max-width: 100%;
+  font-size: var(--txt-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .mestre__linhaNivel {
-  flex: 0 0 auto;
   font-size: var(--txt-xs);
-  font-weight: 400;
   color: var(--cor-texto-fraco);
 }
 
-.mestre__linhaTrilhas {
-  grid-area: trilhas;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--e2) var(--e3);
-}
-
-/* A Esperança é UM número: os losangos não cabem aqui, e o número basta. */
-/*
- * A Esperança empilha NOME sobre número, e não fica só o número.
- *
- * Ela era um algarismo dourado solto no canto da linha — sem rótulo, sem
- * unidade. Quem olhava não tinha como saber se era Esperança, Armadura ou o
- * nível. Empilhado, o nome cabe sem roubar largura das trilhas.
- */
-.mestre__linhaEsperanca {
-  grid-area: esperanca;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1.1;
-}
-
-/* Mesmo caso do `--linhaTrilhaNome`: 10px cravado, abaixo do piso da escala. */
-.mestre__linhaEsperancaNome {
+.mestre__linhaAviso {
   font-size: var(--txt-xs);
   font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--cor-texto-fraco);
+  letter-spacing: .04em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #ffb1b1;
+  background: rgba(224, 82, 82, .18);
+  border: 1px solid rgba(224, 82, 82, .5);
+}
+
+.mestre__barraComNumero { display: flex; flex-direction: column; gap: 3px; }
+
+.mestre__barra {
+  height: 9px;
+  border-radius: 5px;
+  background: var(--cor-superficie-alta);
+  overflow: hidden;
+}
+.mestre__barraCheia { display: block; height: 100%; }
+.mestre__barra--pv .mestre__barraCheia { background: var(--cor-perigo); }
+.mestre__barra--estresse .mestre__barraCheia { background: var(--cor-estresse); }
+
+.mestre__barraNumero {
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-suave);
 }
 
 .mestre__linhaEsperancaValor {
+  text-align: center;
   font-family: var(--fonte-mono);
   font-size: var(--txt-lg);
   font-weight: 700;
   color: var(--cor-esperanca);
 }
-
-/* Cada trilha com o nome dela na frente: sem isso, duas fileiras de
-   quadradinhos numa linha só são um enigma. */
-.mestre__linhaTrilha {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-}
-
-/*
- * "PV", "Estr" e "Esp" estavam em 10px cravado — abaixo do `--txt-xs`, que o
- * tema.css declara como "piso real da escala" (12px). Num celular, a essa
- * altura, três letras maiúsculas com `letter-spacing` viram borrão.
- *
- * Ninguém tinha visto porque o baseline mobile nunca fazia login como Mestre:
- * esta linha só existe na aba Grupo do painel dele.
- */
-.mestre__linhaTrilhaNome {
-  flex: 0 0 auto;
-  font-size: var(--txt-xs);
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-
-.mestre__linhaTrilhaNome--pv { color: #f0b3b3; }
-.mestre__linhaTrilhaNome--estresse { color: #b5d8f2; }
 
 /* Contagem e adversário cabem numa fileira só: o nome é mais curto. */
 .mestre__linhaSimples {
@@ -780,19 +834,6 @@
 .selo--acao { border-color: var(--cor-ouro-escuro); color: var(--cor-ouro-claro); }
 .selo--reacao { border-color: var(--cor-medo); color: #d8c2ff; }
 
-/*
- * A GRADE DE QUATRO NÚMEROS.
- *
- * Eram quatro pares numa frase corrida, e no meio de um combate achar o limiar
- * ali custava ler a linha inteira. Em quatro colunas fixas, cada número tem o
- * mesmo lugar em todos os cartões e o olho vai direto.
- */
-.bestiario__stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--e2);
-}
-
 .bestiario__mini {
   display: flex;
   flex-direction: column;
@@ -961,9 +1002,113 @@
  */
 .bestiario__listas--duas { grid-template-columns: 1fr 1fr; }
 
-.bestiario__linha--comAcao { position: relative; }
+/*
+ * O BESTIÁRIO EM TABELA (proposta 2, 31/10/2026): uma linha por adversário,
+ * colunas fixas, cabeçalho preso no alto. As mesmas seis colunas valem para o
+ * cabeçalho e para as linhas — mude as duas juntas.
+ */
+.bestiario__resultado--tabela { gap: 0; }
+.bestiario__resultado--tabela > .texto-sm { margin-bottom: var(--e2); }
 
-.bestiario__porEmCena {
+.bestiario__cabecalho,
+.bestiario__celulas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px 44px 24px 28px 72px;
+  gap: 4px;
+  align-items: center;
+}
+
+.bestiario__cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 7px var(--e3);
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-fraco);
+  background: var(--cor-fundo-2);
+  border-top: 1px solid var(--cor-borda);
+  border-bottom: 1px solid var(--cor-borda);
+}
+.bestiario__cabecalho span { text-align: center; }
+.bestiario__cabecalho span:first-child { text-align: left; }
+.bestiario__cabecalho span:last-child { text-align: right; }
+
+.bestiario__linha--tabela {
+  padding: 0;
+  gap: 0;
+  border: 0;
+  border-bottom: 1px solid var(--cor-borda);
+  border-radius: 0;
+  background: transparent;
+  cursor: default;
+}
+.bestiario__linha--tabela:nth-child(odd) { background: var(--cor-fundo-2); }
+.bestiario__linha--tabela.esta-aberta {
+  background: var(--cor-superficie);
+  box-shadow: inset 3px 0 var(--cor-medo);
+}
+
+.bestiario__celulas {
+  min-height: 48px;
+  padding: 8px var(--e3);
+  cursor: pointer;
+}
+.bestiario__celulas:focus-visible { outline: 2px solid var(--cor-foco); outline-offset: -2px; }
+
+.bestiario__quem { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.bestiario__quem .bestiario__nome { line-height: 1.2; overflow-wrap: anywhere; }
+.bestiario__quem .bestiario__patamarTipo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--cor-texto-fraco);
+}
+
+.bestiario__patamar {
+  font: 700 var(--txt-xs) var(--fonte-mono);
+  padding: 0 5px;
+  border-radius: 4px;
+  color: var(--cor-fundo);
+}
+.bestiario__patamar--1 { background: var(--cor-sucesso); }
+.bestiario__patamar--2 { background: var(--cor-estresse); }
+.bestiario__patamar--3 { background: #b07cf0; }
+.bestiario__patamar--4 { background: var(--cor-perigo); }
+
+.bestiario__num {
+  text-align: center;
+  font-family: var(--fonte-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: var(--txt-sm);
+}
+
+.bestiario__atq {
+  text-align: right;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-sm);
+  color: var(--cor-ouro-claro);
+  display: flex;
+  flex-direction: column;
+}
+.bestiario__atq small { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+
+.bestiario__detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: 0 var(--e3) var(--e3);
+}
+.bestiario__detalhe .habilidade { margin: 0; }
+
+.bestiario__porEmCena,
+.bestiario__fichaInteira {
   align-self: flex-start;
   min-height: 36px;
 }
@@ -1229,6 +1374,128 @@
 }
 
 .medo__chama.esta-cheio { background-color: var(--cor-medo); }
+
+/*
+ * AS FICHAS DE MEDO DA MESA (proposta 7, 31/10/2026).
+ *
+ * No painel, em 6 × 2, cada peça tem espaço para virar FICHA: um círculo que
+ * acende cheio em violeta e fica tracejado quando vazio — legível do outro lado
+ * da mesa. A caveira da Vanessa continua dentro, agora por `::before`, porque
+ * o botão em si passou a ser o círculo.
+ */
+.trilha--medoMesa .medo__chama {
+  position: relative;
+  aspect-ratio: 1;
+  height: auto;
+  border-radius: 50%;
+  border: 2px dashed var(--cor-medo-apagado);
+  background: transparent;
+  -webkit-mask: none;
+  mask: none;
+}
+.trilha--medoMesa .medo__chama::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--cor-medo-apagado);
+  -webkit-mask: url('../assets/marca/medo.svg') no-repeat center / 52% 52%;
+  mask: url('../assets/marca/medo.svg') no-repeat center / 52% 52%;
+}
+.trilha--medoMesa .medo__chama.esta-cheio {
+  border: 2px solid #c4a8ff;
+  background: radial-gradient(circle at 35% 30%, #b996ff, #6a3fd1 60%, #3d1f86);
+  box-shadow: 0 0 12px rgba(139, 92, 246, .55), inset 0 -3px 6px rgba(0, 0, 0, .4);
+}
+.trilha--medoMesa .medo__chama.esta-cheio::before { background-color: #f1e9ff; }
+
+.medo__acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--e2);
+  margin-top: var(--e3);
+}
+.medo__ganhar,
+.medo__gastar { border-color: var(--cor-medo); color: #d8c2ff; }
+
+.medo__usos { display: flex; flex-direction: column; gap: var(--e2); }
+.medo__uso {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  padding: var(--e2) 0;
+  border-top: 1px solid var(--cor-borda);
+}
+.medo__usoCusto {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: var(--txt-sm);
+  color: #d8c2ff;
+  background: var(--cor-medo-fundo);
+  border: 1px solid var(--cor-medo);
+}
+.medo__usoTexto { margin: 0; font-size: var(--txt-sm); }
+.medo__uso .btn { flex: 0 0 auto; white-space: nowrap; }
+
+/* O HOLOFOTE: um medalhão por personagem; vermelho quando faz tempo. */
+.mestre__holofote .mestre__resumoConta { font-family: var(--fonte-corpo); }
+.holofote__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: var(--e2);
+}
+.holofote__pessoa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--alvo-min);
+  padding: var(--e1) 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto-suave);
+  font: inherit;
+  font-size: var(--txt-xs);
+  cursor: pointer;
+}
+.holofote__medalhao {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: var(--txt-md);
+  color: var(--cor-texto);
+  background: var(--cor-superficie-alta);
+  border: 2px solid var(--cor-borda-forte);
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+.holofote__pessoa.esta-agora .holofote__medalhao {
+  border-color: var(--cor-ouro);
+  box-shadow: 0 0 14px rgba(217, 171, 91, .45);
+}
+.holofote__pessoa.esta-frio .holofote__medalhao { border-color: var(--cor-perigo); }
+.holofote__alerta {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-style: normal;
+  font-family: var(--fonte-corpo);
+  font-size: var(--txt-xs);
+  color: #fff;
+  background: var(--cor-perigo);
+}
+.holofote__nome { color: var(--cor-texto); font-size: var(--txt-xs); }
+.holofote__quando { color: var(--cor-texto-fraco); }
 
 /*
  * O ESTADO DA SESSÃO, EM UMA FRASE.

@@ -21,15 +21,15 @@
  * passo seguinte. O botão "Pontos de Batalha" já faz a conta do encontro.
  */
 
-import { el, limpar, adiar, guardarRolagem } from '../util.js?v=0ebcd032a7';
-import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=0ebcd032a7';
-import { acoes } from '../estado.js?v=0ebcd032a7';
-import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
-import * as dados from '../dados.js?v=0ebcd032a7';
-import { prepararGlossario } from '../glossario.js?v=0ebcd032a7';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=0ebcd032a7';
-import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js?v=0ebcd032a7';
-import { abrirCarta } from '../componentes/carta.js?v=0ebcd032a7';
+import { el, limpar, adiar, guardarRolagem } from '../util.js?v=a65b2e8b2b';
+import { abrirModal, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=a65b2e8b2b';
+import { acoes } from '../estado.js?v=a65b2e8b2b';
+import { mensagemDoErro } from '../api.js?v=a65b2e8b2b';
+import * as dados from '../dados.js?v=a65b2e8b2b';
+import { prepararGlossario } from '../glossario.js?v=a65b2e8b2b';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=a65b2e8b2b';
+import { abrirEditorDeAdversario, confirmarExclusao } from './adversario-da-mesa.js?v=a65b2e8b2b';
+import { abrirCarta } from '../componentes/carta.js?v=a65b2e8b2b';
 
 const PATAMARES = [
   { id: 0, rotulo: 'Todos' },
@@ -100,6 +100,8 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
   let emCena = 0;
   /** As fichas que a MESA inventou — entram na lista junto com as do livro. */
   let daMesa = [];
+  /** O id do adversário com o detalhe aberto na lista (só um por vez). */
+  let aberto = null;
 
   carregarCatalogo()
     .then(() => Promise.all([
@@ -206,7 +208,7 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
 
   function lista() {
     const achados = filtrar();
-    const caixa = el('div', { class: 'bestiario__resultado' });
+    const caixa = el('div', { class: `bestiario__resultado ${filtro.lista === 'adversarios' ? 'bestiario__resultado--tabela' : ''}` });
     if (!achados.length) {
       caixa.append(blocoVazio('Nada com esse filtro',
         'Tente outro patamar ou apague a busca.'));
@@ -215,6 +217,7 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     const total = filtro.lista === 'adversarios'
       ? catalogo.adversarios.length + daMesa.length : catalogo.ambientes.length;
     caixa.append(el('p', { class: 'texto-sm texto-suave', texto: `${achados.length} de ${total}` }));
+    if (filtro.lista === 'adversarios') caixa.append(cabecalhoDaTabela());
     achados.forEach((f) => caixa.append(
       filtro.lista === 'adversarios' ? linhaDeAdversario(f) : linhaDeAmbiente(f)));
     return caixa;
@@ -245,47 +248,80 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
     }, texto || '+ cena');
   }
 
+  /*
+   * O ADVERSÁRIO VIROU LINHA DE TABELA (proposta 2 de design, aprovada em
+   * 31/10/2026).
+   *
+   * Eram cartões de quatro fileiras: cabiam dois por tela, e comparar três
+   * bichos de patamar 1 era rolar. Agora cada um é uma linha com os números
+   * de consulta em colunas fixas — Dif, limiares, PV, Estresse e ataque — e
+   * cabem uns doze. Tocar na linha abre o detalhe ALI MESMO (habilidades,
+   * custo e os botões); "Ficha inteira" continua abrindo o visor de folhear,
+   * que é o gesto de comparar que a Vanessa pediu para esta tela.
+   *
+   * Só uma linha aberta por vez, guardada em `aberto` para sobreviver ao
+   * `desenhar()` de quem filtra ou põe em cena.
+   */
   function linhaDeAdversario(f) {
-    return el('div', {
-      class: 'bestiario__linha bestiario__linha--comAcao',
-      role: 'button', tabindex: '0',
-      onClick: (ev) => {
-        if (!ev.target.closest('.bestiario__porEmCena, .bestiario__daMesaAcao')) abrirAdversario(f);
-      },
-      onKeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrirAdversario(f); } }
+    const estaAberta = aberto === f.id;
+    /* Abre e fecha sem redesenhar a lista: redesenhar jogava a rolagem para o
+       topo, e o Mestre perdia a linha que acabou de tocar. */
+    const alternar = () => {
+      const anterior = area.querySelector('.bestiario__linha--tabela.esta-aberta');
+      if (anterior) {
+        anterior.classList.remove('esta-aberta');
+        anterior.querySelector('.bestiario__detalhe')?.remove();
+        anterior.querySelector('.bestiario__celulas').setAttribute('aria-expanded', 'false');
+      }
+      if (aberto === f.id) { aberto = null; return; }
+      aberto = f.id;
+      linha.classList.add('esta-aberta');
+      celulas.setAttribute('aria-expanded', 'true');
+      linha.append(detalheDoAdversario(f));
+    };
+    const atq = f.ataque || {};
+    const celulas = el('div', {
+      class: 'bestiario__celulas', role: 'button', tabindex: '0',
+      'aria-expanded': estaAberta ? 'true' : 'false',
+      onClick: alternar,
+      onKeydown: (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); alternar(); } }
     }, [
-      /*
-       * PATAMAR E TIPO NUMA LINHA SÓ, à direita do nome.
-       *
-       * Eram duas linhas: uma pílula "1º" no alto e "Lacaio" logo abaixo, com
-       * o PB e o Medo do lado. Três informações em duas fileiras num cartão que
-       * ainda tinha a grade de números — e nenhuma delas é o que se procura
-       * primeiro. "1º · Comandante" responde de uma vez "que bicho é este".
-       */
-      el('div', { class: 'bestiario__linhaTopo' }, [
+      el('div', { class: 'bestiario__quem' }, [
         el('strong', { class: 'bestiario__nome', texto: f.nome }),
-        f.daMesa ? el('span', { class: 'selo selo--ouro', texto: 'da mesa' }) : null,
-        el('span', { class: 'bestiario__patamarTipo', texto: `${f.patamar}º · ${f.tipo}` })
-      ].filter(Boolean)),
-      /*
-       * A GRADE DE QUATRO: rótulo em cima, número embaixo.
-       *
-       * Os quatro números vinham numa frase corrida ("Dif 11 Limiares nenhum
-       * PV 1 Estresse 1") e, no meio de um combate, achar o limiar naquilo
-       * custava ler a linha inteira. Em colunas, cada um tem lugar fixo — o
-       * olho vai direto, e é o mesmo arranjo em todos os cartões.
-       */
-      el('div', { class: 'bestiario__stats' }, [
-        mini('Dif', f.dificuldade),
-        mini('Limiares', f.limiares || 'nenhum'),
-        mini('PV', f.pontosDeVida),
-        mini('Estr', f.estresse)
+        el('span', { class: 'bestiario__patamarTipo' }, [
+          el('span', { class: `bestiario__patamar bestiario__patamar--${f.patamar}`, texto: String(f.patamar) }),
+          el('span', { texto: f.tipo }),
+          f.daMesa ? el('span', { class: 'selo selo--ouro', texto: 'da mesa' }) : null
+        ].filter(Boolean))
       ]),
+      el('span', { class: 'bestiario__num', texto: String(f.dificuldade ?? '—') }),
+      el('span', { class: 'bestiario__num', texto: f.limiares || '—' }),
+      el('span', { class: 'bestiario__num', texto: String(f.pontosDeVida ?? '—') }),
+      el('span', { class: 'bestiario__num', texto: String(f.estresse ?? '—') }),
+      el('span', { class: 'bestiario__atq' }, [
+        el('span', { texto: atq.modificador || '—' }),
+        el('small', { texto: atq.dano || '' })
+      ])
+    ]);
+    const linha = el('div', {
+      class: `bestiario__linha bestiario__linha--tabela ${estaAberta ? 'esta-aberta' : ''}`
+    }, [celulas]);
+    if (estaAberta) linha.append(detalheDoAdversario(f));
+    return linha;
+  }
+
+  function detalheDoAdversario(f) {
+    const atq = f.ataque || {};
+    const exp = (f.experiencias || []).map((x) => `${x.nome} ${x.bonus >= 0 ? '+' : ''}${x.bonus}`).join(', ');
+    return el('div', { class: 'bestiario__detalhe' }, [
+      atq.nome ? el('p', { class: 'texto-sm' }, [
+        el('strong', { texto: atq.nome }),
+        el('span', { texto: ` · ${atq.alcance || ''}` + (exp ? ` · ${exp}` : '') })
+      ]) : null,
+      ...(f.habilidades || []).map((h) => blocoDeHabilidade(h)),
       /*
-       * O CUSTO VIRA FRASE, e ela é sobre o orçamento do encontro: o que o
-       * bicho custa em Pontos de Batalha, e se ele cobra Medo para atacar.
-       * Como pílula solta no meio da linha do tipo, o Medo parecia atributo
-       * dele; escrito, fica claro que é preço.
+       * O CUSTO É FRASE, e ela é sobre o orçamento do encontro: o que o bicho
+       * custa em Pontos de Batalha, e se ele cobra Medo para atacar.
        */
       el('p', { class: 'bestiario__custo' }, [
         f.custoDeMedoMaximo
@@ -296,11 +332,14 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
         el('span', { title: 'Pontos de Batalha', texto: `${custoDoTipo(f.tipo)} PB` })
       ].filter(Boolean)),
       el('div', { class: 'encontro__acoes' }, [
-        botaoPorEmCena(f),
+        botaoPorEmCena(f, '+ Pôr em cena'),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma btn--pequeno bestiario__fichaInteira',
+          onClick: () => abrirAdversario(f)
+        }, 'Ficha inteira'),
         f.daMesa ? el('button', {
           type: 'button', class: 'btn btn--fantasma btn--pequeno bestiario__daMesaAcao',
-          onClick: (ev) => {
-            ev.stopPropagation();
+          onClick: () => {
             abrirEditorDeAdversario({
               ficha: f, tabela: catalogo.porPatamar, tipos: catalogo.tipos,
               aoSalvar: (r) => { daMesa = r.adversarios; desenhar(); }
@@ -309,20 +348,28 @@ export function abaBestiario(pai, painel, { aoMudarMedo, aoCriarContagem } = {})
         }, 'Editar') : null,
         f.daMesa ? el('button', {
           type: 'button', class: 'btn btn--fantasma btn--pequeno bestiario__daMesaAcao',
-          onClick: async (ev) => {
-            ev.stopPropagation();
+          onClick: async () => {
             if (!(await confirmarExclusao(f))) return;
             try {
               const r = await acoes.excluirAdversarioDaMesa(f.id);
               daMesa = r.adversarios;
+              aberto = null;
               // Nome de adversário é campo livre e no bestiário é quase sempre feminino
-      // (Aranha, Serpente, Bruxa): a frase não pode carregar gênero.
-      avisarSucesso(`Ficha apagada: ${f.nome}.`);
+              // (Aranha, Serpente, Bruxa): a frase não pode carregar gênero.
+              avisarSucesso(`Ficha apagada: ${f.nome}.`);
               desenhar();
             } catch (e) { avisarErro(mensagemDoErro(e)); }
           }
         }, 'Apagar') : null
       ].filter(Boolean))
+    ].filter(Boolean));
+  }
+
+  /* Cabeçalho das colunas: fica preso no alto enquanto a lista rola. */
+  function cabecalhoDaTabela() {
+    return el('div', { class: 'bestiario__cabecalho', 'aria-hidden': 'true' }, [
+      el('span', { texto: 'Adversário' }), el('span', { texto: 'Dif' }), el('span', { texto: 'Lim.' }),
+      el('span', { texto: 'PV' }), el('span', { texto: 'Estr' }), el('span', { texto: 'Ataque' })
     ]);
   }
 

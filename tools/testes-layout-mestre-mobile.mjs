@@ -1521,7 +1521,8 @@ async function entrarComoMestre(page) {
  * alguém devolvê-las para lá sem a conta aparecer.
  */
 async function auditarVisorDeFicha(page, viewport) {
-  await page.locator('.bestiario__linha').first().click();
+  await page.locator('.bestiario__linha').first().locator('.bestiario__celulas').click();
+  await page.locator('.bestiario__fichaInteira').click();
   await page.waitForSelector('.modal__caixa--carta .ficha-adversario', { timeout: 15000 });
   await page.waitForTimeout(150);
 

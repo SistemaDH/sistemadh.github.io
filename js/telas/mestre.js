@@ -20,20 +20,21 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0ebcd032a7';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=0ebcd032a7';
-import { acoes } from '../estado.js?v=0ebcd032a7';
-import { mensagemDoErro } from '../api.js?v=0ebcd032a7';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=0ebcd032a7';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=0ebcd032a7';
-import { botaoDeRegras } from './regras.js?v=0ebcd032a7';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=0ebcd032a7';
-import { secaoDoEncontro } from './encontro.js?v=0ebcd032a7';
-import { icone } from '../componentes/icone.js?v=0ebcd032a7';
-import * as dados from '../dados.js?v=0ebcd032a7';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=a65b2e8b2b';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=a65b2e8b2b';
+import { CHAVES } from '../config.js?v=a65b2e8b2b';
+import { acoes } from '../estado.js?v=a65b2e8b2b';
+import { mensagemDoErro } from '../api.js?v=a65b2e8b2b';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=a65b2e8b2b';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=a65b2e8b2b';
+import { botaoDeRegras } from './regras.js?v=a65b2e8b2b';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=a65b2e8b2b';
+import { secaoDoEncontro } from './encontro.js?v=a65b2e8b2b';
+import { icone } from '../componentes/icone.js?v=a65b2e8b2b';
+import * as dados from '../dados.js?v=a65b2e8b2b';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=0ebcd032a7';
+} from '../componentes/carta.js?v=a65b2e8b2b';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -99,6 +100,9 @@ async function carregarBaralhoDaMesa() {
  * A restrição não existe mais (ou nunca existiu com este CSS). Quem for mexer
  * aqui de novo: meça, não deduza.
  */
+/** Minutos sem a vez até o medalhão do holofote ficar vermelho. */
+const ALERTA_DO_HOLOFOTE_MIN = 15;
+
 const ABAS = [
   { id: 'mesa', rotulo: 'Mesa', icone: 'mesa' },
   { id: 'contagens', rotulo: 'Contagens', icone: 'contagens' },
@@ -129,6 +133,9 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
 
   let painel = null;
   let abaAtual = 'mesa';
+  /** O relógio da releitura do grupo; nulo enquanto o painel não abriu. */
+  let releitura = null;
+  let relogioDoHolofote = null;
 
   try {
     // O glossário e os verbetes têm de estar prontos ANTES do primeiro desenho:
@@ -145,7 +152,39 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     return;
   }
 
+  /*
+   * O GRUPO SE ATUALIZA SOZINHO (proposta 3, 31/10/2026).
+   *
+   * Quem marca PV e Estresse é o jogador, no celular dele; o painel só lia o
+   * grupo ao abrir, e a Mestre tinha de sair e voltar para ver o golpe que o
+   * Thorn acabou de levar. Agora, a cada 15 s, com a tela à vista e nenhuma
+   * janela aberta por cima, o painel relê o servidor e troca SÓ a lista de
+   * personagens — Medo, contagens e cena continuam sendo do que a Mestre
+   * mexeu aqui, para uma releitura nunca desfazer um toque dela.
+   */
+  const RELER_GRUPO_MS = 15000;
+  releitura = setInterval(async () => {
+    if (document.hidden || document.querySelector('.modal')) return;
+    if (abaAtual !== 'mesa' && abaAtual !== 'grupo') return;
+    try {
+      const novo = await acoes.painelDoMestre();
+      if (JSON.stringify(novo.personagens) === JSON.stringify(painel.personagens)) return;
+      painel.personagens = novo.personagens;
+      if (abaAtual === 'mesa') {
+        const velho = corpo.querySelector('.mestre__blocoDoGrupo');
+        if (velho) velho.replaceWith(resumoDoGrupo());
+      } else if (!document.querySelector('.modal')) desenhar();
+    } catch { /* a próxima volta tenta de novo; erro de rede aqui não é da Mestre */ }
+  }, RELER_GRUPO_MS);
+
+  /* O holofote conta minutos: repinta sozinho a cada 30 s, sem ir ao servidor. */
+  relogioDoHolofote = setInterval(() => {
+    if (!document.hidden && abaAtual === 'mesa') repintarHolofote();
+  }, 30000);
+
   function fechar() {
+    clearInterval(releitura);
+    clearInterval(relogioDoHolofote);
     overlay.remove();
     document.body.style.overflow = '';
     document.removeEventListener('keydown', aoTeclar);
@@ -170,7 +209,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    */
   function aoMudarMedo(valor) {
     painel.mesa.medo = valor;
-    limpar(cabecalho).append(montarTopo());
+    redesenharTopo();
   }
 
   /**
@@ -200,7 +239,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
   /* ---------------------------------------------------------------------- */
 
   function desenhar() {
-    limpar(cabecalho).append(montarTopo());
+    redesenharTopo();
     limpar(barra).append(...ABAS.map(botaoDeAba));
     const anterior = corpo.scrollTop;
     limpar(corpo);
@@ -248,6 +287,34 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]);
   }
 
+  /*
+   * A FAIXA DE CONTAGENS ATIVAS (proposta 8): abaixo do topo, em todas as abas
+   * menos a própria Contagens. No Bestiário ou na Cena, o relógio do ritual
+   * continua à vista; tocar leva para a aba.
+   */
+  /** O topo e a faixa de contagens andam juntos: quem redesenha um, redesenha os dois. */
+  function redesenharTopo() {
+    limpar(cabecalho).append(montarTopo());
+    const faixa = faixaDeContagens();
+    if (faixa) cabecalho.append(faixa);
+  }
+
+  function faixaDeContagens() {
+    const ativas = (painel.mesa.contagens || []).filter((c) => !c.encerrada);
+    if (!ativas.length || abaAtual === 'contagens') return null;
+    return el('div', { class: 'mestre__faixaDeContagens' }, [
+      el('span', { class: 'mestre__faixaRotulo', texto: 'Ativas' }),
+      ...ativas.map((c) => el('button', {
+        type: 'button', class: 'mestre__faixaItem',
+        'aria-label': `${c.nome}: ${c.valor} de ${c.valorInicial}. Abrir as contagens.`,
+        onClick: () => { abaAtual = 'contagens'; desenhar(); corpo.scrollTop = 0; }
+      }, [
+        relogioDeContagem(c.valor, c.valorInicial, 22, c.valor > 0 && c.valor <= 2 ? 'perto' : c.tipo),
+        el('span', { texto: c.nome })
+      ]))
+    ]);
+  }
+
   desenhar();
 
   /* ======================================================================== *
@@ -278,6 +345,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       blocoDeMedo()
     ]));
     pai.append(resumoDoGrupo());
+    pai.append(blocoDoHolofote());
     pai.append(resumoDasContagens());
     pai.append(resumoDaCena());
     pai.append(secao('Descanso do grupo', blocoDeDescanso()));
@@ -318,7 +386,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
 
   /** "Como está o grupo" — uma linha por ficha, com as duas trilhas que doem. */
   function resumoDoGrupo() {
-    const bloco = el('section', { class: 'mestre__bloco' }, [
+    const bloco = el('section', { class: 'mestre__bloco mestre__blocoDoGrupo' }, [
       topoDeResumo('Como está o grupo', { paraAba: { id: 'grupo', rotulo: 'a aba Grupo' } })
     ]);
 
@@ -327,43 +395,61 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       return bloco;
     }
 
-    bloco.append(el('div', { class: 'mestre__resumoLista' }, painel.personagens.map((p) =>
-      el('div', { class: 'mestre__linhaDoGrupo' }, [
-        el('div', { class: 'mestre__linhaNome' }, [
-          el('span', { class: 'crescer', texto: p.nome }),
-          el('span', { class: 'mestre__linhaNivel', texto: `nv ${p.nivel}` })
-        ]),
-        /*
-         * PV e Estresse, e só. Armadura está na aba Grupo — aqui a pergunta é
-         * "quem está perto de cair?", e são estas duas que respondem.
-         *
-         * ⚠ CADA TRILHA LEVA O NOME DELA, e isso não é enfeite: eram duas
-         * fileiras de quadradinhos sem rótulo nenhum, e ninguém sabia qual era
-         * PV e qual era Estresse. A cor sozinha não resolve — quem não separa
-         * vermelho de azul via duas fileiras idênticas, e mesmo quem separa
-         * precisava lembrar a convenção.
-         *
-         * O rótulo é curto de propósito ("PV", "ESTR"): a linha inteira tem de
-         * caber em 358px com as duas trilhas e a Esperança.
-         */
-        el('div', { class: 'mestre__linhaTrilhas' }, [
-          trilhaComNome('PV', p.pontosDeVida.marcados, p.pontosDeVida.maximo, 'pv',
-            `${p.nome}: ${p.pontosDeVida.marcados} de ${p.pontosDeVida.maximo} PV marcados`),
-          trilhaComNome('Estr', p.estresse.marcados, p.estresse.maximo, 'estresse',
-            `${p.nome}: ${p.estresse.marcados} de ${p.estresse.maximo} de Estresse`)
-        ]),
-        /*
-         * A Esperança era um número dourado SOLTO no canto — sem rótulo, sem
-         * unidade, sem nada que dissesse o que era. Ganhou o nome junto.
-         */
-        el('span', { class: 'mestre__linhaEsperanca',
-          title: `Esperança de ${p.nome}` }, [
-          el('span', { class: 'mestre__linhaEsperancaNome', texto: 'Esp' }),
-          el('strong', { class: 'mestre__linhaEsperancaValor',
-            texto: String(p.esperanca.valor) })
-        ])
-      ]))));
+    /*
+     * O GRUPO VIROU TABELA (proposta 3 de design, aprovada em 31/10/2026).
+     *
+     * Eram duas fileiras de quadradinhos por ficha. Agora cada trilha é uma
+     * BARRA que enche com o que está marcado, como na ficha de papel, com o
+     * número ao lado ("6/7") — de longe se vê quem está perto de cair, e de
+     * perto se lê quanto. Quem está a um PV do fim ganha o aviso escrito; a
+     * cor sozinha não basta para quem não separa vermelho de azul.
+     *
+     * Tocar no nome abre a ficha dele numa janela (o mesmo cartão da aba
+     * Grupo), sem trocar de aba.
+     */
+    bloco.append(el('div', { class: 'mestre__tabelaGrupo' }, [
+      el('div', { class: 'mestre__tabelaGrupoCab', 'aria-hidden': 'true' }, [
+        el('span', { texto: 'Personagem' }), el('span', { texto: 'PV' }),
+        el('span', { texto: 'Estresse' }), el('span', { texto: 'Esp' })
+      ]),
+      ...painel.personagens.map(linhaDoGrupo)
+    ]));
     return bloco;
+  }
+
+  function linhaDoGrupo(p) {
+    const pv = p.pontosDeVida, faltam = pv.maximo - pv.marcados;
+    const aviso = pv.maximo > 0 && faltam <= 0 ? 'SEM PV · movimento de morte'
+      : pv.maximo > 0 && faltam === 1 ? 'FALTA 1 PV' : '';
+    return el('div', { class: `mestre__linhaDoGrupo ${aviso ? 'esta-em-perigo' : ''}` }, [
+      el('button', {
+        type: 'button', class: 'mestre__linhaNome',
+        'aria-label': `Abrir a ficha de ${p.nome}`,
+        onClick: () => abrirModal({ titulo: p.nome, conteudo: cartaoDoPersonagem(p) })
+      }, [
+        el('strong', { class: 'mestre__linhaNomeTexto', texto: p.nome }),
+        el('span', { class: 'mestre__linhaNivel',
+          texto: [p.classe, `nv ${p.nivel}`].filter(Boolean).join(' · ') }),
+        aviso ? el('span', { class: 'mestre__linhaAviso', texto: aviso }) : null
+      ].filter(Boolean)),
+      barraComNumero(pv.marcados, pv.maximo, 'pv',
+        `${p.nome}: ${pv.marcados} de ${pv.maximo} PV marcados`),
+      barraComNumero(p.estresse.marcados, p.estresse.maximo, 'estresse',
+        `${p.nome}: ${p.estresse.marcados} de ${p.estresse.maximo} de Estresse`),
+      el('strong', { class: 'mestre__linhaEsperancaValor', title: `Esperança de ${p.nome}`,
+        texto: String(p.esperanca.valor) })
+    ]);
+  }
+
+  /** Uma barra que enche com o marcado, e o número embaixo. */
+  function barraComNumero(valor, maximo, classe, descricao) {
+    const parte = maximo > 0 ? Math.min(100, Math.round((valor / maximo) * 100)) : 0;
+    return el('div', { class: 'mestre__barraComNumero', role: 'img', 'aria-label': descricao, title: descricao }, [
+      el('div', { class: `mestre__barra mestre__barra--${classe}` }, [
+        el('span', { class: 'mestre__barraCheia', style: `width:${parte}%` })
+      ]),
+      el('span', { class: 'mestre__barraNumero', texto: `${valor}/${maximo}` })
+    ]);
   }
 
   /** "Contagens em jogo" — só as que estão correndo. */
@@ -508,10 +594,110 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
      * apaga ela —, e o dedo não deve aprender duas gramáticas para a mesma
      * coisa. A conta subiu para o cabeçalho da seção.
      */
+    /*
+     * GANHAR E GASTAR EM UM TOQUE (proposta 7, 31/10/2026).
+     *
+     * O ganho mais comum da sessão é "rolou com Medo": vira botão. Gastar abre
+     * os usos do livro (`comoGasta`, os mesmos textos da dobra "Como o Medo
+     * funciona"), e o que custa 1 desconta ali mesmo. O que custa "o número
+     * da ficha" fica só como lembrete: quem cobra a habilidade do adversário
+     * é a aba Cena, e cobrar aqui também seria cobrar duas vezes.
+     */
     return el('div', { class: 'trilha trilha--medoMesa' }, [
       pontos,
+      el('div', { class: 'medo__acoes' }, [
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno medo__ganhar',
+          onClick: () => mexerNoMedo({ valor: medoNaTela() + 1 })
+        }, '+1 rolou com Medo'),
+        el('button', {
+          type: 'button', class: 'btn btn--pequeno medo__gastar',
+          onClick: abrirGastoDeMedo
+        }, '− Gastar Medo')
+      ]),
       el('p', { class: 'trilha__ajuda', texto: painel.medoRegras.entreSessoes })
     ]);
+  }
+
+  function abrirGastoDeMedo() {
+    const usos = painel.medoRegras.comoGasta || [];
+    const agora = medoNaTela();
+    const modal = abrirModal({
+      titulo: 'Gastar Medo',
+      conteudo: el('div', { class: 'medo__usos' }, [
+        el('p', { class: 'texto-sm texto-suave', texto: `Você tem ${agora} de Medo.` }),
+        ...usos.map((u) => el('div', { class: 'medo__uso' }, [
+          el('span', { class: 'medo__usoCusto', texto: u.custo ? String(u.custo) : '?' }),
+          el('div', { class: 'crescer' }, [
+            el('p', { class: 'medo__usoTexto', texto: u.texto }),
+            u.nota ? el('p', { class: 'texto-xs texto-fraco', texto: u.nota }) : null
+          ].filter(Boolean)),
+          u.custo ? el('button', {
+            type: 'button', class: 'btn btn--pequeno', disabled: agora < u.custo,
+            onClick: () => {
+              modal.fechar();
+              mexerNoMedo({ valor: medoNaTela() - u.custo });
+              avisarSucesso(`−${u.custo} Medo: ${u.texto.replace(/\.$/, '').toLowerCase()}.`);
+            }
+          }, `Gastar ${u.custo}`) : null
+        ].filter(Boolean)))
+      ])
+    });
+  }
+
+  /* --- holofote ----------------------------------------------------------- */
+
+  /*
+   * O HOLOFOTE (proposta 7, 31/10/2026): um lembrete de quem está há muito
+   * tempo sem a vez na cena. A Mestre toca em quem agiu; passado o tempo de
+   * alerta, o medalhão fica vermelho.
+   *
+   * ⚠ É LEMBRETE, NÃO REGRA — Daggerheart não tem ordem de turno, e nada aqui
+   * impede ninguém de agir. Por isso mora SÓ NESTE APARELHO (`CHAVES.HOLOFOTE`):
+   * não vai ao banco, não aparece para os jogadores e não custa ida ao
+   * servidor.
+   */
+  function blocoDoHolofote() {
+    const vezes = guardado.ler(CHAVES.HOLOFOTE, {}) || {};
+    const bloco = el('section', { class: 'mestre__bloco mestre__holofote' }, [
+      topoDeResumo('Holofote', { conta: 'toque em quem agiu' })
+    ]);
+    if (!painel.personagens.length) {
+      bloco.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma ficha na mesa ainda.' }));
+      return bloco;
+    }
+    bloco.append(el('div', { class: 'holofote__lista' }, painel.personagens.map((p) => {
+      const quando = vezes[p.id];
+      const minutos = quando ? Math.floor((Date.now() - quando) / 60000) : null;
+      const frio = minutos !== null && minutos >= ALERTA_DO_HOLOFOTE_MIN;
+      const texto = minutos === null ? 'ainda não' : minutos < 1 ? 'agora' : `há ${minutos} min`;
+      return el('button', {
+        type: 'button',
+        class: `holofote__pessoa ${frio ? 'esta-frio' : ''} ${minutos !== null && minutos < 1 ? 'esta-agora' : ''}`,
+        'aria-label': `${p.nome}: teve a vez ${texto}. Tocar marca que agiu agora.`,
+        onClick: () => {
+          const novo = guardado.ler(CHAVES.HOLOFOTE, {}) || {};
+          novo[p.id] = Date.now();
+          guardado.gravar(CHAVES.HOLOFOTE, novo);
+          repintarHolofote();
+        }
+      }, [
+        el('span', { class: 'holofote__medalhao', 'aria-hidden': 'true' }, [
+          document.createTextNode(p.nome.slice(0, 2).toUpperCase()),
+          frio ? el('i', { class: 'holofote__alerta', texto: '!' }) : null
+        ].filter(Boolean)),
+        el('strong', { class: 'holofote__nome', texto: p.nome }),
+        el('span', { class: 'holofote__quando', texto })
+      ]);
+    })));
+    bloco.append(el('p', { class: 'texto-xs texto-fraco', texto:
+      `Fica vermelho depois de ${ALERTA_DO_HOLOFOTE_MIN} minutos sem a vez. É só um lembrete, guardado neste aparelho.` }));
+    return bloco;
+  }
+
+  function repintarHolofote() {
+    const velho = corpo.querySelector('.mestre__holofote');
+    if (velho) velho.replaceWith(blocoDoHolofote());
   }
 
   /** Quantos marcadores de Medo estão acesos AGORA, lido da tela. */
@@ -564,7 +750,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     if (alvo !== null) {
       pintarMedo(alvo);
       painel.mesa.medo = alvo;
-      limpar(cabecalho).append(montarTopo());
+      redesenharTopo();
     }
     const esperado = JSON.stringify(painel.mesa);
 
@@ -575,7 +761,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       if (JSON.stringify(painel.mesa) === esperado) {
         // O servidor confirmou o que já está na tela: só o cabeçalho, que é
         // uma linha de texto e não pisca.
-        limpar(cabecalho).append(montarTopo());
+        redesenharTopo();
       } else {
         desenhar();
       }
@@ -2394,7 +2580,7 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]));
 
     pai.append(ativas.length
-      ? el('div', { class: 'pilha' }, ativas.map(cartaoDeContagem))
+      ? el('div', { class: 'mestre__gradeDeContagens' }, ativas.map(cartaoDeContagem))
       : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma contagem em andamento.' }));
 
     if (encerradas.length) {
@@ -2413,9 +2599,14 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       class: `cartao mestre__contagem ${c.encerrada ? 'esta-encerrada' : ''} mestre__contagem--${c.tipo}`
     });
 
+    const perto = !c.encerrada && c.valor > 0 && c.valor <= 2;
+    if (perto) cartao.classList.add('esta-perto');
     cartao.append(el('div', { class: 'mestre__contagemTopo' }, [
-      el('h4', { class: 'cartao__titulo crescer', texto: c.nome }),
-      el('span', { class: 'mestre__contagemValor', texto: String(c.valor) })
+      el('div', { class: 'mestre__contagemRelogio' }, [
+        relogioDeContagem(c.valor, c.valorInicial, 84, perto ? 'perto' : c.tipo),
+        el('span', { class: 'mestre__contagemValor', texto: String(c.valor) })
+      ]),
+      el('h4', { class: 'cartao__titulo', texto: c.nome })
     ]));
 
     const par = c.parDe ? painel.mesa.contagens.find((x) => x.id === c.parDe) : null;
@@ -2430,16 +2621,6 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       cartao.append(el('p', { class: 'mestre__par', texto:
         `Perseguição: anda junto com "${par.nome}" (${par.valor}).` }));
     }
-
-    // Os quadradinhos da trilha — a mesma forma da ficha de papel.
-    const trilha = el('div', { class: 'mestre__trilha' });
-    for (let i = c.valorInicial; i >= 1; i--) {
-      trilha.append(el('span', {
-        class: `mestre__quadradinho ${i > c.valor ? 'esta-marcado' : ''}`,
-        'aria-hidden': 'true'
-      }));
-    }
-    if (c.valorInicial <= 20) cartao.append(trilha);
 
     if (c.descricao) cartao.append(el('p', { class: 'texto-sm', texto: c.descricao }));
     if (etapa) cartao.append(el('p', { class: 'mestre__etapa', texto: `Agora: ${etapa.texto}` }));
@@ -2474,9 +2655,10 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
         }
       } else {
         acoesCartao.append(el('button', {
-          type: 'button', class: 'btn btn--fantasma btn--pequeno',
+          type: 'button', class: 'btn btn--pequeno mestre__contagemMenos',
+          'aria-label': 'Diminuir 1',
           onClick: () => avancar(c.id, { passo: 1 })
-        }, 'Diminuir 1'));
+        }, '− 1'));
       }
 
       // Avançar e mexer na contagem ficam em linhas SEPARADAS: os botões de
@@ -2484,6 +2666,10 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       // na mesma linha que Editar/Excluir, viravam uma sopa em que era fácil
       // apertar o errado no meio de uma cena.
       cartao.append(acoesCartao);
+      /*
+       * EDITAR E EXCLUIR FORAM PARA O ⋯ (proposta 8): longe do polegar que
+       * toca o "− 1" no meio da cena, e excluir sem querer custava a contagem.
+       */
       const secundarios = el('div', { class: 'mestre__botoes mestre__botoes--secundarios' }, [
         el('button', {
           type: 'button', class: 'btn btn--fantasma btn--pequeno',
@@ -2500,7 +2686,11 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
           onClick: () => (par ? desparear(c) : abrirPareamento(c))
         }, par ? 'Desfazer o par' : 'Parear (perseguição)'));
       }
-      cartao.append(secundarios);
+      cartao.append(el('details', { class: 'mestre__contagemMenu' }, [
+        el('summary', { 'aria-label': `Mais ações de ${c.nome}` }, '⋯'),
+        secundarios
+      ]));
+      if (!dinamica) cartao.classList.add('mestre__contagem--simples');
     } else {
       cartao.append(el('div', { class: 'mestre__botoes' }, [
         el('button', {
@@ -3023,14 +3213,6 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
    * Sem o nome, duas fileiras de quadradinhos numa linha só são um enigma: a
    * primeira é PV ou Estresse? Duas letras resolvem, e cabem.
    */
-  function trilhaComNome(rotulo, valor, maximo, classe, descricao) {
-    return el('div', { class: 'mestre__linhaTrilha' }, [
-      el('span', { class: `mestre__linhaTrilhaNome mestre__linhaTrilhaNome--${classe}`,
-        texto: rotulo }),
-      miniPontos(valor, maximo, classe, descricao)
-    ]);
-  }
-
   function miniPontos(valor, maximo, classe, descricao) {
     const pontos = el('div', {
       class: 'mestre__miniPontos', role: 'img',
@@ -3136,4 +3318,43 @@ function caixinha(rotulo, valor) {
 
 function botao(texto, aoTocar) {
   return el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno', onClick: aoTocar }, texto);
+}
+
+/*
+ * O RELÓGIO DA CONTAGEM (proposta 8, 31/10/2026).
+ *
+ * Cada fatia é um passo; as acesas são o que FALTA. Os quadradinhos davam a
+ * mesma informação, mas só de perto: o relógio que vai se fechando se lê do
+ * outro lado da mesa. Desenhado em SVG aqui mesmo, sem imagem.
+ */
+const SVG = 'http://www.w3.org/2000/svg';
+function relogioDeContagem(falta, total, tamanho, classe) {
+  const n = Math.max(1, Math.min(total, 24));
+  const f = Math.max(0, Math.min(falta, n));
+  const r = tamanho / 2 - 2, c = tamanho / 2, folga = n > 1 ? 0.06 : 0;
+  const svg = document.createElementNS(SVG, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${tamanho} ${tamanho}`);
+  svg.setAttribute('width', String(tamanho));
+  svg.setAttribute('height', String(tamanho));
+  svg.setAttribute('class', `relogio relogio--${classe}`);
+  svg.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < n; i++) {
+    const a0 = (i / n) * 2 * Math.PI - Math.PI / 2 + folga;
+    const a1 = ((i + 1) / n) * 2 * Math.PI - Math.PI / 2 - folga;
+    const fatia = document.createElementNS(SVG, 'path');
+    fatia.setAttribute('d', n === 1
+      ? `M${c},${c - r} A${r},${r} 0 1 1 ${c - 0.01},${c - r} Z`
+      : `M${c},${c} L${c + r * Math.cos(a0)},${c + r * Math.sin(a0)} ` +
+        `A${r},${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${c + r * Math.cos(a1)},${c + r * Math.sin(a1)} Z`);
+    fatia.setAttribute('class', `relogio__fatia ${i < f ? 'esta-acesa' : ''}`);
+    svg.append(fatia);
+  }
+  if (tamanho > 40) {
+    const furo = document.createElementNS(SVG, 'circle');
+    furo.setAttribute('cx', String(c)); furo.setAttribute('cy', String(c));
+    furo.setAttribute('r', String(r * 0.62));
+    furo.setAttribute('class', 'relogio__furo');
+    svg.append(furo);
+  }
+  return svg;
 }

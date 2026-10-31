@@ -3,8 +3,8 @@
  * Backend 100% Supabase Edge Functions.
  */
 
-import { CONFIG, MENSAGENS_ERRO } from './config.js?v=0ebcd032a7';
-import { esperar } from './util.js?v=0ebcd032a7';
+import { CONFIG, MENSAGENS_ERRO } from './config.js?v=a65b2e8b2b';
+import { esperar } from './util.js?v=a65b2e8b2b';
 
 /*
  * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
