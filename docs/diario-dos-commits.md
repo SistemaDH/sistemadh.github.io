@@ -3148,3 +3148,41 @@ os 44 px do alvo mínimo.
 
 Gate: `teste:tudo` verde até a bateria do Mestre; depois do ajuste de 44 px (só
 CSS) as baterias de layout restantes rodaram verdes. Cache-buster `a65b2e8b2b`.
+
+## 31/10/2026 (4) — Design, lote 2: a ficha do jogador
+
+Propostas 5, 6, 10, 13 e 19, aprovadas pela Vanessa:
+
+- **Mão em leque (5).** A aba Cartas abre com a mão em leque, com a arte de
+  verdade das cartas, e o cofre como um monte ao lado. Tocar abre o MESMO visor
+  do nome (com os mesmos botões): a configuração do visor virou uma função só,
+  `visorDaCarta`, usada pelo nome, pelo leque e pela coluna do tablet. A lista
+  em texto continua logo abaixo. Imagens com `loading="lazy"`.
+- **Tablet com a ficha inteira (6).** A partir de 1024px a aba Jogo tem três
+  colunas — retrato e traços, papel, e a mão em miniatura. O contrato L9-C1 da
+  bateria responsiva foi refeito: as duas primeiras colunas cederam largura
+  (pisos 220/400px) e a terceira tem de aparecer à direita do papel; abaixo de
+  1024px ela tem de ficar escondida.
+- **Barra de estado (10).** PV, Estresse, Esperança, Armadura e Evasão presos
+  abaixo do topo nas abas Cartas, Mochila e História. Tocar abre as trilhas
+  numa janela — as MESMAS peças da aba Jogo, não uma cópia. A barra acompanha o
+  toque pelo `espelharLocal`, mesmo quando o servidor concorda e a tela não se
+  redesenha.
+- **Régua de dano (13).** Na janela "Receber dano", um pino corre até o número
+  entre os limiares da ficha e diz a faixa e os PV; a caixa de Armadura desce um
+  degrau ali mesmo. ⚠ É prévia escrita como tal: quem aplica continua sendo o
+  servidor (resistência, reações, armaduras de vários degraus). A régua escuta a
+  janela inteira, porque a Estável e o Espelho mexem na caixa de Armadura sem
+  evento dela. Nomes da ficha: Menor, Maior, Severo.
+- **Busca em tudo (19).** Em vez de uma lupa nova, o índice de regras (o 📖 que
+  já está nos três cabeçalhos) passou a achar também cartas de domínio,
+  adversários e equipamento, a partir de duas letras, cada grupo com título.
+  Tocar abre a tela dona daquilo (visor da carta, ficha do adversário).
+
+Gate: `teste:tudo` verde. Cache-buster no commit.
+
+⚠ **O CI do lote 1 quebrou no cache-buster**, e o site não: o carimbo foi
+calculado com arquivos que o Python do Windows gravou em CRLF, e o GitHub guarda
+LF — o hash do CI deu outro. A cópia local voltou toda para LF e as gravações
+passaram a forçar `newline='\n'`. Este lote recarimba, e antes do push o carimbo
+é conferido numa cópia limpa do commit (`git archive`), que é o que o CI vê.

@@ -2030,3 +2030,247 @@
     gap: 12px;
   }
 }
+
+/* ==========================================================================
+   A BARRA DE ESTADO (proposta 10, 31/10/2026)
+
+   Fica abaixo do topo da ficha nas abas Cartas, Mochila e História: os cinco
+   números de combate, sempre à vista. É um botão inteiro — tocar abre as
+   trilhas para marcar sem trocar de aba.
+   ========================================================================== */
+
+.ficha__hud {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--e1);
+  width: 100%;
+  margin: 0;
+  padding: 6px var(--e3) 8px;
+  border: 0;
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.ficha__hud:focus-visible { outline: 2px solid var(--cor-foco); outline-offset: -2px; }
+
+.ficha__hudItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 3px 0;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+}
+.ficha__hudRotulo {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--txt-xs);
+  letter-spacing: .02em;
+  color: var(--cor-texto-fraco);
+}
+.ficha__hudValor { font-family: var(--fonte-titulo); font-size: var(--txt-md); }
+.ficha__hudItem--pv .ficha__hudValor { color: #ff9a9a; }
+.ficha__hudItem--estresse .ficha__hudValor { color: var(--cor-estresse); }
+.ficha__hudItem--esperanca .ficha__hudValor { color: var(--cor-esperanca); }
+
+.ficha__folhaDeEstado { margin: 0; }
+
+/* ==========================================================================
+   A MÃO EM LEQUE (proposta 5, 31/10/2026)
+
+   As cartas da mão abertas em leque, com a arte de verdade; o cofre é um
+   monte ao lado. Tocar abre o visor de sempre.
+   ========================================================================== */
+
+.ficha__mesaDeCartas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e3);
+  margin-bottom: var(--e4);
+  padding: var(--e3) 0 var(--e2);
+  border-radius: var(--raio);
+  background: radial-gradient(ellipse at 50% 120%, #2a2216 0%, var(--cor-fundo-2) 62%);
+}
+
+.ficha__leque {
+  position: relative;
+  width: 100%;
+  height: 230px;
+}
+
+.ficha__lequeCarta {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 128px;
+  margin-left: -64px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: var(--cor-superficie);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .6);
+  transform-origin: 50% 150%;
+  transform: rotate(var(--angulo));
+  transition: transform var(--transicao);
+  cursor: pointer;
+}
+.ficha__lequeCarta img { display: block; width: 100%; border-radius: 9px; }
+.ficha__lequeCarta:hover,
+.ficha__lequeCarta:focus-visible {
+  z-index: 20;
+  transform: rotate(var(--angulo)) translateY(-18px);
+  outline: 2px solid var(--cor-ouro);
+  outline-offset: 2px;
+}
+.ficha__lequeNome {
+  display: grid;
+  place-items: center;
+  height: 180px;
+  padding: var(--e2);
+  font-family: var(--fonte-titulo);
+  border-left: 4px solid var(--cor-dominio);
+}
+
+.ficha__monte {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: var(--alvo-min);
+  padding: var(--e2) var(--e3);
+  border: 1px dashed var(--cor-borda-forte);
+  border-radius: var(--raio);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ficha__monteCartas { position: relative; width: 46px; height: 64px; flex: 0 0 auto; }
+.ficha__monteCartas img {
+  position: absolute;
+  inset: 0;
+  width: 46px;
+  border-radius: 4px;
+  filter: saturate(.55) brightness(.75);
+}
+.ficha__monteCartas img + img { transform: translate(4px, -3px) rotate(5deg); }
+.ficha__monteTexto { display: flex; flex-direction: column; font-size: var(--txt-xs); color: var(--cor-texto-suave); }
+.ficha__monteTexto strong { font-size: var(--txt-sm); color: var(--cor-texto); }
+
+/* ==========================================================================
+   A RÉGUA DE DANO (proposta 13, 31/10/2026)
+   ========================================================================== */
+
+.reguaDano { display: flex; flex-direction: column; gap: 4px; }
+.reguaDano__trilho { position: relative; margin-top: 14px; }
+.reguaDano__faixas { display: flex; height: 30px; }
+.reguaDano__faixa {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--cor-fundo);
+}
+.reguaDano__faixa--menor { background: #7fae8c; border-radius: 8px 0 0 8px; }
+.reguaDano__faixa--maior { background: var(--cor-alerta); }
+.reguaDano__faixa--severo { background: var(--cor-perigo); color: #fff; border-radius: 0 8px 8px 0; }
+
+.reguaDano__pino {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 0;
+  opacity: 0;
+  transition: left .45s cubic-bezier(.3, 1.4, .5, 1), opacity .2s;
+}
+.reguaDano.tem-numero .reguaDano__pino { opacity: 1; }
+.reguaDano__pino::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 0;
+  border: 8px solid transparent;
+  border-top: 11px solid var(--cor-texto);
+}
+.reguaDano__pino::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 11px;
+  width: 2px;
+  height: 32px;
+  background: var(--cor-texto);
+}
+
+.reguaDano__marcas {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  font-family: var(--fonte-mono);
+  font-size: var(--txt-xs);
+  color: var(--cor-texto-fraco);
+}
+/* Cada número começa onde a faixa começa; o -50% centraliza o número na divisa. */
+.reguaDano__marcas span { justify-self: start; }
+.reguaDano__marcas span:nth-child(2),
+.reguaDano__marcas span:nth-child(3) { transform: translateX(-50%); }
+
+.reguaDano__resultado {
+  margin: 4px 0 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+  font-size: var(--txt-sm);
+}
+.reguaDano__resultado--1 { border-color: #7fae8c; }
+.reguaDano__resultado--2 { border-color: var(--cor-alerta); }
+.reguaDano__resultado--3,
+.reguaDano__resultado--4 { border-color: var(--cor-perigo); }
+
+/* ==========================================================================
+   A MÃO AO LADO (proposta 6, 31/10/2026) — só aparece a partir de 1024px,
+   como terceira coluna da aba Jogo (ver desktop.css).
+   ========================================================================== */
+
+.ficha__maoAoLado {
+  display: none;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+.ficha__maoAoLadoTitulo {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: var(--txt-sm);
+  letter-spacing: .1em;
+  color: var(--cor-texto-suave);
+}
+.ficha__maoAoLadoLista { display: flex; flex-direction: column; }
+.ficha__miniCarta {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: var(--e2);
+  align-items: center;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--cor-borda);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.ficha__miniCarta img { width: 58px; border-radius: 5px; display: block; }
+.ficha__miniCartaTexto { display: flex; flex-direction: column; min-width: 0; font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+.ficha__miniCartaTexto strong { font-family: var(--fonte-titulo); font-size: var(--txt-sm); color: var(--cor-texto); }

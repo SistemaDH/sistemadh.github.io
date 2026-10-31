@@ -12,10 +12,13 @@
  * cena, e ninguém abre uma engrenagem no meio da cena.
  */
 
-import { el, limpar, adiar } from '../util.js?v=a65b2e8b2b';
-import { abrirModal } from '../ui.js?v=a65b2e8b2b';
-import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=a65b2e8b2b';
-import { icone } from '../componentes/icone.js?v=a65b2e8b2b';
+import { el, limpar, adiar } from '../util.js?v=fae579450b';
+import { abrirModal } from '../ui.js?v=fae579450b';
+import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=fae579450b';
+import * as dados from '../dados.js?v=fae579450b';
+import { abrirCarta, daCartaDeDominio } from '../componentes/carta.js?v=fae579450b';
+import { abrirFichaDeAdversario } from './bestiario.js?v=fae579450b';
+import { icone } from '../componentes/icone.js?v=fae579450b';
 
 /**
  * O nome de cada categoria e a ORDEM em que aparecem.
@@ -60,13 +63,60 @@ function palheiro(v) {
   ].join(' '));
 }
 
+/*
+ * A BUSCA EM TUDO (proposta 19 de design, aprovada em 31/10/2026).
+ *
+ * O índice achava só regra. No meio da cena a pergunta também é "o que essa
+ * carta faz?", "qual a Dificuldade do lobo?", "o que é um Gambeson?" — e cada
+ * resposta morava numa tela diferente. Agora, com duas letras ou mais, a mesma
+ * busca acha também cartas de domínio, adversários e equipamento, cada grupo
+ * com o seu título. Os catálogos são os que o app já serve em `data/`, lidos
+ * só na primeira busca.
+ *
+ * ⚠ TOCAR NO RESULTADO ABRE A TELA DONO DAQUILO — o visor da carta, a ficha do
+ * adversário. A busca não desenha carta nem ficha: só acha.
+ */
+const MAX_POR_GRUPO = 8;
+let catalogosDaBusca = null;
+
+function carregarCatalogosDaBusca() {
+  if (!catalogosDaBusca) {
+    catalogosDaBusca = Promise.all([
+      dados.carregar('cartas-dominio'), dados.carregar('adversarios'), dados.carregar('equipamentos')
+    ]).then(([c, a, e]) => ({
+      cartas: c.cartas || [],
+      adversarios: a.adversarios || [],
+      itens: [...(e.armas || []), ...(e.armaduras || []), ...(e.loot || []), ...(e.consumiveis || [])]
+    })).catch(() => ({ cartas: [], adversarios: [], itens: [] }));
+  }
+  return catalogosDaBusca;
+}
+
+function resumoDoItem(i) {
+  if (i.dano) return [i.atributo, i.alcance, i.dano].filter(Boolean).join(' · ');
+  if (i.limiares) return `Limiares ${i.limiares} · Armadura ${i.pontuacaoArmadura}`;
+  return String(i.descricao || '').slice(0, 120);
+}
+
+function abrirItem(i) {
+  const carac = i.caracteristica && (i.caracteristica.texto || i.caracteristica.nome);
+  abrirModal({
+    titulo: i.nome,
+    conteudo: el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm texto-suave', texto: resumoDoItem(i) }),
+      carac ? el('p', { class: 'texto-sm', texto: carac }) : null,
+      i.descricao && (i.dano || i.limiares) ? el('p', { class: 'texto-sm', texto: i.descricao }) : null
+    ].filter(Boolean))
+  });
+}
+
 export async function abrirIndiceDeRegras() {
   await prepararVerbetes();
   const todos = todosOsVerbetes();
 
   const busca = el('input', {
     type: 'search', class: 'campo__entrada', autocomplete: 'off',
-    placeholder: 'Procurar regra, termo do livro ou página…',
+    placeholder: 'Procurar regra, carta, adversário ou item…',
     'aria-label': 'Procurar uma regra'
   });
 
@@ -87,12 +137,49 @@ export async function abrirIndiceDeRegras() {
     ]);
   }
 
-  function desenhar(termo) {
+  /** Os grupos de fora das regras: só com termo de duas letras ou mais. */
+  async function gruposDeFora(alvo) {
+    if (alvo.length < 2) return [];
+    const cat = await carregarCatalogosDaBusca();
+    const casa = (...nomes) => chave(nomes.filter(Boolean).join(' ')).includes(alvo);
+    const grupo = (rotulo, itens, desenhar) => itens.length ? el('section', { class: 'regras__grupo' }, [
+      el('h3', { class: 'regras__grupoTitulo', texto: rotulo }),
+      el('div', { class: 'regras__grupoItens' }, itens.slice(0, MAX_POR_GRUPO).map(desenhar))
+    ]) : null;
+    const item = (nome, resumo, rodape, aoTocar) => el('button', {
+      type: 'button', class: 'regras__item', onClick: aoTocar
+    }, [
+      el('span', { class: 'regras__nome', texto: nome }),
+      el('span', { class: 'regras__resumo', texto: resumo }),
+      el('span', { class: 'regras__pagina', texto: rodape })
+    ]);
+    const cartas = cat.cartas.filter((c) => casa(c.nome, c.nomeImpresso, c.texto));
+    const adversarios = cat.adversarios.filter((a) => casa(a.nome, a.nomeLivro, a.tipo));
+    const itens = cat.itens.filter((i) => casa(i.nome, i.nomeLivro, i.descricao));
+    return [
+      grupo(`Cartas de domínio — ${cartas.length}`, cartas, (c) => item(c.nome,
+        String(c.texto || '').slice(0, 140), `${c.dominioNome} · nível ${c.nivel} · ${c.tipo}`,
+        () => abrirCarta({ itens: [daCartaDeDominio(c)], indice: 0 }))),
+      grupo(`Adversários — ${adversarios.length}`, adversarios, (a) => item(a.nome,
+        `Dif ${a.dificuldade} · Limiares ${a.limiares || 'nenhum'} · PV ${a.pontosDeVida}`,
+        `${a.patamar}º patamar · ${a.tipo}`, () => abrirFichaDeAdversario(a))),
+      grupo(`Equipamento — ${itens.length}`, itens, (i) => item(i.nome, resumoDoItem(i),
+        i.tier ? `patamar ${i.tier}` : 'item', () => abrirItem(i)))
+    ].filter(Boolean);
+  }
+
+  let rodada = 0;
+  async function desenhar(termo) {
+    const minha = ++rodada;
     limpar(lista);
     const alvo = chave(termo).trim();
     const achados = alvo ? todos.filter((v) => palheiro(v).includes(alvo)) : todos;
+    const deFora = await gruposDeFora(alvo);
+    // Quem digitou de novo enquanto os catálogos carregavam ganha a vez.
+    if (minha !== rodada) return;
+    limpar(lista);
 
-    if (!achados.length) {
+    if (!achados.length && !deFora.length) {
       conta.textContent = '';
       lista.append(el('p', { class: 'texto-sm texto-fraco', texto:
         'Nada com esse nome. Tente o termo do livro da Jambô — "fadiga", "teste", ' +
@@ -102,7 +189,9 @@ export async function abrirIndiceDeRegras() {
 
     conta.textContent = achados.length === todos.length
       ? `${todos.length} verbetes atualizados para o SRD 2.0, com a referência de cada um.`
-      : `${achados.length} de ${todos.length}.`;
+      : !achados.length
+        ? 'Nenhuma regra com esse nome — mas há outros achados abaixo.'
+        : `${achados.length} de ${todos.length} regras` + (deFora.length ? ', e outros achados abaixo.' : '.');
 
     CATEGORIAS.forEach(([id, rotulo]) => {
       const doGrupo = achados.filter((v) => v.categoria === id);
@@ -122,13 +211,14 @@ export async function abrirIndiceDeRegras() {
         el('div', { class: 'regras__grupoItens' }, orfas.map(linha))
       ]));
     }
+    lista.append(...deFora);
   }
 
   busca.addEventListener('input', adiar(() => desenhar(busca.value), 120));
   desenhar('');
 
   const modal = abrirModal({
-    titulo: 'Regras — SRD 2.0',
+    titulo: 'Regras e busca — SRD 2.0',
     conteudo: el('div', { class: 'regras' }, [
       el('p', { class: 'ficha__nota', texto:
         'Atualizado para o SRD 2.0 de 25/08/2026. A edição Jambô e a errata são usadas como referência de tradução e paginação quando aplicáveis.' }),

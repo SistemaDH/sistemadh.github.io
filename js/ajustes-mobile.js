@@ -1,5 +1,5 @@
-import { el } from './util.js?v=a65b2e8b2b';
-import { abrirModal } from './ui.js?v=a65b2e8b2b';
+import { el } from './util.js?v=fae579450b';
+import { abrirModal } from './ui.js?v=fae579450b';
 
 /* ========================================================================== *
  * L9-B7 · AÇÕES SECUNDÁRIAS DA MOCHILA EM CELULAR ESTREITO

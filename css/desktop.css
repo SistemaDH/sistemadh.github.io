@@ -22,7 +22,8 @@
    */
   .ficha__corpo:has(> .retrato):has(> .papel) {
     display: grid;
-    grid-template-columns: minmax(300px, .72fr) minmax(500px, 1.28fr);
+    /* Três colunas desde a proposta 6 (31/10/2026): quem age, como está, a mão. */
+    grid-template-columns: minmax(240px, .62fr) minmax(420px, 1.2fr) minmax(210px, .6fr);
     align-content: start;
     align-items: start;
     column-gap: clamp(16px, 2vw, 28px);
@@ -41,11 +42,20 @@
   /* O navegador coloca os dois no mesmo primeiro espaço livre da grade. */
   .ficha__corpo:has(> .retrato):has(> .papel) > .retrato {
     grid-column: 1;
+    grid-row: 1;
     min-width: 0;
   }
 
   .ficha__corpo:has(> .retrato):has(> .papel) > .papel {
     grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .ficha__corpo:has(> .retrato):has(> .papel) > .ficha__maoAoLado {
+    display: flex;
+    grid-column: 3;
+    grid-row: 1;
     min-width: 0;
   }
 
@@ -55,7 +65,7 @@
    * no próximo passo, sem serem espremidos numa coluna por acidente.
    */
   .ficha__corpo:has(> .retrato):has(> .papel)
-    > :not(.retrato):not(.papel):not(.ficha__faixaEstado) {
+    > :not(.retrato):not(.papel):not(.ficha__faixaEstado):not(.ficha__maoAoLado) {
     grid-column: 1 / -1;
     min-width: 0;
   }

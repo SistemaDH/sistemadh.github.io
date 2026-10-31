@@ -129,12 +129,15 @@ async function auditar(page, viewport, tela) {
     const hud = await page.evaluate(() => {
       const retrato = document.querySelector('.ficha__corpo > .retrato');
       const papel = document.querySelector('.ficha__corpo > .papel');
+      const mao = document.querySelector('.ficha__corpo > .ficha__maoAoLado');
       const corpo = document.querySelector('.ficha__corpo');
       if (!retrato || !papel || !corpo) return null;
       const rr = retrato.getBoundingClientRect();
       const rp = papel.getBoundingClientRect();
+      const rm = mao ? mao.getBoundingClientRect() : null;
       return {
         displayCorpo: getComputedStyle(corpo).display,
+        mao: rm ? { left: rm.left, top: rm.top, width: rm.width, visivel: getComputedStyle(mao).display !== 'none' } : null,
         retrato: { left: rr.left, right: rr.right, top: rr.top, bottom: rr.bottom, width: rr.width },
         papel: { left: rp.left, right: rp.right, top: rp.top, bottom: rp.bottom, width: rp.width }
       };
@@ -150,11 +153,25 @@ async function auditar(page, viewport, tela) {
       if (hud.retrato.right >= hud.papel.left) {
         dados.erros.push('retrato e papel não formam duas colunas separadas no desktop');
       }
-      if (hud.retrato.width < 280 || hud.papel.width < 480) {
+      /*
+       * Proposta 6 (31/10/2026): a terceira coluna, com a mão de cartas, entra
+       * ao lado do papel. As duas primeiras cederam largura para ela; os pisos
+       * abaixo são o que ainda deixa traços e trilhas legíveis em 1024px.
+       */
+      if (hud.retrato.width < 220 || hud.papel.width < 400) {
         dados.erros.push(`colunas desktop estreitas demais (${Math.round(hud.retrato.width)}px / ${Math.round(hud.papel.width)}px)`);
       }
-    } else if (hud.papel.top < hud.retrato.bottom - 2) {
-      dados.erros.push('tablet deveria manter retrato e papel empilhados');
+      if (!hud.mao || !hud.mao.visivel) {
+        dados.erros.push('a mão de cartas não apareceu como terceira coluna no desktop');
+      } else {
+        if (hud.mao.left <= hud.papel.right) dados.erros.push('a mão não ficou à direita do papel');
+        if (Math.abs(hud.mao.top - hud.papel.top) > 2) dados.erros.push('a mão não começa na linha do papel');
+      }
+    } else {
+      if (hud.papel.top < hud.retrato.bottom - 2) {
+        dados.erros.push('tablet deveria manter retrato e papel empilhados');
+      }
+      if (hud.mao && hud.mao.visivel) dados.erros.push('abaixo de 1024px a mão ao lado deveria ficar escondida');
     }
   }
 

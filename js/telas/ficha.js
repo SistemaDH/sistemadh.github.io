@@ -21,21 +21,22 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=a65b2e8b2b';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=a65b2e8b2b';
-import { acoes, obterEstado } from '../estado.js?v=a65b2e8b2b';
-import { mensagemDoErro } from '../api.js?v=a65b2e8b2b';
-import { aguardar, temPendente } from '../fila.js?v=a65b2e8b2b';
-import * as dados from '../dados.js?v=a65b2e8b2b';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=a65b2e8b2b';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=a65b2e8b2b';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=a65b2e8b2b';
-import { botaoDeRegras } from './regras.js?v=a65b2e8b2b';
-import { abrirDescanso } from './descanso.js?v=a65b2e8b2b';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=a65b2e8b2b';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=a65b2e8b2b';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=a65b2e8b2b';
-import { icone } from '../componentes/icone.js?v=a65b2e8b2b';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=fae579450b';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=fae579450b';
+import { acoes, obterEstado } from '../estado.js?v=fae579450b';
+import { mensagemDoErro } from '../api.js?v=fae579450b';
+import { aguardar, temPendente } from '../fila.js?v=fae579450b';
+import * as dados from '../dados.js?v=fae579450b';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=fae579450b';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=fae579450b';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=fae579450b';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=fae579450b';
+import { botaoDeRegras } from './regras.js?v=fae579450b';
+import { abrirDescanso } from './descanso.js?v=fae579450b';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=fae579450b';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=fae579450b';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=fae579450b';
+import { icone } from '../componentes/icone.js?v=fae579450b';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -348,6 +349,15 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         ficha.recursos[a.chave] = a.valor;
       }
     });
+    // A barra de estado mostra estes mesmos números: acompanha o toque, mesmo
+    // quando o servidor concorda e a tela não se redesenha.
+    repintarBarraDeEstado();
+  }
+
+  function repintarBarraDeEstado() {
+    const velha = cabecalho.querySelector('.ficha__hud');
+    const nova = barraDeEstado(p.ficha || {});
+    if (velha && nova) velha.replaceWith(nova);
   }
 
   function pedirResultadoInabalavel(pendencia) {
@@ -701,6 +711,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   function desenhar() {
     const ficha = p.ficha || {};
     limpar(cabecalho).append(montarTopo(ficha));
+    const hud = barraDeEstado(ficha);
+    if (hud) cabecalho.append(hud);
     limpar(barra).append(...ABAS.map(botaoDeAba));
 
     const anterior = corpo.scrollTop;
@@ -808,6 +820,69 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ].filter(Boolean));
     }
     return null;
+  }
+
+  /*
+   * A BARRA DE ESTADO (proposta 10 de design, aprovada em 31/10/2026).
+   *
+   * PV, Estresse, Esperança e Armadura moravam só na aba Jogo. Quem estava na
+   * Mochila procurando a poção e levava um golpe tinha de voltar à Jogo para
+   * marcar — e depois voltar à Mochila. Agora os números ficam presos abaixo
+   * do topo nas OUTRAS abas (na Jogo as trilhas inteiras já estão ali), e
+   * tocar na barra abre as mesmas trilhas numa janela por baixo.
+   *
+   * ⚠ A JANELA USA AS MESMAS PEÇAS DA ABA JOGO (`trilhaDePapel`,
+   * `linhaDeDefesas`, `trilhaDeEsperanca`), não uma cópia: o gesto de marcar,
+   * o pedido ao servidor e a pintura na hora são um código só.
+   */
+  function barraDeEstado(ficha) {
+    if (abaAtual === 'jogo' || ficha.encerrada) return null;
+    const r = ficha.recursos || {};
+    const d = ficha.defesas || {};
+    const item = (rotulo, valor, classe) => el('span', { class: `ficha__hudItem ficha__hudItem--${classe}` }, [
+      el('span', { class: 'ficha__hudRotulo', texto: rotulo }),
+      el('strong', { class: 'ficha__hudValor', texto: valor })
+    ]);
+    const espMax = r.esperancaMaxima === undefined ? (r.esperancaImpressa || 6) : r.esperancaMaxima;
+    return el('button', {
+      type: 'button', class: 'ficha__hud',
+      'aria-label': 'Estado de combate. Tocar abre as trilhas para marcar sem trocar de aba.',
+      onClick: () => abrirFolhaDeEstado()
+    }, [
+      item('PV', `${r.pontosDeVidaMarcados || 0}/${r.pontosDeVidaMaximos || 0}`, 'pv'),
+      // Rótulos curtos: cinco colunas em 360px não comportam "Esperança".
+      item('Estr.', `${r.estresseMarcado || 0}/${r.estresseMaximo || 0}`, 'estresse'),
+      item('Esp.', `${r.esperanca || 0}/${espMax}`, 'esperanca'),
+      item('Arm.', `${r.armaduraMarcada || 0}/${d.pontuacaoArmadura || 0}`, 'armadura'),
+      item('Evasão', d.evasao === null || d.evasao === undefined ? '—' : String(d.evasao), 'evasao')
+    ]);
+  }
+
+  function abrirFolhaDeEstado() {
+    const ficha = p.ficha || {};
+    const r = ficha.recursos || {};
+    const d = ficha.defesas || {};
+    abrirModal({
+      titulo: 'Estado de combate',
+      conteudo: el('section', { class: 'papel ficha__folhaDeEstado' }, [
+        trilhaDePapel({
+          chave: 'pontosDeVidaMarcados', rotulo: 'PV', nomeCompleto: 'Pontos de Vida',
+          conta: contaDe(ficha, 'pontosDeVidaMaximos'),
+          classe: 'pv', marcados: r.pontosDeVidaMarcados || 0, total: r.pontosDeVidaMaximos || 0
+        }),
+        trilhaDePapel({
+          chave: 'estresseMarcado', rotulo: 'Estr.', nomeCompleto: 'Estresse',
+          verbete: 'estresse', conta: contaDe(ficha, 'estresseMaximo'),
+          classe: 'estresse', marcados: r.estresseMarcado || 0, total: r.estresseMaximo || 0
+        }),
+        linhaDeDefesas(ficha, r, d),
+        trilhaDeEsperanca(r),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma',
+          onClick: () => abrirDanoRecebido(ficha)
+        }, 'Aplicar dano recebido')
+      ])
+    });
   }
 
   function irParaAba(destino) {
@@ -1930,6 +2005,13 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
          ' marca 4 PV em vez de 3.')
       : 'Dano massivo desligado nesta mesa: o dano nunca marca mais que 3 PV.' });
 
+    // A régua (proposta 13): o pino acompanha o número e a caixa de Armadura.
+    const regua = reguaDeDano(Number(defesasDano.limiarMaior) || 0, severoDaFicha);
+    const atualizarRegua = () => regua.mostrar(Math.trunc(Number(dano.value)) || 0,
+      usarArmadura.checked, massivoLigado);
+    dano.addEventListener('input', atualizarRegua);
+    usarArmadura.addEventListener('change', atualizarRegua);
+
     const conteudo = el('div', { class: 'pilha' }, [
       el('p', { class: 'texto-sm' }, textoAnotado(
         'Informe o dano recebido. O app compara com os limiares e marca PV; nenhuma rolagem é feita aqui.')),
@@ -1943,6 +2025,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Dano recebido' }), dano
       ]),
+      regua,
       el('label', { class: 'campo' }, [
         el('span', { class: 'campo__rotulo', texto: 'Tipo de dano' }), tipo
       ]),
@@ -2037,6 +2120,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         (automaticos.length ? ' — fora as que a carta não deixa escolher, listadas acima' : '') +
         '. Ele não rola dados nem decide gastar Estresse, Esperança ou Armadura por você.' })
     ].filter(Boolean));
+
+    // Outras caixas (Estável, Espelho) mexem na de Armadura sem evento dela:
+    // a régua escuta a janela inteira para não ficar para trás.
+    conteudo.addEventListener('change', atualizarRegua);
 
     const modal = abrirModal({
       titulo: 'Receber dano',
@@ -4323,6 +4410,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
 
     // --- o bloco da ficha de papel --------------------------------------
     pai.append(blocoDePapel(ficha));
+    pai.append(maoAoLado(ficha));
     pai.append(blocoTransformacao);
 
     /* --- equipamento -----------------------------------------------------
@@ -5425,6 +5513,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       ...noCofre.map((c) => [c.id, 'cofre'])
     ]);
 
+    if (naMao.length && naMao.some((c) => c.imagem)) pai.append(lequeDaMao(naMao, noCofre, baralho, ondeEsta));
+
     pai.append(secao(`Mão — ${naMao.length} de ${catalogo.maxCartasAtivas}`,
       naMao.length
         ? el('div', { class: 'ficha__cartas' }, naMao.map((c) => cartaoDeCarta(c, baralho, 'cofre', ondeEsta)))
@@ -5616,6 +5706,105 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     ]);
   }
 
+  /*
+   * A MÃO AO LADO (proposta 6 de design, aprovada em 31/10/2026).
+   *
+   * Num tablet deitado ou no computador, a aba Jogo ganha uma terceira coluna
+   * com a mão de cartas em miniatura — quem é o personagem, como ele está e o
+   * que ele tem na mão, tudo numa tela, sem trocar de aba. Tocar abre o mesmo
+   * visor da aba Cartas. Abaixo de 1024px o CSS esconde a coluna: no celular a
+   * aba Cartas continua sendo o lugar dela.
+   */
+  function maoAoLado(ficha) {
+    const cartas = ficha.cartas || { ativas: [], cofre: [] };
+    const naMao = (cartas.ativas || []).map(catalogo.acharCarta).filter(Boolean);
+    const noCofre = (cartas.cofre || []).map(catalogo.acharCarta).filter(Boolean);
+    const baralho = [...naMao, ...noCofre];
+    const ondeEsta = new Map([
+      ...naMao.map((c) => [c.id, 'ativas']),
+      ...noCofre.map((c) => [c.id, 'cofre'])
+    ]);
+    return el('section', { class: 'ficha__maoAoLado', 'aria-label': 'Mão de cartas' }, [
+      el('h2', { class: 'ficha__maoAoLadoTitulo', texto: `Mão — ${naMao.length} de ${catalogo.maxCartasAtivas}` }),
+      naMao.length
+        ? el('div', { class: 'ficha__maoAoLadoLista' }, naMao.map((c) => el('button', {
+          type: 'button', class: 'ficha__miniCarta',
+          style: `--cor-dominio:${catalogo.corDoDominio(c.dominio)}`,
+          onClick: () => abrirCarta(visorDaCarta(c, baralho, 'cofre', ondeEsta))
+        }, [
+          c.imagem ? el('img', { src: encodeURI(c.imagem), alt: '', loading: 'lazy', decoding: 'async' }) : null,
+          el('span', { class: 'ficha__miniCartaTexto' }, [
+            el('strong', { texto: c.nome }),
+            el('span', { texto: `${c.dominioNome} · ${c.tipo}` })
+          ])
+        ].filter(Boolean))))
+        : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma carta na mão.' })
+    ]);
+  }
+
+  /** O que o visor precisa para abrir `c` folheando `lista` — o nome e o leque usam o mesmo. */
+  function visorDaCarta(c, lista, destino, ondeEsta) {
+    return {
+      itens: lista.map((x) => comSeloDeLugar(x, ondeEsta)),
+      indice: lista.indexOf(c),
+      /*
+       * ⚠ O DESTINO SAI DA CARTA QUE ESTÁ NA TELA, não da seção em que se
+       * tocou. Quem abre uma carta da mão e folheia até uma do cofre
+       * precisa de "Trazer para a mão", não de "Guardar no cofre" — e o
+       * botão errado aqui moveria a carta certa para o lugar errado, sem
+       * nada na tela avisando.
+       */
+      acoes: (item, i, modal) => botoesDaCarta(
+        lista[i],
+        ondeEsta ? (ondeEsta.get(lista[i].id) === 'ativas' ? 'cofre' : 'ativas') : destino,
+        modal)
+    };
+  }
+
+  /*
+   * A MÃO EM LEQUE (proposta 5 de design, aprovada em 31/10/2026).
+   *
+   * O app tem a arte das 210 cartas e a aba Cartas só mostrava texto. Agora a
+   * mão aparece como cartas de verdade, em leque, e o cofre como um monte ao
+   * lado. Tocar numa carta abre o MESMO visor do nome (com os mesmos botões);
+   * a lista em texto continua logo abaixo, para ler e para leitor de tela.
+   *
+   * As imagens são grandes (130 a 210 KB): `loading="lazy"` e só a mão — o
+   * cofre mostra uma carta só, a de cima do monte.
+   */
+  function lequeDaMao(naMao, noCofre, baralho, ondeEsta) {
+    const n = naMao.length;
+    const passo = n > 4 ? 12 : n > 2 ? 16 : 10;
+    const leque = el('div', { class: 'ficha__leque', role: 'group', 'aria-label': 'Mão de cartas' },
+      naMao.map((c, i) => {
+        const angulo = (i - (n - 1) / 2) * passo;
+        return el('button', {
+          type: 'button', class: 'ficha__lequeCarta',
+          style: `--angulo:${angulo}deg;--ordem:${i};--cor-dominio:${catalogo.corDoDominio(c.dominio)}`,
+          'aria-label': `Ver a carta ${c.nome}`,
+          onClick: () => abrirCarta(visorDaCarta(c, baralho, 'cofre', ondeEsta))
+        }, c.imagem
+          ? el('img', { src: encodeURI(c.imagem), alt: '', loading: 'lazy', decoding: 'async' })
+          : el('span', { class: 'ficha__lequeNome', texto: c.nome }));
+      }));
+    const topo = noCofre[0];
+    const monte = noCofre.length ? el('button', {
+      type: 'button', class: 'ficha__monte',
+      'aria-label': `Cofre: ${noCofre.length} ${noCofre.length === 1 ? 'carta' : 'cartas'}. Ver as cartas do cofre.`,
+      onClick: () => abrirCarta(visorDaCarta(topo, baralho, 'ativas', ondeEsta))
+    }, [
+      el('span', { class: 'ficha__monteCartas', 'aria-hidden': 'true' }, topo.imagem
+        ? [el('img', { src: encodeURI(topo.imagem), alt: '', loading: 'lazy', decoding: 'async' }),
+           noCofre.length > 1 ? el('img', { src: encodeURI(topo.imagem), alt: '', loading: 'lazy', decoding: 'async' }) : null].filter(Boolean)
+        : []),
+      el('span', { class: 'ficha__monteTexto' }, [
+        el('strong', { texto: `Cofre · ${noCofre.length}` }),
+        el('span', { texto: 'tocar para ver e recordar' })
+      ])
+    ]) : null;
+    return el('div', { class: 'ficha__mesaDeCartas' }, [leque, monte].filter(Boolean));
+  }
+
   function cartaoDeCarta(c, lista, destino, ondeEsta) {
     const cor = catalogo.corDoDominio(c.dominio);
     return el('div', {
@@ -5630,21 +5819,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
          * lista convertida tem a mesma ordem da original: `lista[i]` é a
          * carta que está na tela, mesmo depois de folhear.
          */
-        nomeQueAbreCarta(c.nome, () => ({
-          itens: lista.map((x) => comSeloDeLugar(x, ondeEsta)),
-          indice: lista.indexOf(c),
-          /*
-           * ⚠ O DESTINO SAI DA CARTA QUE ESTÁ NA TELA, não da seção em que se
-           * tocou. Quem abre uma carta da mão e folheia até uma do cofre
-           * precisa de "Trazer para a mão", não de "Guardar no cofre" — e o
-           * botão errado aqui moveria a carta certa para o lugar errado, sem
-           * nada na tela avisando.
-           */
-          acoes: (item, i, modal) => botoesDaCarta(
-            lista[i],
-            ondeEsta ? (ondeEsta.get(lista[i].id) === 'ativas' ? 'cofre' : 'ativas') : destino,
-            modal)
-        })),
+        nomeQueAbreCarta(c.nome, () => visorDaCarta(c, lista, destino, ondeEsta)),
         el('span', { class: 'selo', texto: `recordar ${c.custoRecordar}` })
       ]),
       el('p', { class: 'texto-xs texto-fraco' },
