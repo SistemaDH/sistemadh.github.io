@@ -2978,3 +2978,10 @@ caía no alias da Store. Um `python3.cmd` ao lado do `python.exe` resolveu de ve
 seção "Rodar a suíte na máquina dela", ganhou o Python 3, o aviso de CRLF e o
 tempo medido — a seção que eu escrevi ontem dizia que o Windows não quebrava
 nada, e quebrava uma coisa.
+
+## 30/10/2026 (3) — O push do lote passa a ser do Claude Code
+
+Por decisão dela: quando o lote fecha com a suíte verde, o próprio Claude Code
+commita e empurra para a `main`, e acompanha o CI. **Continua exigindo a palavra
+dela:** implantar Edge Function, migração de banco, mesclar PR, `push --force` e
+apagar branch. O `CLAUDE.md` também passou a citar o Python 3 na suíte.

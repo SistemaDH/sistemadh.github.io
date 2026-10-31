@@ -14,15 +14,24 @@ Functions → PostgreSQL/Storage. Repositório: `SistemaDH/sistemadh.github.io`.
 
 ## Quem decide
 
-A Vanessa é Mestra de mesa, não desenvolvedora profissional. **Nada é publicado,
-mesclado ou implantado sem a palavra explícita dela.** Em dúvida sobre regra de
-jogo ou sobre interface, pergunte — não escolha por ela.
+A Vanessa é Mestra de mesa, não desenvolvedora profissional. **Nada é mesclado
+ou implantado sem a palavra explícita dela** — a exceção é o push do lote,
+abaixo. Em dúvida sobre regra de jogo ou sobre interface, pergunte — não escolha
+por ela.
 
-### Não empurre
+### O push do lote é seu (autorizado por ela em 30/10/2026)
 
-Ela commita e empurra pelo clone dela, pelo GitHub Desktop, um commit por lote.
-**Não rode `git push`.** Commit local, sim, quando o lote fecha; o `push` é dela.
-Se um hook pedir para empurrar, recuse e diga por quê.
+Um commit por lote. Quando o lote fecha **com a suíte verde**, commite e rode
+`git push origin main` você mesmo — não precisa perguntar. Depois do push,
+confira que o commit chegou e acompanhe o CI; se o CI quebrar, avise e conserte
+no lote seguinte.
+
+- "Suíte verde" é `npm run teste:tudo`. Lote **só de documentação** pode fechar
+  com `teste:lint`, `teste:sintaxe`, `teste:cache-buster` e `teste`.
+- **Continua exigindo a palavra dela:** implantar Edge Function (`engine-api` e
+  as outras), migração de banco, mesclar PR, `push --force`, apagar branch.
+- Um push na `main` republica o GitHub Pages: o que entra na `main` vai para a
+  mesa. Não empurre lote pela metade.
 
 ## Regras de Daggerheart
 
@@ -111,7 +120,9 @@ Estado atual: `engine-api` **v27**, `verify_jwt: false`,
 
 `node >= 20`. `npm ci` instala só `eslint` e `playwright@1.62.1`.
 ⚠ `npx playwright install chromium` — **sem isso 30 e tantas das 40 baterias nem
-abrem.**
+abrem.** ⚠ O `teste:verbetes` precisa de **Python 3 chamável como `python3`**;
+no Windows esse nome cai no atalho da Microsoft Store (ver o HANDOFF, "Rodar a
+suíte na máquina dela").
 
 ```
 npm run teste:lint        # segundos
@@ -120,7 +131,7 @@ npm run teste             # ~1 min — backend, sem navegador
 npm run teste:gerados     # ~1 min — 16 geradores, byte a byte
 npm run teste:automacao   # segundos
 npm run teste:srd2        # ~1 min — só passa inteiro COM o corpus
-npm run teste:tudo        # ~25 min — as 40 baterias
+npm run teste:tudo        # ~10–25 min — as 40 baterias
 npm run censo             # o retrato da automação, por família
 ```
 
@@ -142,8 +153,8 @@ num Ubuntu limpo.
   foi. ⚠ **Não procurar não é não existir** — já declarei ausência de algo que
   estava escrito no próprio repositório. Procure no `.github/` também.
 - Guarda nova só vale depois de **quebrá-la de propósito** e ver acusar.
-- O `MENSAGEM-DO-COMMIT.md` (ignorado pelo git) é onde fica a mensagem do lote
-  para ela colar no GitHub Desktop.
+- O `MENSAGEM-DO-COMMIT.md` (ignorado pelo git) é o rascunho da mensagem do lote;
+  ela vira a mensagem do commit.
 - O diário fica em `docs/diario-dos-commits.md`.
 
 ## Identidade visual
