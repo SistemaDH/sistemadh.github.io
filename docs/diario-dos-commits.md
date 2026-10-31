@@ -3186,3 +3186,39 @@ calculado com arquivos que o Python do Windows gravou em CRLF, e o GitHub guarda
 LF — o hash do CI deu outro. A cópia local voltou toda para LF e as gravações
 passaram a forçar `newline='\n'`. Este lote recarimba, e antes do push o carimbo
 é conferido numa cópia limpa do commit (`git archive`), que é o que o CI vê.
+
+## 31/10/2026 (5) — Design, lote 3: jogada, trilha, cartão e vitrine
+
+Propostas 9, 11, 12 e 17, aprovadas pela Vanessa:
+
+- **Jogada de Dualidade (12).** Botão na aba Jogo, logo abaixo dos traços. Os
+  dados continuam na mesa: a pessoa escolhe o traço e diz o que saiu nos dois
+  d12; a ficha soma, diz qual dado venceu e aplica a parte dela da regra (livro
+  p.94, verbete "resultado-da-jogada"): Esperança maior → +1 Esperança; iguais
+  → sucesso crítico, +1 Esperança e −1 Estresse. Se passou da Dificuldade, quem
+  diz é o Mestre. ⚠ **Medo maior só AVISA** ("avise o Mestre"): o `mesa-api`
+  recusa jogador mexendo no Medo, e mandar o Medo sozinho ao painel é mudança
+  de servidor — espera a palavra dela para o deploy. Experiência na jogada
+  ficou de fora desta primeira versão.
+- **Trilha do personagem (9).** Seção na História: um ponto por nível,
+  separado por patamar, com a conquista, os avanços e a carta de cada subida,
+  lidos do `ficha.avancos.historico` que o motor já grava (só lê; nada é
+  recalculado). O próximo nível mostra o que libera e tem o botão de subir.
+- **Cartão para compartilhar (11).** Botão na História que desenha num canvas
+  a frente e o verso (iniciais, classe, domínios nas cores do tema, traços;
+  defesa, Experiências, mão e o começo da história). Compartilhar usa o menu do
+  celular; "Salvar" baixa o PNG. A foto NÃO entra — ela mora em outro
+  endereço e travaria o canvas para exportar.
+- **Vitrine de classes (17).** A etapa de classe da criação ganhou a arte dos
+  dois domínios de cada classe (a primeira carta de nível 1 de cada, em ordem
+  alfabética) e os domínios nas cores do tema. No celular a vitrine desliza para
+  os lados e volta à classe escolhida depois de redesenhar; em tela larga vira
+  grade. O gesto de escolher não mudou.
+
+Antes do push, o carimbo do cache-buster é conferido numa cópia limpa do commit.
+Gate: `teste:tudo` verde.
+
+A bateria de criação recusou a vitrine ("controles fora da largura"): ela põe as
+classes seguintes fora da tela de propósito. Ganhou a mesma exceção que as
+pílulas do bestiário já têm no painel — só dentro de um scroller horizontal de
+verdade. Depois disso a bateria e as que vinham depois rodaram verdes.

@@ -21,22 +21,24 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=fae579450b';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=fae579450b';
-import { acoes, obterEstado } from '../estado.js?v=fae579450b';
-import { mensagemDoErro } from '../api.js?v=fae579450b';
-import { aguardar, temPendente } from '../fila.js?v=fae579450b';
-import * as dados from '../dados.js?v=fae579450b';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=fae579450b';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=fae579450b';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=fae579450b';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=fae579450b';
-import { botaoDeRegras } from './regras.js?v=fae579450b';
-import { abrirDescanso } from './descanso.js?v=fae579450b';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=fae579450b';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=fae579450b';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=fae579450b';
-import { icone } from '../componentes/icone.js?v=fae579450b';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=6b5cf94111';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=6b5cf94111';
+import { acoes, obterEstado } from '../estado.js?v=6b5cf94111';
+import { mensagemDoErro } from '../api.js?v=6b5cf94111';
+import { aguardar, temPendente } from '../fila.js?v=6b5cf94111';
+import * as dados from '../dados.js?v=6b5cf94111';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=6b5cf94111';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=6b5cf94111';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=6b5cf94111';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=6b5cf94111';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=6b5cf94111';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=6b5cf94111';
+import { botaoDeRegras } from './regras.js?v=6b5cf94111';
+import { abrirDescanso } from './descanso.js?v=6b5cf94111';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=6b5cf94111';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=6b5cf94111';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=6b5cf94111';
+import { icone } from '../componentes/icone.js?v=6b5cf94111';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -3321,6 +3323,114 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
    * De quebra, isto encerra a briga de dois meses com "CONHECIMENTO", que não
    * cabia em cartão nenhum e vinha sendo hifenizado na mão.
    */
+  /*
+   * A JOGADA DE DUALIDADE NA FICHA (proposta 12 de design, aprovada em
+   * 31/10/2026).
+   *
+   * ⚠ O APP NÃO ROLA — os dois d12 continuam na mesa. A pessoa diz o traço e
+   * o que saiu nos dados; a ficha soma, diz qual dado venceu e faz a parte
+   * dela da regra (SRD, Duality Dice; livro p.94, verbete "resultado-da-jogada"):
+   *   - Esperança maior: o personagem ganha 1 Esperança;
+   *   - dados iguais: sucesso crítico — ganha 1 Esperança e limpa 1 Estresse;
+   *   - Medo maior: o Mestre ganha 1 Medo.
+   * Se passou da Dificuldade é o Mestre quem diz: a ficha não sabe o número.
+   *
+   * ⚠ O MEDO NÃO VAI SOZINHO PARA O PAINEL. Só o Mestre mexe no Medo no
+   * servidor (`mesa-api` recusa jogador), e abrir isso é mudança de servidor —
+   * fica para quando a Vanessa autorizar o deploy. Por ora a ficha AVISA.
+   */
+  function botaoDeJogada(ficha) {
+    return el('button', {
+      type: 'button', class: 'btn btn--fantasma ficha__registrarJogada',
+      onClick: () => abrirRegistroDeJogada(ficha)
+    }, 'Registrar jogada de Dualidade');
+  }
+
+  function abrirRegistroDeJogada(ficha) {
+    const conjuracao = catalogo.conjuracaoDe(ficha);
+    let traco = TRACOS_ORDEM.find((t) => conjuracao && dados.chave(conjuracao) === dados.chave(t)) || TRACOS_ORDEM[0];
+    const valorDoTraco = (t) => {
+      const v = ficha.tracos ? ficha.tracos[t] : 0;
+      return (Number(v) || 0) + bonusDaFormaNoTraco(ficha, t) +
+        (Number(((ficha || {}).modificadoresDeTraco || {})[t]) || 0);
+    };
+    const dado = (rotulo) => el('input', semCorretor({
+      type: 'number', class: 'campo__entrada ficha__dadoDaJogada', min: 1, max: 12, step: 1,
+      inputmode: 'numeric', placeholder: '1 a 12', 'aria-label': rotulo
+    }));
+    const dEsp = dado('Dado de Esperança');
+    const dMedo = dado('Dado de Medo');
+    const veredito = el('div', { class: 'ficha__veredito', 'aria-live': 'polite' });
+    const tracos = el('div', { class: 'ficha__tracosDaJogada', role: 'group', 'aria-label': 'Traço da jogada' });
+    const desenharTracos = () => {
+      tracos.replaceChildren(...TRACOS_ORDEM.map((t) => el('button', {
+        type: 'button', class: `ficha__tracoDaJogada ${t === traco ? 'esta-escolhido' : ''}`,
+        'aria-pressed': t === traco ? 'true' : 'false',
+        onClick: () => { traco = t; desenharTracos(); conferir(); }
+      }, [
+        el('span', { texto: siglaDeTraco(catalogo.nomeDoTraco(t)) }),
+        el('strong', { texto: valorDeTraco(valorDoTraco(t)) })
+      ])));
+    };
+    const ler = (c) => { const n = Math.trunc(Number(c.value)); return n >= 1 && n <= 12 ? n : null; };
+    const resultado = () => {
+      const e = ler(dEsp);
+      const m = ler(dMedo);
+      if (e === null || m === null) return null;
+      return { e, m, total: e + m + valorDoTraco(traco), tipo: e === m ? 'critico' : e > m ? 'esperanca' : 'medo' };
+    };
+    const registrar = el('button', { type: 'button', class: 'btn btn--principal', disabled: true }, 'Registrar');
+    function conferir() {
+      const r = resultado();
+      registrar.disabled = !r;
+      if (!r) { veredito.className = 'ficha__veredito'; veredito.textContent = 'Diga o que saiu nos dois dados.'; return; }
+      veredito.className = `ficha__veredito ficha__veredito--${r.tipo}`;
+      veredito.textContent = r.tipo === 'critico'
+        ? `${r.total} · sucesso crítico! Ganha 1 Esperança e limpa 1 Estresse.`
+        : r.tipo === 'esperanca'
+          ? `${r.total} · com Esperança. Ganha 1 Esperança. O Mestre diz se passou da Dificuldade.`
+          : `${r.total} · com Medo. O Mestre ganha 1 Medo. O Mestre diz se passou da Dificuldade.`;
+    }
+    dEsp.addEventListener('input', conferir);
+    dMedo.addEventListener('input', conferir);
+    desenharTracos();
+    conferir();
+    const modal = abrirModal({
+      titulo: 'Jogada de Dualidade',
+      conteudo: el('div', { class: 'pilha' }, [
+        el('p', { class: 'texto-sm' }, textoAnotado(
+          'Role os dois d12 na mesa e diga o que saiu. O app não rola nada.')),
+        tracos,
+        el('div', { class: 'ficha__dadosDaJogada' }, [
+          el('label', { class: 'campo ficha__dadoEsperanca' }, [el('span', { class: 'campo__rotulo', texto: 'Esperança' }), dEsp]),
+          el('label', { class: 'campo ficha__dadoMedo' }, [el('span', { class: 'campo__rotulo', texto: 'Medo' }), dMedo])
+        ]),
+        veredito
+      ]),
+      acoes: [
+        el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Cancelar'),
+        registrar
+      ]
+    });
+    registrar.addEventListener('click', () => {
+      const r = resultado();
+      if (!r) return;
+      modal.fechar();
+      const rec = (p.ficha || {}).recursos || {};
+      const maxEsp = rec.esperancaMaxima === undefined ? (rec.esperancaImpressa || 6) : rec.esperancaMaxima;
+      const ajustes = [];
+      if (r.tipo !== 'medo') ajustes.push({ tipo: 'recurso', chave: 'esperanca', valor: Math.min(maxEsp, (rec.esperanca || 0) + 1) });
+      if (r.tipo === 'critico') ajustes.push({ tipo: 'recurso', chave: 'estresseMarcado', valor: Math.max(0, (rec.estresseMarcado || 0) - 1) });
+      if (ajustes.length) {
+        espelharLocal(ajustes);
+        enviar(ajustes, { soSeMudou: true });
+        desenhar();
+      }
+      if (r.tipo === 'medo') avisar('Jogada com Medo: avise o Mestre — ele ganha 1 Medo.', 'info', 5000);
+      else avisarSucesso(r.tipo === 'critico' ? 'Sucesso crítico: +1 Esperança e −1 Estresse.' : '+1 Esperança.');
+    });
+  }
+
   function blocoDeTracos(ficha) {
     /*
      * Quem decide o traço de Conjuração é o SERVIDOR — e ele manda duas
@@ -4320,7 +4430,9 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }
 
     // --- retrato e traços (o topo) ---------------------------------------
-    pai.append(blocoDeRetrato(ficha));
+    const retrato = blocoDeRetrato(ficha);
+    retrato.append(botaoDeJogada(ficha));
+    pai.append(retrato);
 
     const td = ficha.transformacaoDados || null;
     /*
@@ -7493,6 +7605,40 @@ function ouroEmPunhados(ouro) {
    *  ABA HISTÓRIA
    * ======================================================================== */
 
+  /** O que vai no cartão para compartilhar, já em texto: o componente só desenha. */
+  function retratoParaCartao(ficha) {
+    const ident = ficha.identidade || {};
+    const r = ficha.recursos || {};
+    const d = ficha.defesas || {};
+    const nome = ident.nome || p.nome || 'Personagem';
+    const classe = catalogo.acharClasse(ident.classe);
+    const conjuracao = catalogo.conjuracaoDe(ficha);
+    const cartasDaMao = ((ficha.cartas || {}).ativas || []).map(catalogo.acharCarta).filter(Boolean);
+    const h = ficha.historia || {};
+    const historia = ident.descricao || ((h.fundo || [])[0] || {}).resposta || '';
+    return {
+      nome,
+      iniciais: nome.split(/\s+/).map((x) => x[0]).join('').slice(0, 2).toUpperCase(),
+      nivel: Number(ident.nivel || p.nivel) || 1,
+      linha: [ident.classe, ident.subclasse, ident.ancestralidade].filter(Boolean).join(' · '),
+      dominios: classe ? (classe.dominios || []).map((codigo, i) => ({
+        nome: (classe.dominiosNomes || [])[i] || codigo, cor: catalogo.corDoDominio(codigo)
+      })) : [],
+      tracos: TRACOS_ORDEM.map((t) => ({
+        sigla: siglaDeTraco(catalogo.nomeDoTraco(t)),
+        valor: valorDeTraco(ficha.tracos ? ficha.tracos[t] : null),
+        conjuracao: Boolean(conjuracao) && dados.chave(conjuracao) === dados.chave(t)
+      })),
+      evasao: d.evasao ?? '—',
+      armadura: d.pontuacaoArmadura ?? 0,
+      pv: r.pontosDeVidaMaximos ?? 0,
+      estresse: r.estresseMaximo ?? 0,
+      experiencias: (ficha.experiencias || []).map((e) => `${e.nome} +${e.bonus === undefined ? 2 : e.bonus}`),
+      mao: cartasDaMao.map((c) => c.nome),
+      historia: String(historia).slice(0, 400)
+    };
+  }
+
   function abaHistoria(pai, ficha) {
     const exp = ficha.experiencias || [];
     const reliquiaExp = ((ficha || {}).inventario || []).find((item) =>
@@ -7544,6 +7690,22 @@ function ouroEmPunhados(ouro) {
         ])))));
     }
 
+    /* A trilha do nível 1 ao 10 (proposta 9) e o cartão para compartilhar (proposta 11). */
+    const nivelAtual = Number(ident.nivel || p.nivel) || 1;
+    pai.append(secao('Trilha do personagem', blocoDaTrilha({
+      ficha,
+      aoSubir: nivelAtual < 10 ? () => abrirAvanco({
+        personagem: p, catalogo,
+        aoAplicar: (novo) => { p = novo; desenhar(); }
+      }) : null
+    })));
+    pai.append(secao('Cartão do personagem', el('div', { class: 'pilha' }, [
+      el('p', { class: 'texto-sm texto-suave', texto:
+        'Uma imagem frente e verso, como carta colecionável, para mandar no grupo ou apresentar o personagem.' }),
+      el('button', {
+        type: 'button', class: 'btn', onClick: () => abrirCartaoDoPersonagem(retratoParaCartao(ficha))
+      }, 'Montar o cartão')
+    ])));
     pai.append(secao('Anotações', blocoAnotacoes(ficha)));
     pai.append(rodapeDaFicha());
   }

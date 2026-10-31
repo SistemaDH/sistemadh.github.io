@@ -2274,3 +2274,138 @@
 .ficha__miniCarta img { width: 58px; border-radius: 5px; display: block; }
 .ficha__miniCartaTexto { display: flex; flex-direction: column; min-width: 0; font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
 .ficha__miniCartaTexto strong { font-family: var(--fonte-titulo); font-size: var(--txt-sm); color: var(--cor-texto); }
+
+/* ==========================================================================
+   A JOGADA DE DUALIDADE (proposta 12, 31/10/2026)
+   ========================================================================== */
+
+.ficha__registrarJogada { width: 100%; margin-top: var(--e3); grid-column: 1 / -1; }
+
+.ficha__tracosDaJogada {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--e1);
+}
+.ficha__tracoDaJogada {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: var(--alvo-min);
+  padding: 4px 0;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto-fraco);
+  font: inherit;
+  font-size: var(--txt-xs);
+  cursor: pointer;
+}
+.ficha__tracoDaJogada strong { font-family: var(--fonte-titulo); font-size: var(--txt-md); color: var(--cor-texto); }
+.ficha__tracoDaJogada.esta-escolhido { border-color: var(--cor-ouro); background: #2a2214; color: var(--cor-ouro-claro); }
+
+.ficha__dadosDaJogada { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e3); }
+.ficha__dadoDaJogada { font-family: var(--fonte-titulo); font-size: var(--txt-2xl); text-align: center; }
+.ficha__dadoEsperanca .ficha__dadoDaJogada { border-color: var(--cor-esperanca); }
+.ficha__dadoMedo .ficha__dadoDaJogada { border-color: var(--cor-medo); }
+.ficha__dadoEsperanca .campo__rotulo { color: var(--cor-esperanca); }
+.ficha__dadoMedo .campo__rotulo { color: #c9b3ff; }
+
+.ficha__veredito {
+  padding: var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-fundo-2);
+  font-size: var(--txt-sm);
+  text-align: center;
+}
+.ficha__veredito--esperanca { border-color: var(--cor-esperanca); color: var(--cor-esperanca); }
+.ficha__veredito--critico { border-color: var(--cor-esperanca); color: var(--cor-esperanca); box-shadow: 0 0 16px rgba(255, 201, 74, .25); }
+.ficha__veredito--medo { border-color: var(--cor-medo); color: #c9b3ff; }
+
+/* ==========================================================================
+   A TRILHA DO PERSONAGEM (proposta 9, 31/10/2026)
+   ========================================================================== */
+
+.trilhaPj {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.trilhaPj::before {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 30px;
+  bottom: 20px;
+  width: 3px;
+  background: var(--cor-borda);
+}
+.trilhaPj__patamar {
+  margin: var(--e3) 0 var(--e2) 52px;
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--cor-ouro);
+}
+.trilhaPj__patamar.esta-futuro { color: var(--cor-texto-fraco); }
+.trilhaPj__ponto {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--e3);
+  margin-bottom: var(--e2);
+}
+.trilhaPj__bola {
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  background: var(--cor-fundo);
+  border: 2px solid var(--cor-borda-forte);
+  color: var(--cor-texto-fraco);
+}
+.trilhaPj__ponto.esta-feito .trilhaPj__bola {
+  background: linear-gradient(var(--cor-ouro-claro), #b8893f);
+  border-color: var(--cor-ouro-claro);
+  color: #2a1e07;
+}
+.trilhaPj__ponto.esta-proximo .trilhaPj__bola {
+  border: 2px dashed var(--cor-ouro);
+  color: var(--cor-ouro-claro);
+  box-shadow: 0 0 14px rgba(217, 171, 91, .3);
+}
+.trilhaPj__ponto.esta-futuro { opacity: .55; }
+.trilhaPj__caixa {
+  min-width: 0;
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-superficie);
+}
+.trilhaPj__ponto.esta-proximo .trilhaPj__caixa { border-color: var(--cor-ouro-escuro); background: #1d1a14; }
+.trilhaPj__titulo { font-family: var(--fonte-titulo); font-size: var(--txt-sm); }
+.trilhaPj__etiquetas { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.trilhaPj__etiqueta {
+  font-size: var(--txt-xs);
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--cor-superficie-alta);
+  color: var(--cor-texto-suave);
+}
+.trilhaPj__etiqueta--conquista { background: #2a2214; color: var(--cor-ouro-claro); }
+.trilhaPj__etiqueta--carta { background: #2b1830; color: #f3a6d0; }
+.trilhaPj__subir { width: 100%; margin-top: var(--e2); }
+
+/* ==========================================================================
+   O CARTÃO DO PERSONAGEM (proposta 11, 31/10/2026)
+   ========================================================================== */
+
+.cartaoPj { display: flex; flex-direction: column; gap: var(--e2); }
+.cartaoPj__imagem { width: 100%; height: auto; border-radius: var(--raio); }

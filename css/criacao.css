@@ -699,3 +699,71 @@
   font-size: var(--txt-xs);
   color: var(--cor-texto);
 }
+
+/* ==========================================================================
+   A VITRINE DE CLASSES (proposta 17, 31/10/2026)
+
+   Cada classe com a arte dos dois domínios e as cores do tema. No celular
+   desliza para os lados (uma carta e a borda da próxima à vista); em tela
+   larga vira grade.
+   ========================================================================== */
+
+.vitrine__artes {
+  position: relative;
+  height: 150px;
+  margin: calc(-1 * var(--e2)) 0 var(--e2);
+}
+.vitrine__artes img {
+  position: absolute;
+  top: 4px;
+  width: 98px;
+  border-radius: 7px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .55);
+}
+.vitrine__artes img:first-child { left: calc(50% - 104px); transform: rotate(-7deg); }
+.vitrine__artes img:last-child { left: calc(50% + 6px); transform: rotate(7deg); }
+
+.vitrine__dominios { display: flex; gap: 6px; margin-bottom: var(--e1); }
+.vitrine__dominio {
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--cor-borda-forte);
+}
+.vitrine__dominio--arcana { background: var(--dom-arcana); }
+.vitrine__dominio--blade { background: var(--dom-lamina); }
+.vitrine__dominio--bone { background: var(--dom-osso); color: #1b170e; }
+.vitrine__dominio--codex { background: var(--dom-codex); }
+.vitrine__dominio--grace { background: var(--dom-graca); }
+.vitrine__dominio--midnight { background: var(--dom-meianoite); }
+.vitrine__dominio--sage { background: var(--dom-sabio); }
+.vitrine__dominio--splendor { background: var(--dom-esplendor); color: #1b170e; }
+.vitrine__dominio--valor { background: var(--dom-valor); }
+.vitrine__dominio--dread { background: #5a2a3a; }
+
+@media (max-width: 639px) {
+  .lista-escolha--vitrine {
+    display: flex;
+    flex-direction: row;
+    gap: var(--e3);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding-bottom: var(--e2);
+  }
+  .lista-escolha--vitrine > .lista-escolha__item {
+    flex: 0 0 84%;
+    scroll-snap-align: center;
+  }
+}
+
+@media (min-width: 640px) {
+  .lista-escolha--vitrine {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--e3);
+  }
+}

@@ -82,7 +82,20 @@ async function auditar(page, viewport, tela, {
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"], input[type="checkbox"], input[type="radio"], input[type="range"]'));
 
+    /*
+     * A vitrine de classes (proposta 17, 31/10/2026) desliza para os lados DE
+     * PROPÓSITO: as classes seguintes ficam fora da tela até o dedo trazê-las.
+     * Vale a mesma exceção das pílulas do bestiário — só dentro de um scroller
+     * horizontal de verdade, que rola sozinho e não empurra a página.
+     */
+    const dentroDeScrollerHorizontal = (el) => {
+      const scroller = el.closest('.lista-escolha--vitrine');
+      if (!scroller) return false;
+      const s = getComputedStyle(scroller);
+      return /auto|scroll/.test(s.overflowX) && scroller.scrollWidth > scroller.clientWidth + 1;
+    };
     const fora = interativos.filter((el) => {
+      if (dentroDeScrollerHorizontal(el)) return false;
       const r = el.getBoundingClientRect();
       return r.left < -1 || r.right > largura + 1;
     }).slice(0, 10);

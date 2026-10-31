@@ -3,7 +3,7 @@
  * Sem dependência de framework: só DOM, focado em toque.
  */
 
-import { el } from './util.js?v=fae579450b';
+import { el } from './util.js?v=6b5cf94111';
 
 /* --------------------------------------------------------------------------
    Avisos (toasts)

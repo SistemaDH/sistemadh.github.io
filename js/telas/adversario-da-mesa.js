@@ -15,10 +15,10 @@
  * para…", a habilidade passa a cobrar 1 Medo na cena, igual às impressas.
  */
 
-import { el, limpar, semCorretor, guardarRolagem } from '../util.js?v=fae579450b';
-import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=fae579450b';
-import { acoes } from '../estado.js?v=fae579450b';
-import { mensagemDoErro } from '../api.js?v=fae579450b';
+import { el, limpar, semCorretor, guardarRolagem } from '../util.js?v=6b5cf94111';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=6b5cf94111';
+import { acoes } from '../estado.js?v=6b5cf94111';
+import { mensagemDoErro } from '../api.js?v=6b5cf94111';
 
 const TIPOS_DE_HABILIDADE = ['passiva', 'ação', 'reação'];
 

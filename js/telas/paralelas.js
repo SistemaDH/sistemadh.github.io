@@ -26,13 +26,13 @@
  * quebrar a cobrança. Entrar na forma custa Estresse, e o custo é do servidor.
  */
 
-import { el, limpar, semCorretor } from '../util.js?v=fae579450b';
-import { abrirModal, avisarSucesso, blocoVazio } from '../ui.js?v=fae579450b';
-import { mensagemDoErro } from '../api.js?v=fae579450b';
-import * as dados from '../dados.js?v=fae579450b';
-import { nomeComGlossa } from '../glossario.js?v=fae579450b';
-import { textoAnotado } from '../verbete.js?v=fae579450b';
-import { icone } from '../componentes/icone.js?v=fae579450b';
+import { el, limpar, semCorretor } from '../util.js?v=6b5cf94111';
+import { abrirModal, avisarSucesso, blocoVazio } from '../ui.js?v=6b5cf94111';
+import { mensagemDoErro } from '../api.js?v=6b5cf94111';
+import * as dados from '../dados.js?v=6b5cf94111';
+import { nomeComGlossa } from '../glossario.js?v=6b5cf94111';
+import { textoAnotado } from '../verbete.js?v=6b5cf94111';
+import { icone } from '../componentes/icone.js?v=6b5cf94111';
 
 /** Qual ficha paralela cada classe/subclasse pode ter. */
 const QUEM_PODE = [

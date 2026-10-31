@@ -15,17 +15,17 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=fae579450b';
-import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=fae579450b';
-import { acoes, obterEstado } from '../estado.js?v=fae579450b';
-import { mensagemDoErro } from '../api.js?v=fae579450b';
-import * as dados from '../dados.js?v=fae579450b';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=6b5cf94111';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=6b5cf94111';
+import { acoes, obterEstado } from '../estado.js?v=6b5cf94111';
+import { mensagemDoErro } from '../api.js?v=6b5cf94111';
+import * as dados from '../dados.js?v=6b5cf94111';
 import {
   nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
-} from '../componentes/carta.js?v=fae579450b';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=fae579450b';
-import { textoAnotado, prepararVerbetes } from '../verbete.js?v=fae579450b';
+} from '../componentes/carta.js?v=6b5cf94111';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=6b5cf94111';
+import { textoAnotado, prepararVerbetes } from '../verbete.js?v=6b5cf94111';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -384,14 +384,32 @@ export async function abrirCriacao({ aoCriar } = {}) {
       etiqueta: 'Etapa 1',
       titulo: 'Escolha sua classe',
       ajuda: 'Cada classe é um arquétipo que define a que habilidades você tem acesso. Toque no nome para ver a carta.',
+      /*
+       * A VITRINE DE CLASSES (proposta 17 de design, aprovada em 31/10/2026).
+       *
+       * Escolher a classe era ler uma lista. Agora cada classe é uma carta
+       * grande com a arte dos seus dois domínios — a primeira carta de nível 1
+       * de cada um, tirada do mesmo catálogo de cartas desta tela — e as cores
+       * do tema. No celular a vitrine desliza para os lados; em tela larga as
+       * cartas ficam em grade. O gesto de escolher não mudou.
+       */
       desenhar(pai) {
-        const lista = el('div', { class: 'lista-escolha' });
+        const lista = el('div', { class: 'lista-escolha lista-escolha--vitrine' });
+        let escolhidaNaTela = null;
         catalogo.classes.forEach((c) => {
           const escolhida = rascunho.classe === c.id;
           const guia = catalogo.guias.find((g) => g.classe === c.id);
-          lista.append(el('div', {
+          const artes = (c.dominios || []).map((d) => catalogo.cartas
+            .filter((x) => x.dominio === d && x.nivel === 1 && x.imagem)
+            .sort((a, b) => a.nome.localeCompare(b.nome, 'pt'))[0]).filter(Boolean);
+          const item = el('div', {
             class: `cartao cartao--alvo lista-escolha__item ${escolhida ? 'esta-escolhido' : ''}`
           }, [
+            artes.length ? el('div', { class: 'vitrine__artes', 'aria-hidden': 'true' },
+              artes.map((x) => el('img', { src: encodeURI(x.imagem), alt: '', loading: 'lazy', decoding: 'async' }))) : null,
+            el('div', { class: 'vitrine__dominios' }, (c.dominios || []).map((d, i) => el('span', {
+              class: `vitrine__dominio vitrine__dominio--${String(d).toLowerCase()}`, texto: c.dominiosNomes[i] || d
+            }))),
             el('div', { class: 'lista-escolha__cabecalho' }, [
               nomeQueAbreCarta(c.nome, () => ({
                 itens: c.subclasses.map((s) => daSubclasse(s)),
@@ -423,9 +441,13 @@ export async function abrirCriacao({ aoCriar } = {}) {
                 desenhar();
               }
             })
-          ]));
+          ].filter(Boolean));
+          if (escolhida) escolhidaNaTela = item;
+          lista.append(item);
         });
         pai.append(lista);
+        // Redesenhar volta a vitrine ao começo: a escolhida volta para o meio.
+        if (escolhidaNaTela) requestAnimationFrame(() => escolhidaNaTela.scrollIntoView({ inline: 'center', block: 'nearest' }));
       },
       problema() { return rascunho.classe ? null : 'Escolha uma classe.'; }
     };

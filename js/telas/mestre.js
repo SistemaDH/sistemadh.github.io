@@ -20,21 +20,21 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=fae579450b';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=fae579450b';
-import { CHAVES } from '../config.js?v=fae579450b';
-import { acoes } from '../estado.js?v=fae579450b';
-import { mensagemDoErro } from '../api.js?v=fae579450b';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=fae579450b';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=fae579450b';
-import { botaoDeRegras } from './regras.js?v=fae579450b';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=fae579450b';
-import { secaoDoEncontro } from './encontro.js?v=fae579450b';
-import { icone } from '../componentes/icone.js?v=fae579450b';
-import * as dados from '../dados.js?v=fae579450b';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=6b5cf94111';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=6b5cf94111';
+import { CHAVES } from '../config.js?v=6b5cf94111';
+import { acoes } from '../estado.js?v=6b5cf94111';
+import { mensagemDoErro } from '../api.js?v=6b5cf94111';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=6b5cf94111';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=6b5cf94111';
+import { botaoDeRegras } from './regras.js?v=6b5cf94111';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=6b5cf94111';
+import { secaoDoEncontro } from './encontro.js?v=6b5cf94111';
+import { icone } from '../componentes/icone.js?v=6b5cf94111';
+import * as dados from '../dados.js?v=6b5cf94111';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=fae579450b';
+} from '../componentes/carta.js?v=6b5cf94111';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
