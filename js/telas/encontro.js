@@ -20,11 +20,11 @@
  * a causar o dano reduzido quando marca metade dos PV.
  */
 
-import { el, limpar, travarBotao, guardarRolagem } from '../util.js?v=7151d8b057';
-import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js?v=7151d8b057';
-import { acoes } from '../estado.js?v=7151d8b057';
-import { mensagemDoErro } from '../api.js?v=7151d8b057';
-import { nomeComGlossa } from '../glossario.js?v=7151d8b057';
+import { el, limpar, travarBotao, guardarRolagem } from '../util.js?v=564f57006f';
+import { abrirModal, avisar, avisarErro, avisarSucesso, blocoVazio, confirmar } from '../ui.js?v=564f57006f';
+import { acoes } from '../estado.js?v=564f57006f';
+import { mensagemDoErro } from '../api.js?v=564f57006f';
+import { nomeComGlossa } from '../glossario.js?v=564f57006f';
 
 /** As condições que se põem num adversário com um toque (livro p.102). */
 const CONDICOES_RAPIDAS = ['Vulnerável', 'Restrito', 'Oculto'];
@@ -61,6 +61,8 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
   let recados = [];
   /** Guarda o texto digitado por adversário para o redesenho não apagar. */
   const danoDigitado = new Map();
+  // Cartas fora de foco que o Mestre abriu com "Abrir carta" (com muitos em cena).
+  const cartasAbertas = new Set();
 
   carregando();
   recarregar();
@@ -165,7 +167,16 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
       return;
     }
     area.append(barraDeAcoes());
-    dados.adversarios.forEach((a) => area.append(cartao(a)));
+    /*
+     * CARTAS DE LUTA (proposta 26, A e B juntas). Com mais de três adversários
+     * de pé, quem não está em foco encolhe para o essencial — nome, PV e o
+     * campo de dano —, e "Abrir carta" mostra o resto. Com poucos, todas
+     * ficam inteiras, como sempre.
+     */
+    const muitos = dados.adversarios.filter((x) => !x.derrotado).length > 3;
+    dados.adversarios.forEach((a) => area.append(cartao(a, {
+      compacto: muitos && !a.emFoco && !a.derrotado && !cartasAbertas.has(a.id)
+    })));
   }
 
   function barraDaConta() {
@@ -256,9 +267,9 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
     aoAbrirFicha(ficha, [...unicas.values()]);
   }
 
-  function cartao(a) {
+  function cartao(a, { compacto = false } = {}) {
     const caixa = el('article', {
-      class: `encontro__cartao ${a.derrotado ? 'esta-derrotado' : ''} ${a.emFoco ? 'esta-em-foco' : ''}`
+      class: `encontro__cartao ${a.derrotado ? 'esta-derrotado' : ''} ${a.emFoco ? 'esta-em-foco' : ''} ${compacto ? 'esta-compacto' : ''}`
     });
 
     caixa.append(el('header', { class: 'encontro__topo' }, [
@@ -289,6 +300,12 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
       total: a.pontosDeVida, glosa: false,
       aoMarcar: (n) => mexer(a, { pontosDeVida: n })
     }));
+    if (compacto) {
+      caixa.append(campoDeDano(a), el('div', { class: 'encontro__acoes' }, [
+        botao('Abrir carta', () => { cartasAbertas.add(a.id); desenhar(); })
+      ]));
+      return caixa;
+    }
     if (a.estresse) {
       caixa.append(trilha({
         rotulo: 'Estresse', classe: 'estresse', marcados: a.estresseMarcado,
@@ -484,7 +501,13 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
       placeholder: 'dano', value: danoDigitado.get(a.id) || '',
       'aria-label': `Dano sofrido por ${a.nome}`
     });
-    entrada.addEventListener('input', () => danoDigitado.set(a.id, entrada.value));
+    const previa = el('p', { class: 'encontro__previaDano', 'aria-live': 'polite' });
+    const mostrarPrevia = () => {
+      const pr = previaDoDano(a, entrada.value, tipoDeDano);
+      previa.textContent = pr ? pr.texto : '';
+      previa.className = `encontro__previaDano ${pr ? `encontro__previaDano--${pr.faixa}` : ''}`;
+    };
+    entrada.addEventListener('input', () => { danoDigitado.set(a.id, entrada.value); mostrarPrevia(); });
     entrada.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') marcar(); });
 
     const dica = a.lacaio
@@ -507,6 +530,7 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
             tipoDeDano = id;
             [...seletorTipo.children].forEach((x, i) =>
               x.classList.toggle('esta-ativa', ['', 'fisico', 'magico'][i] === id));
+            mostrarPrevia();
           }
         }, rotulo);
         return b;
@@ -531,8 +555,10 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
         entrada,
         el('button', { type: 'button', class: 'btn btn--pequeno', onClick: marcar }, 'Marcar dano'),
         el('span', { class: 'texto-xs texto-suave', texto: dica })
-      ])
+      ]),
+      previa
     ]);
+    mostrarPrevia();
     if (seletorTipo) {
       caixa.append(el('p', { class: 'texto-xs texto-suave', texto:
         `Resiste a dano ${resiste.map((x) => x === 'fisico' ? 'físico' : 'mágico').join(' e ')} — ` +
@@ -686,8 +712,33 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
    * e tocar no último marcado desmarca ele. O dedo não precisa aprender duas
    * coisas só porque agora é um monstro.
    */
+  /*
+   * "QUANTO DE DANO?" ANTES DE MARCAR (a metade B da proposta 26).
+   *
+   * ⚠ É A MESMA CONTA DE `pvDoDano_` (backend/4G_Encontro.gs), repetida só
+   * para AVISAR enquanto o Mestre digita. Quem marca é o servidor, com a dele;
+   * se as duas discordassem, valeria a do servidor — e o aviso de depois diz
+   * o que ele decidiu.
+   */
+  function previaDoDano(a, bruto, tipoDeDano) {
+    if (String(bruto).trim() === '') return null;
+    let n = Math.max(0, Math.trunc(Number(bruto)) || 0);
+    const resistiu = Boolean(tipoDeDano) && (a.resistencias || []).includes(tipoDeDano);
+    if (resistiu && n > 0) n = Math.ceil(n / 2);
+    const metade = resistiu ? ` (resistência: vira ${n})` : '';
+    if (n <= 0) return { faixa: 'nenhum', texto: 'Não marca PV.' };
+    const m = /(\d+)\s*\/\s*(\d+)/.exec(String(a.limiares || ''));
+    if (a.lacaio || !m) return { faixa: 'menor', texto: 'Lacaio: cai com qualquer dano.' };
+    const maior = Number(m[1]), severo = Number(m[2]);
+    if (dados.danoMassivo && n >= severo * 2) return { faixa: 'massivo', texto: `${n} chega ao dobro do ${severo}${metade}: dano massivo · 4 PV` };
+    if (n >= severo) return { faixa: 'severo', texto: `${n} passa do ${severo}${metade}: Severo · 3 PV` };
+    if (n >= maior) return { faixa: 'maior', texto: `${n} passa do ${maior}${metade}: Maior · 2 PV` };
+    return { faixa: 'menor', texto: `${n} fica abaixo do ${maior}${metade}: Menor · 1 PV` };
+  }
+
   function trilha({ rotulo, classe, marcados, total, glosa, aoMarcar }) {
     const pontos = el('div', { class: 'trilha__pontos', role: 'group', 'aria-label': rotulo });
+    deslizarParaMarcar(pontos, marcados, aoMarcar);
     for (let i = 1; i <= total; i++) {
       const cheio = i <= marcados;
       pontos.append(el('button', {
@@ -705,6 +756,43 @@ export function secaoDoEncontro(pai, { catalogo, aoAbrirFicha, aoMudarMedo, aoCr
       ]),
       pontos
     ]);
+  }
+
+  /*
+   * DESLIZAR O DEDO PELA TRILHA (a metade A da proposta 26): marca até a caixa
+   * em que o dedo parou, num pedido só. O toque continua funcionando como
+   * antes — o arrasto só conta quando o dedo passa por mais de uma caixa.
+   */
+  function deslizarParaMarcar(pontos, marcados, aoMarcar) {
+    let ini = -1, atual = -1, arrastou = false;
+    const indiceSob = (x, y) => {
+      const alvo = document.elementFromPoint(x, y);
+      const ponto = alvo && alvo.closest('.trilha__ponto');
+      return ponto && pontos.contains(ponto) ? [...pontos.children].indexOf(ponto) : -1;
+    };
+    const pintar = (ate) => [...pontos.children].forEach((b, i) => b.classList.toggle('esta-provisorio', i <= ate));
+    pontos.addEventListener('pointerdown', (e) => {
+      ini = atual = indiceSob(e.clientX, e.clientY);
+      arrastou = false;
+    });
+    pontos.addEventListener('pointermove', (e) => {
+      if (ini < 0) return;
+      const i = indiceSob(e.clientX, e.clientY);
+      if (i < 0 || i === atual) return;
+      // Só agora o dedo virou arrasto: capturar antes roubaria o clique do toque simples.
+      if (!arrastou) pontos.setPointerCapture(e.pointerId);
+      atual = i; arrastou = true; pintar(i);
+    });
+    pontos.addEventListener('pointerup', () => {
+      if (ini >= 0 && arrastou && atual + 1 !== marcados) aoMarcar(atual + 1);
+      if (!arrastou) pintar(-1);
+      ini = -1;
+    });
+    pontos.addEventListener('pointercancel', () => { ini = -1; arrastou = false; pintar(-1); });
+    // Depois de um arrasto, o clique que o navegador solta no fim não pode desmarcar.
+    pontos.addEventListener('click', (e) => {
+      if (arrastou) { e.stopPropagation(); e.preventDefault(); arrastou = false; }
+    }, true);
   }
 
   function botao(texto, aoTocar, desligado) {

@@ -5,16 +5,16 @@
  * conhece "tem sessão?" e "qual tela desenhar".
  */
 
-import { el, limpar } from './util.js?v=7151d8b057';
-import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js?v=7151d8b057';
-import { avisarErro, avisar } from './ui.js?v=7151d8b057';
-import { mensagemDoErro } from './api.js?v=7151d8b057';
-import { telaAbertura } from './telas/abertura.js?v=7151d8b057';
-import { telaRoster } from './telas/roster.js?v=7151d8b057';
-import { abrirAjustes } from './telas/ajustes.js?v=7151d8b057';
-import { botaoDeRegras } from './telas/regras.js?v=7151d8b057';
-import { icone } from './componentes/icone.js?v=7151d8b057';
-import { aplicarPreferencias } from './preferencias.js?v=7151d8b057';
+import { el, limpar } from './util.js?v=564f57006f';
+import { obterEstado, assinar, acoes, estaLogado, ehMestre } from './estado.js?v=564f57006f';
+import { avisarErro, avisar } from './ui.js?v=564f57006f';
+import { mensagemDoErro } from './api.js?v=564f57006f';
+import { telaAbertura } from './telas/abertura.js?v=564f57006f';
+import { telaRoster } from './telas/roster.js?v=564f57006f';
+import { abrirAjustes } from './telas/ajustes.js?v=564f57006f';
+import { botaoDeRegras } from './telas/regras.js?v=564f57006f';
+import { icone } from './componentes/icone.js?v=564f57006f';
+import { aplicarPreferencias } from './preferencias.js?v=564f57006f';
 
 const raiz = document.getElementById('app');
 
@@ -171,7 +171,7 @@ window.addEventListener('online', () => avisar('Conexão de volta.', 'sucesso'))
  * identidade de um módulo é a URL INTEIRA: `/js/estado.js` e
  * `/js/estado.js?v=abc` são dois módulos diferentes, com estados separados.
  *
- * As baterias de tela faziam `import('/js/estado.js?v=7151d8b057')` para trocar uma ação
+ * As baterias de tela faziam `import('/js/estado.js?v=564f57006f')` para trocar uma ação
  * por um dublê — e passaram a trocar a ação de uma SEGUNDA cópia do módulo,
  * que o app não usa. A tela chamava a ação de verdade, a rede respondia o que
  * responderia, e o teste falhava por timeout dizendo "o modal não abriu".

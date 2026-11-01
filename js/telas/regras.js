@@ -12,13 +12,13 @@
  * cena, e ninguém abre uma engrenagem no meio da cena.
  */
 
-import { el, limpar, adiar } from '../util.js?v=7151d8b057';
-import { abrirModal } from '../ui.js?v=7151d8b057';
-import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=7151d8b057';
-import * as dados from '../dados.js?v=7151d8b057';
-import { abrirCarta, daCartaDeDominio } from '../componentes/carta.js?v=7151d8b057';
-import { abrirFichaDeAdversario } from './bestiario.js?v=7151d8b057';
-import { icone } from '../componentes/icone.js?v=7151d8b057';
+import { el, limpar, adiar, guardado } from '../util.js?v=564f57006f';
+import { abrirModal } from '../ui.js?v=564f57006f';
+import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=564f57006f';
+import * as dados from '../dados.js?v=564f57006f';
+import { abrirCarta, daCartaDeDominio } from '../componentes/carta.js?v=564f57006f';
+import { abrirFichaDeAdversario } from './bestiario.js?v=564f57006f';
+import { icone } from '../componentes/icone.js?v=564f57006f';
 
 /**
  * O nome de cada categoria e a ORDEM em que aparecem.
@@ -110,9 +110,97 @@ function abrirItem(i) {
   });
 }
 
+/*
+ * AS SITUAÇÕES COM PERGUNTAS DENTRO (proposta 30, as versões A e B juntas,
+ * aprovada em 01/11/2026). Com a busca vazia, o índice abre com quatro
+ * situações de mesa; cada uma tem a pergunta no alto ("o que aconteceu?") e
+ * a lista curta de regras embaixo. Quem sabe o que quer rola a lista; quem
+ * não sabe responde. "Me pergunte" abre a pergunta geral.
+ *
+ * ⚠ NENHUMA REGRA MORA AQUI. A árvore (data/guia-de-regras.json) só aponta
+ * para verbetes, e o teste do motor confere que cada id existe.
+ */
+const CHAVE_VISTAS = 'dh:regrasVistas';
+const MAX_VISTAS = 5;
+function registrarVista(id) {
+  const vistas = (guardado.ler(CHAVE_VISTAS, []) || []).filter((x) => x !== id);
+  guardado.gravar(CHAVE_VISTAS, [id, ...vistas].slice(0, MAX_VISTAS));
+}
+
 export async function abrirIndiceDeRegras() {
   await prepararVerbetes();
   const todos = todosOsVerbetes();
+  const porId = new Map(todos.map((v) => [v.id, v]));
+  const guiaDeRegras = await dados.carregar('guia-de-regras').catch(() => null);
+  const guiaEl = el('div', { class: 'regras__guia' });
+  let vista = null;   // null, { situacao } ou { pergunta, caminho }
+
+  const abrirRegra = (id) => { registrarVista(id); abrirVerbete(id); };
+  function responder(r, caminho) {
+    if (r.verbete) abrirRegra(r.verbete);
+    else if (r.situacao) mostrar({ situacao: r.situacao });
+    else if (r.proxima) mostrar({ pergunta: r.proxima, caminho: [...caminho, r.texto] });
+  }
+  function mostrar(nova) {
+    vista = nova;
+    desenharGuia();
+    lista.hidden = conta.hidden = Boolean(vista);
+  }
+  function voltar(texto = 'Voltar') {
+    return el('button', { type: 'button', class: 'btn btn--fantasma btn--pequeno regras__voltar', onClick: () => mostrar(null) },
+      [icone('voltar'), texto]);
+  }
+  function desenharGuia() {
+    limpar(guiaEl);
+    if (!guiaDeRegras) return;
+    const situacoes = guiaDeRegras.situacoes || [];
+    if (!vista) {
+      const vistas = (guardado.ler(CHAVE_VISTAS, []) || []).map((id) => porId.get(id)).filter(Boolean);
+      guiaEl.append(...[
+        el('div', { class: 'regras__situacoes' }, situacoes.map((s) => el('button', {
+          type: 'button', class: `regras__situacao regras__situacao--${s.cor}`, onClick: () => mostrar({ situacao: s.id })
+        }, [icone(s.icone), el('span', { texto: s.titulo })]))),
+        el('button', {
+          type: 'button', class: 'btn btn--fantasma regras__mePergunte',
+          onClick: () => mostrar({ pergunta: 'geral', caminho: [] })
+        }, 'Não sei por onde começar — me pergunte'),
+        vistas.length ? el('div', { class: 'regras__vistas' }, [
+          el('span', { class: 'texto-xs texto-fraco', texto: 'Vistas agora há pouco' }),
+          el('div', { class: 'regras__vistasLista' }, vistas.map((v) => el('button', {
+            type: 'button', class: 'chip', onClick: () => abrirRegra(v.id)
+          }, v.termo)))
+        ]) : null
+      ].filter(Boolean));
+      return;
+    }
+    if (vista.situacao) {
+      const s = situacoes.find((x) => x.id === vista.situacao);
+      if (!s) { vista = null; desenharGuia(); return; }
+      guiaEl.append(
+        el('div', { class: 'regras__guiaTopo' }, [el('h3', { class: 'regras__guiaTitulo' }, [icone(s.icone), s.titulo]), voltar()]),
+        el('div', { class: 'regras__pergunta' }, [
+          el('strong', { class: 'regras__perguntaTexto', texto: s.pergunta }),
+          el('div', { class: 'regras__respostas regras__respostas--chips' }, s.respostas.map((r) => el('button', {
+            type: 'button', class: 'chip', onClick: () => responder(r, [s.titulo])
+          }, r.texto)))
+        ]),
+        el('span', { class: 'texto-xs texto-fraco', texto: `ou veja todas as regras de "${s.titulo.toLowerCase()}"` }),
+        el('div', { class: 'regras__grupoItens' }, (s.verbetes || []).map((id) => porId.get(id)).filter(Boolean).map(linha))
+      );
+      return;
+    }
+    const q = (guiaDeRegras.perguntas || {})[vista.pergunta];
+    if (!q) { vista = null; desenharGuia(); return; }
+    guiaEl.append(
+      el('div', { class: 'regras__guiaTopo' }, [
+        el('p', { class: 'regras__caminho', texto: [...vista.caminho, '…'].join(' › ') }), voltar('Início')
+      ]),
+      el('strong', { class: 'regras__perguntaGrande', texto: q.pergunta }),
+      el('div', { class: 'regras__respostas' }, q.respostas.map((r) => el('button', {
+        type: 'button', class: 'regras__resposta', onClick: () => responder(r, vista.caminho)
+      }, r.texto)))
+    );
+  }
 
   const busca = el('input', {
     type: 'search', class: 'campo__entrada', autocomplete: 'off',
@@ -126,7 +214,7 @@ export async function abrirIndiceDeRegras() {
   function linha(v) {
     return el('button', {
       type: 'button', class: 'regras__item',
-      onClick: () => abrirVerbete(v.id)
+      onClick: () => abrirRegra(v.id)
     }, [
       el('span', { class: 'regras__nome', texto: v.termo }),
       v.noLivro
@@ -214,8 +302,14 @@ export async function abrirIndiceDeRegras() {
     lista.append(...deFora);
   }
 
-  busca.addEventListener('input', adiar(() => desenhar(busca.value), 120));
+  busca.addEventListener('input', adiar(() => {
+    // Buscando, o guia sai da frente; com a busca vazia, ele volta ao começo.
+    guiaEl.hidden = Boolean(busca.value.trim());
+    if (vista) mostrar(null);
+    desenhar(busca.value);
+  }, 120));
   desenhar('');
+  desenharGuia();
 
   const modal = abrirModal({
     titulo: 'Regras e busca — SRD 2.0',
@@ -223,6 +317,7 @@ export async function abrirIndiceDeRegras() {
       el('p', { class: 'ficha__nota', texto:
         'Atualizado para o SRD 2.0 de 25/08/2026. A edição Jambô e a errata são usadas como referência de tradução e paginação quando aplicáveis.' }),
       el('div', { class: 'regras__busca' }, [busca]),
+      guiaEl,
       conta,
       lista
     ])

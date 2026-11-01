@@ -12,7 +12,7 @@
  * backend/30_Personagens.gs). A tela não inventa data nem número de sessão.
  */
 
-import { el } from '../util.js?v=7151d8b057';
+import { el } from '../util.js?v=564f57006f';
 
 /** As sessões mais novas ficam abertas; as antigas, numa dobra. */
 const SESSOES_ABERTAS = 3;

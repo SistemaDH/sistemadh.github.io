@@ -89,7 +89,8 @@ async function auditar(page, viewport, tela, {
      * horizontal de verdade, que rola sozinho e não empurra a página.
      */
     const dentroDeScrollerHorizontal = (el) => {
-      const scroller = el.closest('.lista-escolha--vitrine');
+      // A trilha de etapas (proposta 24) também desliza quando as nove casinhas não cabem.
+      const scroller = el.closest('.lista-escolha--vitrine, .criacao__etapas');
       if (!scroller) return false;
       const s = getComputedStyle(scroller);
       return /auto|scroll/.test(s.overflowX) && scroller.scrollWidth > scroller.clientWidth + 1;

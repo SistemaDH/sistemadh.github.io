@@ -767,3 +767,80 @@
     gap: var(--e3);
   }
 }
+
+/* ==========================================================================
+   A CRIAÇÃO QUE MOSTRA O PERSONAGEM NASCENDO (proposta 24, A e B juntas)
+   ========================================================================== */
+/* A barra continua para o leitor de tela; quem vê, vê as casinhas. */
+.criacao__progresso.criacao__progresso {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.criacao__etapas {
+  display: flex;
+  gap: 4px;
+  margin-top: var(--e2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.criacao__etapas::-webkit-scrollbar { display: none; }
+.criacao__casinha {
+  flex: 1 0 var(--alvo-min);
+  min-width: var(--alvo-min);
+  height: var(--alvo-min);
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  background: none;
+  color: var(--cor-texto-fraco);
+  font: 600 var(--txt-xs) var(--fonte-corpo);
+}
+.criacao__casinha.esta-feita { border-color: var(--cor-sucesso); color: var(--cor-sucesso); cursor: pointer; }
+.criacao__casinha.esta-agora { border-color: var(--cor-ouro); color: var(--cor-ouro-claro); background: #2a2214; }
+.criacao__casinha:disabled { cursor: default; }
+.criacao__mini {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-ouro-escuro);
+  background: linear-gradient(90deg, #2a1424, var(--cor-superficie));
+}
+.criacao__miniRetrato {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--cor-ouro);
+  background: #1a1424;
+  font: 700 var(--txt-md) var(--fonte-titulo);
+}
+.criacao__miniTexto { display: flex; flex-direction: column; min-width: 0; }
+.criacao__miniTexto strong { font-family: var(--fonte-titulo); }
+.criacao__miniTexto small { font-size: var(--txt-xs); color: var(--cor-texto-suave); overflow-wrap: anywhere; }
+.criacao__miniDominios { color: var(--cor-ouro-claro) !important; }
+.criacao__miniTracos { font-family: var(--fonte-mono); }
+.criacao__fichas { display: flex; flex-wrap: wrap; gap: var(--e2); justify-content: center; }
+.criacao__ficha {
+  width: var(--alvo-min);
+  height: var(--alvo-min);
+  border-radius: 50%;
+  border: 0;
+  background: radial-gradient(circle at 35% 30%, var(--cor-ouro-claro), #b8893f);
+  color: #2a1e07;
+  font: 700 var(--txt-md) var(--fonte-titulo);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
+}
+.criacao__ficha.esta-usada { opacity: .22; cursor: default; box-shadow: none; }
+.criacao__ficha.esta-na-mao { outline: 3px solid #fff; outline-offset: 2px; }
+.criacao__porAqui { white-space: nowrap; }
+.criacao__verso { background: linear-gradient(160deg, #2a1424, var(--cor-superficie) 55%, #0f1a2e); }

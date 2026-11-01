@@ -17,7 +17,7 @@
  * FORA da mesa seleciona, e tocar numa cadeira livre senta.
  */
 
-import { el, guardado } from '../util.js?v=7151d8b057';
+import { el, guardado } from '../util.js?v=564f57006f';
 
 const CHAVE_LUGARES = 'dh:lugaresDaMesa';
 const SEGURAR_MS = 550;

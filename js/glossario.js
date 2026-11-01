@@ -14,8 +14,8 @@
  * onde o sentido é conhecido.
  */
 
-import { el } from './util.js?v=7151d8b057';
-import { carregar } from './dados.js?v=7151d8b057';
+import { el } from './util.js?v=564f57006f';
+import { carregar } from './dados.js?v=564f57006f';
 
 /**
  * Como o chave() de dados.js, MAS sem mexer em espaço: só tira acento e caixa.

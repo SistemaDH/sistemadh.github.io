@@ -12,10 +12,10 @@
  * celular de tamanho diferente.
  */
 
-import { el, limpar, semCorretor } from '../util.js?v=7151d8b057';
-import { abrirModal, avisarErro, confirmar } from '../ui.js?v=7151d8b057';
-import { acoes } from '../estado.js?v=7151d8b057';
-import { mensagemDoErro } from '../api.js?v=7151d8b057';
+import { el, limpar, semCorretor } from '../util.js?v=564f57006f';
+import { abrirModal, avisarErro, confirmar } from '../ui.js?v=564f57006f';
+import { acoes } from '../estado.js?v=564f57006f';
+import { mensagemDoErro } from '../api.js?v=564f57006f';
 
 const SVG = 'http://www.w3.org/2000/svg';
 const TIPOS = [['pessoa', 'Pessoa'], ['faccao', 'Facção'], ['lugar', 'Lugar']];

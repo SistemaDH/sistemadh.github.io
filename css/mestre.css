@@ -2089,7 +2089,7 @@
 }
 .mapaMesa__pj, .mapaMesa__cadeira { cursor: pointer; }
 .mapaMesa__pj strong { font-size: var(--txt-xs); line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mapaMesa small { font-size: 11px; color: var(--cor-texto-fraco); }
+.mapaMesa small { font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
 .mapaMesa__medalhao {
   position: relative;
   width: 46px;
@@ -2120,7 +2120,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font: 700 11px var(--fonte-corpo);
+  font: 700 var(--txt-xs) var(--fonte-corpo);
   font-style: normal;
   background: var(--cor-perigo);
   color: #fff;
@@ -2137,3 +2137,17 @@
 .mapaMesa__fora .texto-xs { flex-basis: 100%; }
 .mapaMesa__fora .mapaMesa__pj { position: relative; transform: none; }
 .mapaMesa__ajuda { margin: 0; text-align: center; }
+
+/* ==========================================================================
+   CARTAS DE LUTA (proposta 26, A e B juntas) — aba Cena
+   ========================================================================== */
+/* Deslizando o dedo: as caixas acendem até onde ele está, antes de soltar. */
+.trilha__ponto.esta-provisorio { background: var(--cor-perigo); border-color: var(--cor-perigo); opacity: .75; }
+.encontro__cartao .trilha__pontos { touch-action: pan-y; }
+.encontro__cartao.esta-compacto { padding-top: var(--e2); padding-bottom: var(--e2); }
+.encontro__previaDano { margin: 4px 0 0; font-size: var(--txt-sm); color: var(--cor-texto-suave); min-height: 1.3em; }
+.encontro__previaDano--nenhum { color: var(--cor-texto-fraco); }
+.encontro__previaDano--menor { color: var(--cor-texto); }
+.encontro__previaDano--maior { color: var(--cor-alerta); font-weight: 700; }
+.encontro__previaDano--severo { color: #ff9a9a; font-weight: 700; }
+.encontro__previaDano--massivo { color: var(--cor-perigo); font-weight: 700; }

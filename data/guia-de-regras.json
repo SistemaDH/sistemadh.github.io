@@ -1,0 +1,76 @@
+{
+  "versao": 1,
+  "fonte": "Proposta 30 de design (01/11/2026): situações de mesa com perguntas. Não há regra aqui — toda resposta abre um verbete de data/verbetes.json, conferido por tools/testes-backend.mjs.",
+  "situacoes": [
+    {
+      "id": "combate", "titulo": "Estou em combate", "icone": "jogo", "cor": "combate",
+      "pergunta": "O que aconteceu?",
+      "respostas": [
+        { "texto": "Vou atacar", "verbete": "jogada-de-ataque" },
+        { "texto": "Recebi dano", "proxima": "dano-armadura" },
+        { "texto": "Quero me esconder", "verbete": "oculto" },
+        { "texto": "Vou me mover", "verbete": "movimento" }
+      ],
+      "verbetes": ["jogada-de-ataque", "jogada-de-dano", "proficiencia", "limiares-de-dano", "pontos-de-armadura",
+        "evasao", "vantagem", "condicoes", "alcance", "dano-massivo"]
+    },
+    {
+      "id": "descanso", "titulo": "Vou descansar", "icone": "fogueira", "cor": "descanso",
+      "pergunta": "Que descanso?",
+      "respostas": [
+        { "texto": "Curto, cerca de uma hora", "verbete": "descanso-curto" },
+        { "texto": "Longo, algumas horas", "verbete": "descanso-longo" },
+        { "texto": "Trabalhar num projeto", "verbete": "projeto" }
+      ],
+      "verbetes": ["repouso", "descanso-curto", "descanso-longo", "projeto", "gastando-recursos"]
+    },
+    {
+      "id": "caiu", "titulo": "Meu personagem caiu", "icone": "dano", "cor": "caiu",
+      "pergunta": "O que aconteceu?",
+      "respostas": [
+        { "texto": "Marquei o último PV", "verbete": "morte" },
+        { "texto": "Ganhei uma cicatriz", "verbete": "cicatrizes" },
+        { "texto": "O Estresse encheu", "verbete": "estresse" }
+      ],
+      "verbetes": ["pontos-de-vida", "morte", "cicatrizes", "estresse", "vulneravel"]
+    },
+    {
+      "id": "nivel", "titulo": "Vou subir de nível", "icone": "seta-cima", "cor": "nivel",
+      "pergunta": "O que você quer saber?",
+      "respostas": [
+        { "texto": "O que posso escolher", "verbete": "avanco" },
+        { "texto": "O que ganho no patamar novo", "verbete": "conquistas" },
+        { "texto": "Pegar outra classe", "verbete": "multiclasse" }
+      ],
+      "verbetes": ["avanco", "conquistas", "patamar-de-jogo", "multiclasse", "proficiencia"]
+    }
+  ],
+  "perguntas": {
+    "geral": {
+      "pergunta": "O que está acontecendo?",
+      "respostas": [
+        { "texto": "Alguém está atacando", "situacao": "combate" },
+        { "texto": "Vou fazer uma jogada", "proxima": "jogada" },
+        { "texto": "Recebi dano", "proxima": "dano-armadura" },
+        { "texto": "Vamos descansar", "situacao": "descanso" }
+      ]
+    },
+    "jogada": {
+      "pergunta": "Como saiu a jogada?",
+      "respostas": [
+        { "texto": "O dado de Esperança ou o de Medo saiu maior", "verbete": "resultado-da-jogada" },
+        { "texto": "Os dois dados saíram iguais", "verbete": "sucesso-critico" },
+        { "texto": "Quero ajudar alguém na jogada", "verbete": "prestar-ajuda" },
+        { "texto": "Tenho uma Experiência que serve", "verbete": "experiencia" }
+      ]
+    },
+    "dano-armadura": {
+      "pergunta": "Você vai gastar Armadura?",
+      "respostas": [
+        { "texto": "Sim, 1 espaço", "verbete": "pontos-de-armadura" },
+        { "texto": "Não", "verbete": "limiares-de-dano" },
+        { "texto": "O dano passou muito do limiar", "verbete": "dano-massivo" }
+      ]
+    }
+  }
+}

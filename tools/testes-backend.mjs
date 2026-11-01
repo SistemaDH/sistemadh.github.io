@@ -6779,6 +6779,28 @@ teste('a anotação automática não pode ser apagada, e o diário guarda as 300
   igual(contexto.normalizarDiario_('lixo').length, 0);
 });
 
+teste('o guia de regras só aponta para verbetes que existem (proposta 30)', () => {
+  const guia = JSON.parse(fs.readFileSync(new URL('../data/guia-de-regras.json', import.meta.url), 'utf8'));
+  const v = JSON.parse(fs.readFileSync(new URL('../data/verbetes.json', import.meta.url), 'utf8'));
+  const lista = Array.isArray(v) ? v : (v.verbetes || Object.values(v).find(Array.isArray));
+  const ids = new Set(lista.map((x) => x.id));
+  const situacoes = new Set(guia.situacoes.map((s) => s.id));
+  const perguntas = new Set(Object.keys(guia.perguntas));
+  const faltam = [];
+  const conferir = (r, onde) => {
+    if (r.verbete && !ids.has(r.verbete)) faltam.push(`${onde}: verbete ${r.verbete}`);
+    if (r.situacao && !situacoes.has(r.situacao)) faltam.push(`${onde}: situação ${r.situacao}`);
+    if (r.proxima && !perguntas.has(r.proxima)) faltam.push(`${onde}: pergunta ${r.proxima}`);
+    if (!r.verbete && !r.situacao && !r.proxima) faltam.push(`${onde}: resposta sem destino`);
+  };
+  guia.situacoes.forEach((s) => {
+    s.respostas.forEach((r) => conferir(r, s.id));
+    s.verbetes.forEach((id) => { if (!ids.has(id)) faltam.push(`${s.id}: lista ${id}`); });
+  });
+  Object.entries(guia.perguntas).forEach(([id, q]) => q.respostas.forEach((r) => conferir(r, id)));
+  igual(faltam.join(' | '), '');
+});
+
 teste('a chamada de mais de 10 minutos não acende ninguém', () => {
   igual(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 11 * 60000).toISOString() }), null);
   verdade(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 60000).toISOString() }));

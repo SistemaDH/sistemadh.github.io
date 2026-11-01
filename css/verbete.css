@@ -354,3 +354,53 @@
 }
 
 .regras__grupo + .regras__grupo { margin-top: var(--e4); }
+
+/* ==========================================================================
+   AS SITUAÇÕES COM PERGUNTAS (proposta 30, A e B juntas)
+   ========================================================================== */
+.regras__guia { display: flex; flex-direction: column; gap: var(--e3); margin-bottom: var(--e4); }
+.regras__situacoes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); }
+.regras__situacao {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--e2);
+  min-height: 84px;
+  padding: var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto);
+  font: 600 var(--txt-sm) var(--fonte-titulo);
+  text-align: left;
+  cursor: pointer;
+}
+.regras__situacao .icone { width: 24px; height: 24px; }
+.regras__situacao--combate { border-color: var(--cor-perigo); background: #2a1414; }
+.regras__situacao--descanso { border-color: var(--cor-alerta); background: #2a1f10; }
+.regras__situacao--caiu { border-color: var(--cor-medo); background: #1c1430; }
+.regras__situacao--nivel { border-color: var(--cor-ouro); background: #2a2214; }
+.regras__mePergunte { width: 100%; }
+.regras__vistas { display: flex; flex-direction: column; gap: var(--e1); }
+.regras__vistasLista { display: flex; flex-wrap: wrap; gap: var(--e1); }
+.regras__guiaTopo { display: flex; align-items: center; justify-content: space-between; gap: var(--e2); }
+.regras__guiaTitulo { display: flex; align-items: center; gap: var(--e2); margin: 0; font-family: var(--fonte-titulo); font-size: var(--txt-md); }
+.regras__voltar { display: inline-flex; align-items: center; gap: 4px; }
+.regras__pergunta { display: flex; flex-direction: column; gap: var(--e2); padding: var(--e3); border-radius: var(--raio); border: 1px solid var(--cor-borda); background: var(--cor-fundo-2); }
+.regras__perguntaTexto { font-family: var(--fonte-titulo); }
+.regras__perguntaGrande { font: 600 var(--txt-lg) var(--fonte-titulo); text-align: center; }
+.regras__caminho { margin: 0; font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+.regras__respostas { display: flex; flex-direction: column; gap: var(--e2); }
+.regras__respostas--chips { flex-direction: row; flex-wrap: wrap; }
+.regras__resposta {
+  min-height: var(--alvo-min);
+  padding: var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-superficie-alta);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--txt-sm);
+  text-align: left;
+  cursor: pointer;
+}

@@ -21,26 +21,27 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=7151d8b057';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=7151d8b057';
-import { acoes, obterEstado } from '../estado.js?v=7151d8b057';
-import { mensagemDoErro } from '../api.js?v=7151d8b057';
-import { aguardar, temPendente } from '../fila.js?v=7151d8b057';
-import * as dados from '../dados.js?v=7151d8b057';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=7151d8b057';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=7151d8b057';
-import { blocoDaLinhaDoTempo } from '../componentes/linha-do-tempo.js?v=7151d8b057';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=7151d8b057';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=7151d8b057';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=7151d8b057';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=7151d8b057';
-import { botaoDeRegras } from './regras.js?v=7151d8b057';
-import { abrirDescanso } from './descanso.js?v=7151d8b057';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=7151d8b057';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=7151d8b057';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=7151d8b057';
-import { icone } from '../componentes/icone.js?v=7151d8b057';
-import { vibrar } from '../preferencias.js?v=7151d8b057';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=564f57006f';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=564f57006f';
+import { acoes, obterEstado } from '../estado.js?v=564f57006f';
+import { mensagemDoErro } from '../api.js?v=564f57006f';
+import { aguardar, temPendente } from '../fila.js?v=564f57006f';
+import * as dados from '../dados.js?v=564f57006f';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=564f57006f';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=564f57006f';
+import { blocoDaLinhaDoTempo } from '../componentes/linha-do-tempo.js?v=564f57006f';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=564f57006f';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=564f57006f';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=564f57006f';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=564f57006f';
+import { botaoDeRegras } from './regras.js?v=564f57006f';
+import { abrirDescanso } from './descanso.js?v=564f57006f';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=564f57006f';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=564f57006f';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=564f57006f';
+import { icone } from '../componentes/icone.js?v=564f57006f';
+import { iconeDoItem } from '../componentes/icone-do-item.js?v=564f57006f';
+import { vibrar } from '../preferencias.js?v=564f57006f';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -7649,6 +7650,7 @@ function ouroEmPunhados(ouro) {
         [{ tipo: 'inventario', acao: 'quantidade', indice, delta }]);
 
       return el('li', { class: `ficha__item ${item.emUso ? 'esta-em-uso' : ''}` }, [
+        iconeDoItem({ nome: doLivro ? doLivro.nome : nome }, { magico: /^loot-/.test(String(item.id || '')) }),
         el('div', { class: 'ficha__itemTexto' }, [
           rotulo,
           item.vinculo ? el('span', { class:'ficha__itemNota',
@@ -7726,26 +7728,88 @@ function ouroEmPunhados(ouro) {
       ])
     ]) : null;
 
-    const linhasEquipamento = arsenalDaFicha(ficha).map((e, posicao) =>
-      linhaDeEquipamentoPossuido(e.item, e.estado, () => abrirArsenal(ficha, posicao)));
+    /*
+     * O BONECO (proposta 21, versão A detalhada): o que está nas mãos e no
+     * corpo, cada encaixe com os números da mesa — traço, alcance, dano com a
+     * Proficiência e a característica. Tocar abre o folheador do arsenal na
+     * posição certa (a troca mora lá). Embaixo, o que está guardado.
+     */
+    const arsenal = arsenalDaFicha(ficha).map((e, posicao) => ({ ...e, posicao }));
+    const posicaoDe = (rotulo) => arsenal.findIndex((e) => e.rotulo === rotulo);
+    const encaixe = (rotulo, onde) => {
+      const i = posicaoDe(rotulo);
+      if (i < 0) {
+        return el('button', {
+          type: 'button', class: `mochila__encaixe mochila__encaixe--vazio mochila__encaixe--${onde}`,
+          onClick: () => abrirGerenciadorDeEquipamentos(ficha)
+        }, [el('small', { class: 'mochila__onde', texto: rotulo.replace(/ equipada$/, '') }),
+          el('span', { class: 'texto-sm texto-fraco', texto: 'vazio — toque para equipar' })]);
+      }
+      const item = arsenal[i].item;
+      const carac = item.caracteristica && item.caracteristica.nome;
+      const doTraco = item.dano ? tracoDeAtaqueDaArma(item) : null;
+      const linhas = item.dano
+        ? [[doTraco.traco, alcanceEfetivoNaFicha(ficha, item.alcance)].filter(Boolean).join(' · '),
+          `${danoDaArmaComProficiencia(ficha, item)} · ${String(item.maos || '').toLowerCase()}`]
+        : [`Pontuação ${item.pontuacaoArmadura ?? item.pontuacao ?? 0} · limiares ${item.limiares || '—'}`];
+      return el('button', {
+        type: 'button', class: `mochila__encaixe mochila__encaixe--${onde}`,
+        'aria-label': `${rotulo}: ${item.nome} — ver e trocar`,
+        onClick: () => abrirArsenal(ficha, i)
+      }, [
+        el('span', { class: 'mochila__encaixeTopo' }, [
+          iconeDoItem(item),
+          el('span', {}, [
+            el('small', { class: 'mochila__onde', texto: rotulo.replace(/ equipada$/, '') }),
+            el('strong', { class: 'mochila__nome' }, nomeComGlossa(item.nome))
+          ])
+        ]),
+        ...linhas.map((t) => el('span', { class: 'mochila__linha', texto: t })),
+        carac ? el('span', { class: 'mochila__carac', texto: carac }) : null
+      ].filter(Boolean));
+    };
+    const guardados = arsenal.filter((e) => !e.permitirUso);
+    const linhaGuardada = (e) => {
+      const li = linhaDeEquipamentoPossuido(e.item, e.estado, () => abrirArsenal(ficha, e.posicao));
+      li.prepend(iconeDoItem(e.item));
+      return li;
+    };
 
     pai.append(secao('Equipamentos', el('div', { class: 'coluna' }, [
-      linhasEquipamento.length
-        ? el('ul', { class: 'ficha__inventario', 'aria-label': 'Equipamentos possuídos' }, linhasEquipamento)
-        : el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhum equipamento registrado.' }),
+      el('div', { class: 'mochila__boneco' }, [
+        encaixe('Arma primária equipada', 'primaria'),
+        encaixe('Arma secundária equipada', 'secundaria'),
+        encaixe('Armadura equipada', 'armadura')
+      ]),
+      guardados.length ? el('h3', { class: 'mochila__subtitulo', texto: 'Guardado' }) : null,
+      guardados.length
+        ? el('ul', { class: 'ficha__inventario', 'aria-label': 'Equipamentos guardados' }, guardados.map(linhaGuardada))
+        : null,
       el('p', { class: 'texto-xs texto-fraco', texto:
-        'Equipado é um estado. Armas e armaduras guardadas continuam sendo suas e aparecem aqui sem conceder benefícios enquanto não estiverem equipadas.' }),
+        'Equipado é um estado. Armas e armaduras guardadas continuam sendo suas e não concedem benefícios enquanto não estiverem equipadas.' }),
       el('button', {
         type: 'button', class: 'btn btn--fantasma btn--pequeno',
         onClick: () => abrirGerenciadorDeEquipamentos(ficha)
       }, 'Gerenciar')
     ])));
 
+    /*
+     * Consumíveis primeiro (é o que se gasta na mesa), depois o resto. O índice
+     * de cada linha continua o da lista gravada: é ele que vai no pedido.
+     */
+    const comIndice = inv.map((item, indice) => ({ item, indice }));
+    const ehConsumivel = ({ item }) => /^consumivel-/.test(String(item.id || ''));
+    const grupoDoInventario = (titulo, lista) => lista.length ? [
+      el('h3', { class: 'mochila__subtitulo', texto: `${titulo} · ${lista.length}` }),
+      el('ul', { class: 'ficha__inventario' }, lista.map(({ item, indice }) => linhaDeItem(item, indice)))
+    ] : [];
+
     pai.append(secao('Inventário',
       el('div', { class: 'coluna' }, [
-        inv.length
-          ? el('ul', { class: 'ficha__inventario' }, inv.map(linhaDeItem))
-          : el('p', { class: 'texto-sm texto-fraco', texto: 'A mochila está vazia.' }),
+        ...(inv.length
+          ? [...grupoDoInventario('Consumíveis', comIndice.filter(ehConsumivel)),
+            ...grupoDoInventario('Itens', comIndice.filter((x) => !ehConsumivel(x)))]
+          : [el('p', { class: 'texto-sm texto-fraco', texto: 'A mochila está vazia.' })]),
 
         /*
          * O campo ganhou RÓTULO e linha própria.

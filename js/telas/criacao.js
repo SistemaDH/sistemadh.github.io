@@ -15,17 +15,17 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=7151d8b057';
-import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=7151d8b057';
-import { acoes, obterEstado } from '../estado.js?v=7151d8b057';
-import { mensagemDoErro } from '../api.js?v=7151d8b057';
-import * as dados from '../dados.js?v=7151d8b057';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=564f57006f';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=564f57006f';
+import { acoes, obterEstado } from '../estado.js?v=564f57006f';
+import { mensagemDoErro } from '../api.js?v=564f57006f';
+import * as dados from '../dados.js?v=564f57006f';
 import {
   nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
-} from '../componentes/carta.js?v=7151d8b057';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=7151d8b057';
-import { textoAnotado, prepararVerbetes } from '../verbete.js?v=7151d8b057';
+} from '../componentes/carta.js?v=564f57006f';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=564f57006f';
+import { textoAnotado, prepararVerbetes } from '../verbete.js?v=564f57006f';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 
@@ -61,6 +61,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
   }
 
   const rascunho = rascunhoVazio();
+  // O valor de traço que a pessoa tocou e ainda vai pôr num traço (proposta 24).
+  let fichaNaMao = null;
   let passoAtual = 0;
   let passos = [];
 
@@ -286,10 +288,13 @@ export async function abrirCriacao({ aoCriar } = {}) {
         ]),
         el('span', { class: 'crescer' })
       ]),
-      barraDeProgresso()
+      barraDeProgresso(),
+      trilhaDeEtapas()
     );
 
     limpar(corpo);
+    const mini = miniFicha();
+    if (mini) corpo.append(mini);
     if (passo.ajuda) corpo.append(el('p', { class: 'criacao__ajuda', texto: passo.ajuda }));
     passo.desenhar(corpo);
 
@@ -304,6 +309,9 @@ export async function abrirCriacao({ aoCriar } = {}) {
     );
 
     corpo.scrollTop = rolagem;
+    // A casinha de agora fica à vista quando a trilha não cabe na largura.
+    const agora = cabecalho.querySelector('.criacao__casinha.esta-agora');
+    if (agora) agora.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
   function botaoAvancar(problema) {
@@ -313,6 +321,59 @@ export async function abrirCriacao({ aoCriar } = {}) {
       disabled: Boolean(problema),
       onClick: () => ir(proximoPasso())
     }, 'Continuar');
+  }
+
+  /*
+   * A TRILHA DE ETAPAS (proposta 24, a metade B). As nove etapas viram
+   * casinhas: verde é feita, dourada é a de agora. Tocar numa feita volta para
+   * ela — nada do que já foi escolhido se perde, é o mesmo "Voltar" de sempre,
+   * só que direto. Para a frente, só pelo "Continuar", que confere a etapa.
+   * A barra de antes continua para o leitor de tela (role progressbar).
+   */
+  function trilhaDeEtapas() {
+    const total = passos.length - 1;
+    return el('nav', { class: 'criacao__etapas', 'aria-label': 'Etapas da criação' },
+      Array.from({ length: total }, (_, k) => {
+        const i = k + 1;
+        const feita = i < passoAtual;
+        return el('button', {
+          type: 'button',
+          class: `criacao__casinha ${feita ? 'esta-feita' : ''} ${i === passoAtual ? 'esta-agora' : ''}`,
+          'aria-label': `${passos[i].titulo}${feita ? ' — voltar para esta etapa' : ''}`,
+          'aria-current': i === passoAtual ? 'step' : null,
+          disabled: !feita,
+          onClick: () => ir(i)
+        }, String(i));
+      }));
+  }
+
+  /*
+   * A MINI FICHA (proposta 24, a metade A). Do momento em que há classe até a
+   * revisão, o personagem fica à vista no alto: nome, classe, herança,
+   * domínios e os traços já distribuídos. Ela só LÊ o rascunho.
+   */
+  function miniFicha() {
+    if (passoAtual < 2 || passoAtual >= IDX_REVISAO || !rascunho.classe) return null;
+    const classe = catalogo.classes.find((c) => c.id === rascunho.classe);
+    if (!classe) return null;
+    const sub = (classe.subclasses || []).find((x) => x.id === rascunho.subclasse);
+    const anc = catalogo.ancestralidades.find((a) => a.id === rascunho.ancestralidade);
+    const nome = rascunho.nome.trim() || 'Sem nome';
+    const iniciais = nome.split(/\s+/).map((x) => x[0]).join('').slice(0, 2).toUpperCase();
+    const tracos = TRACOS_ORDEM.filter((t) => rascunho.tracos[t] !== null && rascunho.tracos[t] !== undefined)
+      .map((t) => {
+        const tr = catalogo.tracos.tracos.find((x) => x.id === t);
+        return `${(tr ? tr.nome : t).slice(0, 3).toUpperCase()} ${formatarValor(rascunho.tracos[t])}`;
+      });
+    return el('div', { class: 'criacao__mini', 'aria-label': 'Resumo do personagem' }, [
+      el('span', { class: 'criacao__miniRetrato', 'aria-hidden': 'true', texto: iniciais }),
+      el('div', { class: 'criacao__miniTexto' }, [
+        el('strong', { texto: nome }),
+        el('small', { texto: [classe.nome, sub && sub.nome, anc && anc.nome].filter(Boolean).join(' · ') }),
+        el('small', { class: 'criacao__miniDominios', texto: (classe.dominiosNomes || []).join(' e ') }),
+        tracos.length ? el('small', { class: 'criacao__miniTracos', texto: tracos.join(' · ') }) : null
+      ])
+    ]);
   }
 
   function barraDeProgresso() {
@@ -1060,9 +1121,34 @@ export async function abrirCriacao({ aoCriar } = {}) {
           }, 'Usar a sugestão do livro para esta classe'));
         }
 
+        /*
+         * AS FICHAS DOURADAS (proposta 24, a metade A): os seis valores ficam
+         * à vista como fichas; as usadas apagam. Tocar numa ficha e depois em
+         * "pôr aqui" no traço é o mesmo que tocar no valor dentro do traço —
+         * os dois caminhos escrevem no mesmo rascunho.
+         */
         const restantes = pilhaRestante();
-        pai.append(el('p', { class: 'texto-sm texto-suave', texto:
-          restantes.length ? `Ainda falta colocar: ${restantes.map(formatarValor).join(', ')}.` : 'Todos os traços distribuídos.' }));
+        if (fichaNaMao !== null && !restantes.includes(fichaNaMao)) fichaNaMao = null;
+        const sobra = restantes.slice();
+        const fichas = distribuicaoDeTracos().slice().sort((a, b) => b - a).map((v) => {
+          const i = sobra.indexOf(v);
+          const livre = i >= 0;
+          if (livre) sobra.splice(i, 1);
+          return el('button', {
+            type: 'button',
+            class: `criacao__ficha ${livre ? '' : 'esta-usada'} ${livre && fichaNaMao === v ? 'esta-na-mao' : ''}`,
+            disabled: !livre,
+            'aria-pressed': livre && fichaNaMao === v ? 'true' : 'false',
+            'aria-label': livre ? `Pegar a ficha ${formatarValor(v)}` : `Ficha ${formatarValor(v)} já usada`,
+            onClick: () => { fichaNaMao = fichaNaMao === v ? null : v; desenhar(); }
+          }, formatarValor(v));
+        });
+        pai.append(el('div', { class: 'criacao__fichas', role: 'group', 'aria-label': 'Valores para distribuir' }, fichas));
+        pai.append(el('p', { class: 'texto-sm texto-suave', texto: !restantes.length
+          ? 'Todos os traços distribuídos.'
+          : fichaNaMao !== null
+            ? `Ficha ${formatarValor(fichaNaMao)} na mão: toque em "pôr aqui" no traço.`
+            : 'Toque numa ficha e depois no traço — ou no valor dentro de cada traço.' }));
 
         const conjuracao = tracoDeConjuracao();
 
@@ -1087,6 +1173,11 @@ export async function abrirCriacao({ aoCriar } = {}) {
               el('strong', { texto: t.nome }),
               conjuracao === id ? el('span', { class: 'selo selo--mestre', texto: 'Conjuração' }) : null,
               el('span', { class: 'crescer' }),
+              fichaNaMao !== null ? el('button', {
+                type: 'button', class: 'btn btn--pequeno criacao__porAqui',
+                'aria-label': `Pôr ${formatarValor(fichaNaMao)} em ${t.nome}`,
+                onClick: () => { rascunho.tracos[id] = fichaNaMao; fichaNaMao = null; desenhar(); }
+              }, `pôr ${formatarValor(fichaNaMao)} aqui`) : null,
               el('span', { class: 'criacao__tracoValor', texto: atual === null || atual === undefined ? '—' : formatarValor(atual) })
             ]),
             el('p', { class: 'texto-sm texto-suave', texto: t.verbos.join(' · ') }),
@@ -1856,7 +1947,8 @@ export async function abrirCriacao({ aoCriar } = {}) {
           ? `${herancaMista} (mista)`
           : (anc ? anc.nome : '—');
 
-        pai.append(el('div', { class: 'cartao cartao--ornamentado' }, [
+        // O verso da carta (proposta 24, metade B): o mesmo desenho do cartão para compartilhar.
+        pai.append(el('div', { class: 'cartao cartao--ornamentado criacao__verso' }, [
           el('h2', { class: 'cartao__titulo', texto: rascunho.nome || 'Sem nome' }),
           rascunho.pronomes ? el('p', { class: 'texto-sm texto-suave', texto: rascunho.pronomes }) : null,
           linha('Classe', classe ? `${classe.nome} · ${sub ? sub.nome : '—'}` : '—'),

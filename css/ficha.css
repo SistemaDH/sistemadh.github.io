@@ -2779,3 +2779,51 @@
   cursor: pointer;
 }
 .linhaTempo__apagar:hover, .linhaTempo__apagar:focus-visible { color: var(--cor-perigo); }
+
+/* ==========================================================================
+   A MOCHILA ORGANIZADA (proposta 21, versão A detalhada)
+   O boneco com os três encaixes e um ícone de traço por item.
+   ========================================================================== */
+.iconeItem { flex: none; width: 24px; height: 24px; color: var(--cor-ouro-claro); }
+.iconeItem--magico { color: #c9b3ff; }
+.ficha__item > .iconeItem { margin-left: 2px; }
+.ficha__item > .ficha__itemTexto { flex: 1; min-width: 0; }
+.mochila__boneco { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); }
+.mochila__encaixe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 0;
+  padding: var(--e2) var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-ouro-escuro);
+  background: linear-gradient(160deg, #211d16, var(--cor-superficie) 70%);
+  color: var(--cor-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mochila__encaixe--armadura { grid-column: 1 / -1; }
+.mochila__encaixe--vazio { border-style: dashed; border-color: var(--cor-borda-forte); background: transparent; }
+.mochila__encaixeTopo { display: flex; align-items: center; gap: var(--e2); min-width: 0; }
+.mochila__encaixeTopo > span { min-width: 0; display: flex; flex-direction: column; }
+.mochila__onde { font-size: var(--txt-xs); letter-spacing: .08em; text-transform: uppercase; color: var(--cor-texto-fraco); }
+.mochila__nome { font-family: var(--fonte-titulo); font-size: var(--txt-sm); line-height: 1.15; overflow-wrap: anywhere; }
+.mochila__linha { font-size: var(--txt-xs); color: var(--cor-texto-suave); line-height: 1.3; }
+.mochila__carac {
+  margin-top: 2px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--cor-ouro-escuro);
+  color: var(--cor-ouro-claro);
+  font-size: var(--txt-xs);
+  font-weight: 700;
+}
+.mochila__subtitulo {
+  margin: var(--e2) 0 0;
+  font: 600 var(--txt-xs) var(--fonte-titulo);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
