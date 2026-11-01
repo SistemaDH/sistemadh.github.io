@@ -13,7 +13,7 @@
  * diz isso por escrito embaixo.
  */
 
-import { el } from '../util.js?v=ede14ebfb2';
+import { el } from '../util.js?v=baf1699ec3';
 
 const FAIXAS = [
   { pv: 1, nome: 'Menor', classe: 'menor' },

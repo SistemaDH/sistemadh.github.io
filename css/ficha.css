@@ -2132,6 +2132,7 @@
 @media (hover: hover) {
   .ficha__lequeCarta:not(.esta-escolhida):hover { z-index: 15; transform: rotate(var(--angulo)) translateY(-12px); }
 }
+.ficha__cartaPuxada { display: flex; flex-direction: column; }
 .ficha__lequeLegenda {
   margin: 0;
   min-height: 2.6em;

@@ -20,24 +20,24 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=ede14ebfb2';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=ede14ebfb2';
-import { CHAVES } from '../config.js?v=ede14ebfb2';
-import { acoes } from '../estado.js?v=ede14ebfb2';
-import { mensagemDoErro } from '../api.js?v=ede14ebfb2';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=ede14ebfb2';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=ede14ebfb2';
-import { botaoDeRegras } from './regras.js?v=ede14ebfb2';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=ede14ebfb2';
-import { abrirTeia } from './teia.js?v=ede14ebfb2';
-import { abrirTelaDaMesa } from './tela-da-mesa.js?v=ede14ebfb2';
-import { relogioDeContagem } from '../componentes/relogio.js?v=ede14ebfb2';
-import { secaoDoEncontro } from './encontro.js?v=ede14ebfb2';
-import { icone } from '../componentes/icone.js?v=ede14ebfb2';
-import * as dados from '../dados.js?v=ede14ebfb2';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=baf1699ec3';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=baf1699ec3';
+import { CHAVES } from '../config.js?v=baf1699ec3';
+import { acoes } from '../estado.js?v=baf1699ec3';
+import { mensagemDoErro } from '../api.js?v=baf1699ec3';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=baf1699ec3';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=baf1699ec3';
+import { botaoDeRegras } from './regras.js?v=baf1699ec3';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=baf1699ec3';
+import { abrirTeia } from './teia.js?v=baf1699ec3';
+import { abrirTelaDaMesa } from './tela-da-mesa.js?v=baf1699ec3';
+import { relogioDeContagem } from '../componentes/relogio.js?v=baf1699ec3';
+import { secaoDoEncontro } from './encontro.js?v=baf1699ec3';
+import { icone } from '../componentes/icone.js?v=baf1699ec3';
+import * as dados from '../dados.js?v=baf1699ec3';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=ede14ebfb2';
+} from '../componentes/carta.js?v=baf1699ec3';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -362,7 +362,11 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
     ]));
     pai.append(resumoDoGrupo());
     pai.append(blocoDoHolofote());
-    pai.append(resumoDasContagens());
+    /*
+     * "Contagens em jogo" SAIU DA MESA (pedido da Vanessa em 01/11/2026): a
+     * faixa de contagens ativas, presa abaixo do topo, já mostra as mesmas
+     * contagens em todas as abas — inclusive esta.
+     */
     pai.append(resumoDaCena());
     pai.append(el('div', { class: 'mestre__atalhos' }, [
       botao('Tela da mesa (TV)', () => abrirTelaDaMesa(painel)),
@@ -477,36 +481,6 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       ]),
       el('span', { class: 'mestre__barraNumero', texto: `${valor}/${maximo}` })
     ]);
-  }
-
-  /** "Contagens em jogo" — só as que estão correndo. */
-  function resumoDasContagens() {
-    const ativas = painel.mesa.contagens.filter((c) => !c.encerrada);
-    const MOSTRA = 3;
-    const sobra = Math.max(0, ativas.length - MOSTRA);
-
-    const bloco = el('section', { class: 'mestre__bloco' }, [
-      // "+2" quer dizer "há mais duas que não couberam", e não um botão de
-      // somar: por isso vem antes do "Abrir", que é onde elas estão.
-      topoDeResumo('Contagens em jogo', {
-        conta: sobra ? `+${sobra}` : '',
-        paraAba: { id: 'contagens', rotulo: 'a aba Contagens' }
-      })
-    ]);
-
-    if (!ativas.length) {
-      bloco.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma contagem correndo.' }));
-      return bloco;
-    }
-
-    bloco.append(el('div', { class: 'mestre__resumoLista' },
-      ativas.slice(0, MOSTRA).map((c) => el('div', { class: 'mestre__linhaSimples' }, [
-        el('span', { class: 'crescer', texto: c.nome }),
-        miniPontos(c.valor, c.valorInicial, 'contagem',
-          `${c.nome}: ${c.valor} de ${c.valorInicial}`),
-        el('span', { class: 'mestre__linhaConta', texto: `${c.valor}/${c.valorInicial}` })
-      ]))));
-    return bloco;
   }
 
   /**

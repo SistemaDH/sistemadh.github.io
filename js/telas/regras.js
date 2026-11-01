@@ -12,13 +12,13 @@
  * cena, e ninguém abre uma engrenagem no meio da cena.
  */
 
-import { el, limpar, adiar } from '../util.js?v=ede14ebfb2';
-import { abrirModal } from '../ui.js?v=ede14ebfb2';
-import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=ede14ebfb2';
-import * as dados from '../dados.js?v=ede14ebfb2';
-import { abrirCarta, daCartaDeDominio } from '../componentes/carta.js?v=ede14ebfb2';
-import { abrirFichaDeAdversario } from './bestiario.js?v=ede14ebfb2';
-import { icone } from '../componentes/icone.js?v=ede14ebfb2';
+import { el, limpar, adiar } from '../util.js?v=baf1699ec3';
+import { abrirModal } from '../ui.js?v=baf1699ec3';
+import { prepararVerbetes, todosOsVerbetes, abrirVerbete } from '../verbete.js?v=baf1699ec3';
+import * as dados from '../dados.js?v=baf1699ec3';
+import { abrirCarta, daCartaDeDominio } from '../componentes/carta.js?v=baf1699ec3';
+import { abrirFichaDeAdversario } from './bestiario.js?v=baf1699ec3';
+import { icone } from '../componentes/icone.js?v=baf1699ec3';
 
 /**
  * O nome de cada categoria e a ORDEM em que aparecem.

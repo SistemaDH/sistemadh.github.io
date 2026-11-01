@@ -3309,3 +3309,19 @@ na mesma abre o visor. Tocar noutra troca a escolhida. O `:hover` ficou só para
 aparelho com ponteiro: no celular ele grudava na última carta tocada.
 
 Gate: `teste:tudo` verde.
+
+## 01/11/2026 (2) — O que ficou repetido depois das propostas
+
+A Vanessa pediu para verificar se as telas novas deixaram partes obsoletas, e
+autorizou tirar as duas repetições achadas:
+
+- **Cartas:** a lista da mão repetia o leque. Agora, embaixo do leque, fica só
+  a carta PUXADA (cartão completo: texto, selo de recordar, contadores, que o
+  leque não mostra), e a lista inteira mora numa dobra "Ver a mão em lista".
+  Sem arte, não há leque e a lista volta aberta. O cofre ficou: o monte mostra
+  só a carta de cima.
+- **Mesa:** o bloco "Contagens em jogo" saiu — a faixa de contagens ativas,
+  presa no topo, já mostra as mesmas contagens em todas as abas.
+
+A aba Grupo ficou: repete parte da tabela da Mesa, mas é o único lugar com as
+cartas e a transformação de cada ficha. Gate: `teste:tudo` verde.
