@@ -2044,3 +2044,96 @@
 .holofote__chamada { font-size: var(--txt-xs); color: var(--cor-alerta); }
 .holofote__chamada.esta-pronta { color: var(--cor-sucesso); font-weight: 700; }
 .holofote__chamar { display: flex; flex-wrap: wrap; gap: var(--e1); margin-top: var(--e2); }
+
+/* ==========================================================================
+   O MAPA DA MESA (proposta 32, versão A) — aba Grupo
+   ========================================================================== */
+.mapaMesa { display: flex; flex-direction: column; gap: var(--e2); }
+.mapaMesa__pista {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 1 / 1.05;
+  margin: 0 auto;
+  touch-action: none;
+}
+.mapaMesa__tampo {
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  top: 18%;
+  bottom: 18%;
+  border-radius: 28px;
+  border: 1px solid #5a4422;
+  background: radial-gradient(circle at 50% 40%, #3a2a14, #1d150b 75%);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .6);
+}
+.mapaMesa__mestre, .mapaMesa__pj, .mapaMesa__cadeira {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 84px;
+  min-height: var(--alvo-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cor-texto);
+  font: inherit;
+  text-align: center;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.mapaMesa__pj, .mapaMesa__cadeira { cursor: pointer; }
+.mapaMesa__pj strong { font-size: var(--txt-xs); line-height: 1.1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mapaMesa small { font-size: 11px; color: var(--cor-texto-fraco); }
+.mapaMesa__medalhao {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  font: 700 var(--txt-sm) var(--fonte-titulo);
+  border: 2px solid var(--cor-borda-forte);
+  background: var(--cor-superficie-alta);
+}
+.mapaMesa__medalhao img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.mapaMesa__mestre .mapaMesa__medalhao { border-color: var(--cor-medo); color: #c9b3ff; background: #1c1430; }
+.mapaMesa__cadeira .mapaMesa__medalhao { border-style: dashed; color: var(--cor-texto-fraco); background: transparent; }
+.mapaMesa__cadeira.esta-chamando .mapaMesa__medalhao { border-color: var(--cor-ouro); color: var(--cor-ouro-claro); }
+.mapaMesa__pj.esta-em-perigo .mapaMesa__medalhao { border-color: var(--cor-perigo); box-shadow: 0 0 12px rgba(224, 82, 82, .55); }
+.mapaMesa__pj.esta-em-perigo small { color: #ff9a9a; font-weight: 700; }
+.mapaMesa__pj.esta-com-a-vez .mapaMesa__medalhao { border-color: var(--cor-ouro); box-shadow: 0 0 0 3px rgba(217, 171, 91, .3), 0 0 16px rgba(217, 171, 91, .5); }
+.mapaMesa__pj.esta-selecionado .mapaMesa__medalhao { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.mapaMesa__pj.esta-arrastando { z-index: 5; opacity: .9; }
+.mapaMesa__alerta {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 700 11px var(--fonte-corpo);
+  font-style: normal;
+  background: var(--cor-perigo);
+  color: #fff;
+}
+.mapaMesa__fora {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e2);
+  padding: var(--e2) var(--e3);
+  border: 1px dashed var(--cor-borda-forte);
+  border-radius: var(--raio);
+}
+.mapaMesa__fora .texto-xs { flex-basis: 100%; }
+.mapaMesa__fora .mapaMesa__pj { position: relative; transform: none; }
+.mapaMesa__ajuda { margin: 0; text-align: center; }

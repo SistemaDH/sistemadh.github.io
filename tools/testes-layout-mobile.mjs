@@ -58,7 +58,21 @@ async function auditar(page, viewport, tela) {
       .filter(visivel)
       .filter((el) => !el.matches(':disabled, [aria-disabled="true"]'));
 
+    /*
+     * A estante de cartas do roster (proposta 27 A, 01/11/2026) desliza para
+     * os lados DE PROPÓSITO, como a vitrine de classes da criação: as cartas
+     * seguintes ficam fora da tela até o dedo trazê-las. A exceção vale só
+     * dentro de um scroller horizontal de verdade, que não empurra a página
+     * (o overflow do documento continua conferido acima).
+     */
+    const dentroDaEstante = (el) => {
+      const scroller = el.closest('.roster__estante');
+      if (!scroller) return false;
+      const s = getComputedStyle(scroller);
+      return /auto|scroll/.test(s.overflowX) && scroller.scrollWidth > scroller.clientWidth + 1;
+    };
     const fora = interativos.filter((el) => {
+      if (dentroDaEstante(el)) return false;
       const r = el.getBoundingClientRect();
       return r.left < -1 || r.right > largura + 1;
     }).slice(0, 8);

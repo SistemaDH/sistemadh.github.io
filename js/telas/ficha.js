@@ -21,24 +21,25 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=baf1699ec3';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=baf1699ec3';
-import { acoes, obterEstado } from '../estado.js?v=baf1699ec3';
-import { mensagemDoErro } from '../api.js?v=baf1699ec3';
-import { aguardar, temPendente } from '../fila.js?v=baf1699ec3';
-import * as dados from '../dados.js?v=baf1699ec3';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=baf1699ec3';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=baf1699ec3';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=baf1699ec3';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=baf1699ec3';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=baf1699ec3';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=baf1699ec3';
-import { botaoDeRegras } from './regras.js?v=baf1699ec3';
-import { abrirDescanso } from './descanso.js?v=baf1699ec3';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=baf1699ec3';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=baf1699ec3';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=baf1699ec3';
-import { icone } from '../componentes/icone.js?v=baf1699ec3';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=0f4ded732e';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=0f4ded732e';
+import { acoes, obterEstado } from '../estado.js?v=0f4ded732e';
+import { mensagemDoErro } from '../api.js?v=0f4ded732e';
+import { aguardar, temPendente } from '../fila.js?v=0f4ded732e';
+import * as dados from '../dados.js?v=0f4ded732e';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=0f4ded732e';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=0f4ded732e';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=0f4ded732e';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=0f4ded732e';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=0f4ded732e';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=0f4ded732e';
+import { botaoDeRegras } from './regras.js?v=0f4ded732e';
+import { abrirDescanso } from './descanso.js?v=0f4ded732e';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=0f4ded732e';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=0f4ded732e';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=0f4ded732e';
+import { icone } from '../componentes/icone.js?v=0f4ded732e';
+import { vibrar } from '../preferencias.js?v=0f4ded732e';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -715,6 +716,8 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     limpar(cabecalho).append(montarTopo(ficha));
     const hud = barraDeEstado(ficha);
     if (hud) cabecalho.append(hud);
+    const condicoesNoTopo = faixaDeCondicoes(ficha);
+    if (condicoesNoTopo) cabecalho.append(condicoesNoTopo);
     limpar(barra).append(...ABAS.map(botaoDeAba));
 
     const anterior = corpo.scrollTop;
@@ -734,6 +737,10 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     if (abaAtual === 'mochila') abaMochila(corpo, ficha);
     if (abaAtual === 'historia') abaHistoria(corpo, ficha);
     corpo.scrollTop = anterior;
+    overlay.querySelectorAll('.ficha__turno').forEach((x) => x.remove());
+    const comTurno = abaAtual === 'jogo' && !ficha.encerrada;
+    overlay.classList.toggle('com-turno', comTurno);
+    if (comTurno) overlay.append(botaoDoTurno(ficha));
   }
 
   /**
@@ -858,6 +865,26 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
       item('Arm.', `${r.armaduraMarcada || 0}/${d.pontuacaoArmadura || 0}`, 'armadura'),
       item('Evasão', d.evasao === null || d.evasao === undefined ? '—' : String(d.evasao), 'evasao')
     ]);
+  }
+
+  /*
+   * AS CONDIÇÕES À VISTA (proposta 29, versão B): logo abaixo dos números, em
+   * qualquer aba, um chip por condição marcada. Tocar abre o efeito do livro e
+   * o "Remover" — a mesma janela do bloco de Condições. Sem condição, nada:
+   * a barra volta a ser uma linha só. Fica fora do botão da barra porque
+   * botão dentro de botão não é toque confiável.
+   */
+  function faixaDeCondicoes(ficha) {
+    const lista = ficha.condicoes || [];
+    if (!lista.length || ficha.encerrada) return null;
+    return el('div', { class: 'ficha__hudCondicoes', role: 'list', 'aria-label': 'Condições marcadas' },
+      lista.map((c) => {
+        const def = catalogo.condicaoPorId(c.id);
+        return el('button', {
+          type: 'button', role: 'listitem', class: 'ficha__hudCondicao',
+          onClick: () => verCondicao(c, def)
+        }, c.nome || (def && def.nome) || c.id);
+      }));
   }
 
   function abrirFolhaDeEstado() {
@@ -1373,7 +1400,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   }
 
   function mostrarChamado(c) {
-    if (navigator.vibrate) navigator.vibrate([220, 120, 220]);
+    vibrar([220, 120, 220]);
     const caixa = el('div', { class: 'chamado', role: 'alertdialog', 'aria-live': 'assertive' }, [
       el('small', { class: 'chamado__rotulo', texto: 'O MESTRE CHAMOU' }),
       el('strong', { class: 'chamado__titulo', texto: `Sua vez, ${(p.ficha && p.ficha.identidade && p.ficha.identidade.nome) || p.nome}` }),
@@ -3386,9 +3413,16 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     }, 'Registrar jogada de Dualidade');
   }
 
-  function abrirRegistroDeJogada(ficha) {
+  /*
+   * Com `arma`, é o "Atacar com…" do botão do turno: a mesma jogada, já com o
+   * traço da arma escolhido (o que a Gema trocou, se trocou) e o dano escrito
+   * para a mesa rolar se acertar. A regra da jogada não muda.
+   */
+  function abrirRegistroDeJogada(ficha, { arma = null } = {}) {
     const conjuracao = catalogo.conjuracaoDe(ficha);
-    let traco = TRACOS_ORDEM.find((t) => conjuracao && dados.chave(conjuracao) === dados.chave(t)) || TRACOS_ORDEM[0];
+    const tracoDaArma = arma ? tracoDeAtaqueDaArma(arma).traco : '';
+    let traco = TRACOS_ORDEM.find((t) => tracoDaArma && dados.chave(tracoDaArma) === dados.chave(t)) ||
+      TRACOS_ORDEM.find((t) => conjuracao && dados.chave(conjuracao) === dados.chave(t)) || TRACOS_ORDEM[0];
     const valorDoTraco = (t) => {
       const v = ficha.tracos ? ficha.tracos[t] : 0;
       return (Number(v) || 0) + bonusDaFormaNoTraco(ficha, t) +
@@ -3435,11 +3469,22 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
     dMedo.addEventListener('input', conferir);
     desenharTracos();
     conferir();
+    let linhaDaArma = null;
+    if (arma) {
+      const ataque = ataqueDaArma(ficha, arma);
+      const extras = bonusFixosDaArma(ficha, arma);
+      linhaDaArma = el('p', { class: 'texto-sm ficha__danoDoAtaque' }, [
+        'Se acertar: ',
+        el('strong', { texto: danoDaArmaComProficiencia(ficha, arma) }),
+        ` de dano${extras.length ? ` · ${extras.join(' · ')}` : ''}${ataque ? ` · ${ataque}` : ''}.`
+      ]);
+    }
     const modal = abrirModal({
-      titulo: 'Jogada de Dualidade',
+      titulo: arma ? `Atacar com ${arma.nome}` : 'Jogada de Dualidade',
       conteudo: el('div', { class: 'pilha' }, [
         el('p', { class: 'texto-sm' }, textoAnotado(
           'Role os dois d12 na mesa e diga o que saiu. O app não rola nada.')),
+        linhaDaArma,
         tracos,
         el('div', { class: 'ficha__dadosDaJogada' }, [
           el('label', { class: 'campo ficha__dadoEsperanca' }, [el('span', { class: 'campo__rotulo', texto: 'Esperança' }), dEsp]),
@@ -3472,6 +3517,54 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
           .catch(() => avisar('Jogada com Medo: não consegui avisar o painel — conte ao Mestre.', 'alerta', 6000));
       } else avisarSucesso(r.tipo === 'critico' ? 'Sucesso crítico: +1 Esperança e −1 Estresse.' : '+1 Esperança.');
     });
+  }
+
+  /**
+   * O BOTÃO DO DADO (proposta 20, versão A): as ações do turno perto do polegar.
+   *
+   * Nada some da aba Jogo — o botão flutua sobre ela e abre quatro atalhos para
+   * janelas que já existem: a Jogada de Dualidade, o ataque com cada arma em
+   * mãos (a mesma jogada, com o traço e o dano da arma), Receber dano e o que a
+   * Esperança compra. Ele mora no `overlay`, fora do corpo que rola, para não
+   * subir junto com a página; `desenhar()` o tira em qualquer outra aba.
+   */
+  function botaoDoTurno(ficha) {
+    const eq = ficha.equipamento || {};
+    const armas = [eq.primaria, eq.secundaria].filter(Boolean).map(catalogo.acharArma).filter(Boolean);
+    const caixa = el('div', { class: 'ficha__turno' });
+    const fechar = () => caixa.classList.remove('esta-aberto');
+    const acao = (nomeDoIcone, texto, fazer) => el('button', {
+      type: 'button', class: 'ficha__acaoDoTurno',
+      onClick: () => { fechar(); fazer(); }
+    }, [el('span', { texto }), icone(nomeDoIcone)]);
+    const lista = el('div', { class: 'ficha__acoesDoTurno', role: 'menu' }, [
+      acao('dado', 'Jogada de Dualidade', () => abrirRegistroDeJogada(ficha)),
+      ...armas.map((arma) => acao('jogo', `Atacar com ${arma.nome}`, () => abrirRegistroDeJogada(ficha, { arma }))),
+      acao('dano', 'Recebi dano', () => abrirDanoRecebido(ficha)),
+      acao('esperanca', 'Usar Esperança', () => abrirOQueAEsperancaCompra(ficha))
+    ]);
+    const botao = el('button', {
+      type: 'button', class: 'ficha__dadoDoTurno', 'aria-label': 'Ações do turno', 'aria-expanded': 'false',
+      onClick: () => {
+        const abrir = !caixa.classList.contains('esta-aberto');
+        caixa.classList.toggle('esta-aberto', abrir);
+        botao.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+      }
+    }, [icone('dado', { grande: true }), icone('fechar', { grande: true })]);
+    caixa.append(el('div', { class: 'ficha__veuDoTurno', onClick: fechar }), lista, botao);
+    return caixa;
+  }
+
+  function abrirOQueAEsperancaCompra(ficha) {
+    const bloco = blocoDoQueAEsperancaCompra(ficha) ||
+      el('p', { class: 'texto-sm texto-fraco', texto: 'Nada a comprar com Esperança agora.' });
+    const modal = abrirModal({
+      titulo: 'Usar Esperança',
+      conteudo: bloco,
+      acoes: [el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => modal.fechar() }, 'Fechar')]
+    });
+    // Cada botão do bloco já cobra pelo servidor; depois do toque a janela sai da frente.
+    bloco.addEventListener('click', (e) => { if (e.target.closest('.papel__compraBotao')) modal.fechar(); });
   }
 
   function blocoDeTracos(ficha) {

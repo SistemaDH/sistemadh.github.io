@@ -1,0 +1,80 @@
+/* ==========================================================================
+   MEU JEITO DE JOGAR (proposta 31, versão A)
+
+   Os ajustes viram atributos em <html> (js/preferencias.js). A escala de
+   letra do app é toda em rem: crescer a raiz cresce tudo na mesma proporção.
+   ========================================================================== */
+
+:root[data-letra="grande"] { font-size: 112.5%; }
+:root[data-letra="maior"]  { font-size: 125%; }
+
+/* Alto contraste: o que era fraco fica legível, as bordas aparecem. */
+:root[data-contraste="alto"] {
+  --cor-texto-fraco: #c9bfae;
+  --cor-texto-suave: #e2d8c6;
+  --cor-borda: #5a5d70;
+  --cor-borda-forte: #7a7e94;
+}
+
+/* Canhota: o botão do dado e as ações do turno trocam de lado. */
+:root[data-canhota="sim"] .ficha__turno { right: auto; left: var(--e4); align-items: flex-start; }
+:root[data-canhota="sim"] .ficha__acoesDoTurno { align-items: flex-start; }
+:root[data-canhota="sim"] .ficha__acaoDoTurno { flex-direction: row-reverse; padding: 0 var(--e3) 0 4px; }
+
+/* --- o bloco nos Ajustes --- */
+.meuJeito { display: flex; flex-direction: column; }
+.meuJeito__titulo { margin: 0 0 var(--e1); font-family: var(--fonte-titulo); font-size: var(--txt-md); color: var(--cor-titulo); }
+.meuJeito__linha {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: var(--alvo-min);
+  padding: var(--e2) 0;
+  border-bottom: 1px solid var(--cor-borda);
+  font-size: var(--txt-sm);
+  cursor: pointer;
+}
+.meuJeito__linha strong { display: block; font-weight: 600; }
+.meuJeito__linha small { display: block; font-size: var(--txt-xs); color: var(--cor-texto-fraco); }
+.meuJeito__tamanhos { display: flex; gap: var(--e1); }
+.meuJeito__tamanho {
+  width: var(--alvo-min);
+  height: var(--alvo-min);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-fundo-2);
+  color: var(--cor-texto);
+  font-family: var(--fonte-titulo);
+  cursor: pointer;
+}
+.meuJeito__tamanho--normal { font-size: 13px; }
+.meuJeito__tamanho--grande { font-size: 16px; }
+.meuJeito__tamanho--maior  { font-size: 20px; }
+.meuJeito__tamanho.esta-escolhido { border-color: var(--cor-ouro); color: var(--cor-ouro-claro); background: #2a2214; }
+.meuJeito__chave {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 48px;
+  height: 28px;
+  margin: 0;
+  border-radius: 999px;
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-superficie-alta);
+  cursor: pointer;
+  transition: background var(--transicao), border-color var(--transicao);
+}
+.meuJeito__chave::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--cor-texto-fraco);
+  transition: transform var(--transicao), background var(--transicao);
+}
+.meuJeito__chave:checked { background: #3a2e14; border-color: var(--cor-ouro); }
+.meuJeito__chave:checked::after { transform: translateX(20px); background: var(--cor-ouro); }
+.meuJeito__chave:focus-visible { outline: 2px solid var(--cor-foco); outline-offset: 2px; }

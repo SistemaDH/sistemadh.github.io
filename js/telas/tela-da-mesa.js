@@ -13,10 +13,10 @@
  * aparelho ele começa vazio, e está tudo bem: é lembrete, não regra.
  */
 
-import { el, limpar, guardado } from '../util.js?v=baf1699ec3';
-import { acoes } from '../estado.js?v=baf1699ec3';
-import { CHAVES } from '../config.js?v=baf1699ec3';
-import { relogioDeContagem } from '../componentes/relogio.js?v=baf1699ec3';
+import { el, limpar, guardado } from '../util.js?v=0f4ded732e';
+import { acoes } from '../estado.js?v=0f4ded732e';
+import { CHAVES } from '../config.js?v=0f4ded732e';
+import { relogioDeContagem } from '../componentes/relogio.js?v=0f4ded732e';
 
 const RELER_MS = 10000;
 

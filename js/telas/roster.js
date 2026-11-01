@@ -6,18 +6,18 @@
  * que segue as nove etapas do livro.
  */
 
-import { el, dataRelativa } from '../util.js?v=baf1699ec3';
-import { CONFIG } from '../config.js?v=baf1699ec3';
-import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=baf1699ec3';
-import { mensagemDoErro } from '../api.js?v=baf1699ec3';
-import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=baf1699ec3';
-import { abrirCriacao } from './criacao.js?v=baf1699ec3';
-import { abrirFichaEmJogo } from './ficha.js?v=baf1699ec3';
-import { abrirPainelDoMestre } from './mestre.js?v=baf1699ec3';
-import { urlDaFoto } from './foto.js?v=baf1699ec3';
-import * as dados from '../dados.js?v=baf1699ec3';
-import { icone } from '../componentes/icone.js?v=baf1699ec3';
-import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=baf1699ec3';
+import { el, dataRelativa } from '../util.js?v=0f4ded732e';
+import { CONFIG } from '../config.js?v=0f4ded732e';
+import { obterEstado, acoes, ehMestre, assinar } from '../estado.js?v=0f4ded732e';
+import { mensagemDoErro } from '../api.js?v=0f4ded732e';
+import { confirmar, avisar, avisarErro, avisarSucesso, blocoVazio } from '../ui.js?v=0f4ded732e';
+import { abrirCriacao } from './criacao.js?v=0f4ded732e';
+import { abrirFichaEmJogo } from './ficha.js?v=0f4ded732e';
+import { abrirPainelDoMestre } from './mestre.js?v=0f4ded732e';
+import { urlDaFoto } from './foto.js?v=0f4ded732e';
+import * as dados from '../dados.js?v=0f4ded732e';
+import { icone } from '../componentes/icone.js?v=0f4ded732e';
+import { nomeAnotado, prepararVerbetes } from '../verbete.js?v=0f4ded732e';
 
 /** O nível em que a mesa está, para marcar quem ficou para trás. */
 function nivelDaMesa() {
@@ -121,7 +121,17 @@ export function telaRoster() {
      */
     const emJogo = personagens.filter((p) => !p.encerrada);
     const encerradas = personagens.filter((p) => p.encerrada);
-    emJogo.forEach((p) => lista.append(cartaoPersonagem(p)));
+    /*
+     * A ESTANTE DE CARTAS (proposta 27, versão A). As fichas em jogo viram
+     * cartas grandes numa fileira que desliza para o lado no celular, com a
+     * próxima espiando na beirada. Com mais de quatro (a tela do Mestre), a
+     * estante vira grade de duas colunas: deslizar por oito cartas cansa.
+     * No tablet e no computador, sempre grade.
+     */
+    lista.append(el('div', {
+      class: `roster__estante ${emJogo.length > 4 ? 'e-grade' : ''}`,
+      role: 'list', 'aria-label': 'Fichas em jogo'
+    }, emJogo.map((p) => cartaoPersonagem(p, { carta: true }))));
 
     if (encerradas.length) {
       lista.append(el('h2', { class: 'roster__secaoEncerradas', texto:
@@ -188,7 +198,7 @@ export function telaRoster() {
     ]);
   }
 
-  function cartaoPersonagem(p) {
+  function cartaoPersonagem(p, { carta = false } = {}) {
     // A ficha encerrada fica em meio-tom: continua legível, deixa de competir.
     const encerrada = p.encerrada ? ' esta-encerrada' : '';
     const detalhes = [p.ancestralidade, p.comunidade].filter(Boolean).join(' · ');
@@ -248,10 +258,45 @@ export function telaRoster() {
     }, icone('lixeira'));
 
     abrir.prepend(retratoDoCartao(p));
+    if (carta) return cartaDaEstante(p, abrir);
     const cartao = el('div', {
       class: `cartao cartao--clicavel cartao--ornamentado ficha-cartao ficha-cartao--comRetrato${encerrada}`,
       dataset: p.classe ? { classe: p.classe } : null
     }, [abrir, excluir]);
+    pintarFaixa(cartao);
+    return cartao;
+  }
+
+  /*
+   * A carta da estante. A frente continua sendo o botão que abre a ficha —
+   * um toque, como sempre, que é o gesto de toda sessão. O botão do canto
+   * VIRA a carta: no verso ficam "Abrir ficha" e "Excluir", longe do dedo
+   * que só queria abrir. A lixeira saiu da frente por isso.
+   */
+  function cartaDaEstante(p, abrir) {
+    const cartao = el('div', {
+      class: 'cartao cartao--ornamentado ficha-cartao ficha-cartao--comRetrato ficha-cartao--carta',
+      role: 'listitem',
+      dataset: p.classe ? { classe: p.classe } : null
+    });
+    const virar = (lado) => {
+      cartao.classList.toggle('esta-virada', lado);
+      botaoVirar.setAttribute('aria-expanded', lado ? 'true' : 'false');
+      (lado ? verso.querySelector('button') : botaoVirar).focus({ preventScroll: true });
+    };
+    const botaoVirar = el('button', {
+      type: 'button', class: 'btn btn--fantasma btn--icone ficha-cartao__virar',
+      'aria-label': `Mais opções da ficha de ${p.nome}`, 'aria-expanded': 'false',
+      onClick: () => virar(true)
+    }, icone('virar'));
+    const verso = el('div', { class: 'ficha-cartao__verso' }, [
+      el('strong', { class: 'ficha-cartao__nome', texto: p.nome }),
+      el('p', { class: 'ficha-cartao__linha', texto: [p.classe, p.subclasse].filter(Boolean).join(' · ') }),
+      el('button', { type: 'button', class: 'btn btn--principal', onClick: () => abrirFicha(p.id) }, 'Abrir ficha'),
+      el('button', { type: 'button', class: 'btn btn--perigo', onClick: () => pedirExclusao(p) }, 'Excluir'),
+      el('button', { type: 'button', class: 'btn btn--fantasma', onClick: () => virar(false) }, 'Voltar')
+    ]);
+    cartao.append(abrir, verso, botaoVirar);
     pintarFaixa(cartao);
     return cartao;
   }

@@ -20,24 +20,25 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=baf1699ec3';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=baf1699ec3';
-import { CHAVES } from '../config.js?v=baf1699ec3';
-import { acoes } from '../estado.js?v=baf1699ec3';
-import { mensagemDoErro } from '../api.js?v=baf1699ec3';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=baf1699ec3';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=baf1699ec3';
-import { botaoDeRegras } from './regras.js?v=baf1699ec3';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=baf1699ec3';
-import { abrirTeia } from './teia.js?v=baf1699ec3';
-import { abrirTelaDaMesa } from './tela-da-mesa.js?v=baf1699ec3';
-import { relogioDeContagem } from '../componentes/relogio.js?v=baf1699ec3';
-import { secaoDoEncontro } from './encontro.js?v=baf1699ec3';
-import { icone } from '../componentes/icone.js?v=baf1699ec3';
-import * as dados from '../dados.js?v=baf1699ec3';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=0f4ded732e';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=0f4ded732e';
+import { CHAVES } from '../config.js?v=0f4ded732e';
+import { acoes } from '../estado.js?v=0f4ded732e';
+import { mensagemDoErro } from '../api.js?v=0f4ded732e';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=0f4ded732e';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=0f4ded732e';
+import { botaoDeRegras } from './regras.js?v=0f4ded732e';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=0f4ded732e';
+import { abrirTeia } from './teia.js?v=0f4ded732e';
+import { abrirTelaDaMesa } from './tela-da-mesa.js?v=0f4ded732e';
+import { relogioDeContagem } from '../componentes/relogio.js?v=0f4ded732e';
+import { secaoDoEncontro } from './encontro.js?v=0f4ded732e';
+import { mapaDaMesa } from './mapa-da-mesa.js?v=0f4ded732e';
+import { icone } from '../componentes/icone.js?v=0f4ded732e';
+import * as dados from '../dados.js?v=0f4ded732e';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=baf1699ec3';
+} from '../componentes/carta.js?v=0f4ded732e';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.
@@ -3144,6 +3145,21 @@ export async function abrirPainelDoMestre({ aoFechar } = {}) {
       pai.append(el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma ficha na mesa ainda.' }));
       return;
     }
+    // O mapa da mesa (proposta 32 A) vem antes das fichas: de relance, quem
+    // está onde, quem está mal e de quem é a vez.
+    pai.append(mapaDaMesa({
+      personagens: painel.personagens,
+      vezes: guardado.ler(CHAVES.HOLOFOTE, {}) || {},
+      alertaMin: ALERTA_DO_HOLOFOTE_MIN,
+      aoAbrir: (p) => abrirModal({ titulo: p.nome, conteudo: cartaoDoPersonagem(p) }),
+      aoMarcarVez: (p) => {
+        const novo = guardado.ler(CHAVES.HOLOFOTE, {}) || {};
+        novo[p.id] = Date.now();
+        guardado.gravar(CHAVES.HOLOFOTE, novo);
+        avisar(`${p.nome} teve a vez agora.`, 'info', 2500);
+        desenhar();
+      }
+    }));
     pai.append(el('p', { class: 'texto-xs texto-fraco', texto:
       'As trilhas são só de leitura aqui — quem marca é o jogador na ficha dele.' }));
     pai.append(el('div', { class: 'pilha' }, painel.personagens.map(cartaoDoPersonagem)));

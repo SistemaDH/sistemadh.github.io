@@ -12,8 +12,8 @@
  * endereço, e desenhá-la travaria o canvas para exportação — ficam as iniciais.
  */
 
-import { el } from '../util.js?v=baf1699ec3';
-import { abrirModal, avisarErro } from '../ui.js?v=baf1699ec3';
+import { el } from '../util.js?v=0f4ded732e';
+import { abrirModal, avisarErro } from '../ui.js?v=0f4ded732e';
 
 const L = 600;
 const A = 840;

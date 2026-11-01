@@ -16,12 +16,13 @@
  * discordar.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=baf1699ec3';
-import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=baf1699ec3';
-import { acoes } from '../estado.js?v=baf1699ec3';
-import { mensagemDoErro } from '../api.js?v=baf1699ec3';
-import { nomeComGlossa } from '../glossario.js?v=baf1699ec3';
-import { textoAnotado } from '../verbete.js?v=baf1699ec3';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0f4ded732e';
+import { abrirModal, avisarErro, avisarSucesso } from '../ui.js?v=0f4ded732e';
+import { icone } from '../componentes/icone.js?v=0f4ded732e';
+import { acoes } from '../estado.js?v=0f4ded732e';
+import { mensagemDoErro } from '../api.js?v=0f4ded732e';
+import { nomeComGlossa } from '../glossario.js?v=0f4ded732e';
+import { textoAnotado } from '../verbete.js?v=0f4ded732e';
 
 /**
  * @param {{personagem:Object, aoAplicar?:Function}} opcoes
@@ -122,12 +123,28 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
      */
     const rolagem = modal.caixa.scrollTop;
     limpar(corpo);
+    /*
+     * A FOGUEIRA (proposta 22, versão A): o topo diz que descanso é e quantos
+     * movimentos faltam, com uma brasa acesa por escolha. Logo embaixo, quando
+     * as escolhas fecham, a prévia "antes → depois" aparece sozinha — o
+     * descanso cabe num passo só, e o "Ver o que muda" continua para quem quer
+     * a conta inteira.
+     */
     corpo.append(
-      el('p', { class: 'descanso__migalha', texto:
-        `${tipo === 'curto' ? 'Descanso Curto' : 'Descanso Longo'} · patamar ${patamar}` }),
-      el('h3', { class: 'descanso__titulo', texto: `Escolha ${porDescanso} movimentos` }),
+      el('div', { class: `descanso__fogueira descanso__fogueira--${tipo}` }, [
+        icone('fogueira', { grande: true }),
+        el('div', { class: 'crescer' }, [
+          el('p', { class: 'descanso__migalha', texto:
+            `${tipo === 'curto' ? 'Descanso Curto' : 'Descanso Longo'} · patamar ${patamar}` }),
+          el('h3', { class: 'descanso__titulo', texto: `Escolha ${porDescanso} movimentos` })
+        ]),
+        el('span', { class: 'descanso__brasas', 'aria-label': `${escolhas.length} de ${porDescanso} escolhidos` },
+          Array.from({ length: porDescanso }, (_, i) =>
+            el('i', { class: i < escolhas.length ? 'esta-acesa' : '' })))
+      ]),
       el('p', { class: 'campo__ajuda', texto: 'Pode repetir o mesmo movimento duas vezes.' })
     );
+    if (escolhas.length >= porDescanso) corpo.append(previaViva());
     const fichaAtual = personagem.ficha || personagem;
     const transformacao = fichaAtual.transformacaoDados || fichaAtual.transformacao || null;
     if (transformacao && transformacao.id === 'reanimado') {
@@ -208,9 +225,11 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
 
     const cartao = el('div', { class: `cartao descanso__movimento ${quantas ? 'esta-escolhido' : ''}` });
 
+    // O número é a ordem da escolha (1, 2…): a carta "sobe" com ele, como na mesa.
+    const ordem = escolhas.map((e, i) => (e.movimento === m.id ? i + 1 : 0)).filter(Boolean);
     const titulo = el('div', { class: 'descanso__movTopo' }, [
       el('h4', { class: 'cartao__titulo' }, nomeComGlossa(m.nome)),
-      quantas ? el('span', { class: 'selo selo--nivel', texto: `×${quantas}` }) : null
+      ...ordem.map((n) => el('span', { class: 'descanso__ordem', 'aria-label': `escolha ${n}`, texto: String(n) }))
     ]);
     cartao.append(titulo);
 
@@ -434,6 +453,43 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
     return cartao;
   }
 
+  /*
+   * A prévia que aparece sozinha. Pede ao servidor a mesma prévia do botão
+   * (ele é quem sabe a conta) e mostra só as trilhas que mudam; os erros vêm
+   * junto, para ninguém descansar sem ver o que faltou. `pedidoDaPrevia`
+   * descarta respostas velhas quando a pessoa troca a escolha no meio.
+   */
+  let pedidoDaPrevia = 0;
+  function previaViva() {
+    const caixa = el('div', { class: 'descanso__previaViva', 'aria-live': 'polite' }, [
+      el('p', { class: 'texto-sm texto-fraco', texto: 'Somando o que muda…' })
+    ]);
+    const meu = ++pedidoDaPrevia;
+    acoes.previaDescanso(personagem.id, tipo, escolhas).then(({ previa }) => {
+      if (meu !== pedidoDaPrevia || !caixa.isConnected) return;
+      const linhas = (previa.recursos || []).map((r) => el('div', { class: 'descanso__antesDepois' }, [
+        el('span', { class: 'crescer' }, nomeComGlossa(r.rotulo)),
+        el('span', { class: 'descanso__de', texto: `${r.antes}` }),
+        el('span', { class: 'descanso__seta', 'aria-hidden': 'true' }, '→'),
+        el('strong', { class: 'descanso__para', texto: `${r.depois}` })
+      ]));
+      const descansar = el('button', { type: 'button', class: 'btn btn--principal', disabled: !previa.ok },
+        previa.ok ? 'Descansar' : 'Falta preencher');
+      descansar.addEventListener('click', () => travarBotao(descansar, aplicar(previa)));
+      limpar(caixa).append(
+        el('h4', { class: 'descanso__subtitulo', texto: 'O que vai mudar' }),
+        ...(previa.erros || []).map((e) => el('p', { class: 'descanso__erro', texto: e })),
+        ...(linhas.length ? linhas : [el('p', { class: 'texto-sm texto-fraco', texto: 'Nenhuma trilha muda.' })]),
+        descansar
+      );
+    }).catch((e) => {
+      if (meu === pedidoDaPrevia && caixa.isConnected) {
+        limpar(caixa).append(el('p', { class: 'descanso__erro', texto: mensagemDoErro(e) }));
+      }
+    });
+    return caixa;
+  }
+
   function botaoVerPrevia() {
     const botao = el('button', {
       type: 'button', class: 'btn btn--principal',
@@ -542,35 +598,38 @@ export function abrirDescanso({ personagem, aoAplicar } = {}) {
       type: 'button', class: 'btn btn--principal', disabled: !previa.ok
     }, previa.ok ? 'Confirmar descanso' : 'Falta preencher');
 
-    confirmar.addEventListener('click', () => {
-      travarBotao(confirmar, (async () => {
-        try {
-          const r = await acoes.aplicarDescanso(personagem.id, tipo, escolhas, personagem.versao);
-          const proj = (r.resultado || {}).projeto;
-          if (proj) {
-            avisarSucesso(proj.acionou
-              ? `"${proj.nome}" chegou a zero — o projeto terminou!`
-              : `"${proj.nome}": ${proj.antes} → ${proj.depois}.`);
-          }
-          (r.curados || []).forEach((c) => {
-            if (c.erro) avisarErro(`${c.aliadoNome || 'Aliado'}: ${c.erro}`);
-            else if (c.semEfeito) avisarSucesso(`${c.aliadoNome} já estava sem ${c.rotulo} marcado.`);
-            else avisarSucesso(`${c.aliadoNome}: ${c.rotulo} ${c.antes} → ${c.depois}.`);
-          });
-          avisarSucesso(`${previa.nomeDoTipo} aplicado.`);
-          modal.fechar();
-          if (aoAplicar) aoAplicar(r.personagem);
-        } catch (e) {
-          avisarErro(mensagemDoErro(e));
-        }
-      })());
-    });
+    confirmar.addEventListener('click', () => travarBotao(confirmar, aplicar(previa)));
 
     limpar(acoesModal).append(
       el('button', { type: 'button', class: 'btn btn--fantasma', onClick: passoMovimentos }, 'Voltar'),
       el('span', { class: 'crescer' }),
       confirmar
     );
+  }
+
+  /** Aplica o descanso (pelo "Confirmar" da prévia ou pelo "Descansar" da fogueira). */
+  function aplicar(previa) {
+    return (async () => {
+      try {
+        const r = await acoes.aplicarDescanso(personagem.id, tipo, escolhas, personagem.versao);
+        const proj = (r.resultado || {}).projeto;
+        if (proj) {
+          avisarSucesso(proj.acionou
+            ? `"${proj.nome}" chegou a zero — o projeto terminou!`
+            : `"${proj.nome}": ${proj.antes} → ${proj.depois}.`);
+        }
+        (r.curados || []).forEach((c) => {
+          if (c.erro) avisarErro(`${c.aliadoNome || 'Aliado'}: ${c.erro}`);
+          else if (c.semEfeito) avisarSucesso(`${c.aliadoNome} já estava sem ${c.rotulo} marcado.`);
+          else avisarSucesso(`${c.aliadoNome}: ${c.rotulo} ${c.antes} → ${c.depois}.`);
+        });
+        avisarSucesso(`${previa.nomeDoTipo} aplicado.`);
+        modal.fechar();
+        if (aoAplicar) aoAplicar(r.personagem);
+      } catch (e) {
+        avisarErro(mensagemDoErro(e));
+      }
+    })();
   }
 
   return modal;

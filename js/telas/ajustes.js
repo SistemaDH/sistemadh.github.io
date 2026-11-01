@@ -6,11 +6,12 @@
  * conexão virou informação, não campo.
  */
 
-import { el, travarBotao } from '../util.js?v=baf1699ec3';
-import { CONFIG } from '../config.js?v=baf1699ec3';
-import { api, mensagemDoErro } from '../api.js?v=baf1699ec3';
-import { abrirModal, fecharModal, avisar, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=baf1699ec3';
-import { obterEstado, acoes } from '../estado.js?v=baf1699ec3';
+import { el, travarBotao } from '../util.js?v=0f4ded732e';
+import { CONFIG } from '../config.js?v=0f4ded732e';
+import { api, mensagemDoErro } from '../api.js?v=0f4ded732e';
+import { abrirModal, fecharModal, avisar, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=0f4ded732e';
+import { obterEstado, acoes } from '../estado.js?v=0f4ded732e';
+import { lerPreferencias, gravarPreferencia } from '../preferencias.js?v=0f4ded732e';
 
 export function abrirAjustes() {
   const { token, jogador } = obterEstado();
@@ -75,6 +76,8 @@ export function abrirAjustes() {
     });
 
   const conteudo = el('div', { class: 'pilha' }, [
+    blocoMeuJeito(),
+    el('hr', { class: 'divisor' }),
     el('div', { class: 'campo' }, [
       el('span', { class: 'campo__rotulo', texto: 'Conexão' }),
       linhaEstado,
@@ -125,6 +128,46 @@ export function abrirAjustes() {
       }, 'Fechar')
     ]
   });
+}
+
+/*
+ * "MEU JEITO DE JOGAR" (proposta 31, versão A). Cada toque aplica na hora —
+ * a pessoa vê a letra crescer atrás do próprio modal — e fica guardado só
+ * neste aparelho (preferencias.js).
+ */
+function blocoMeuJeito() {
+  const p = lerPreferencias();
+  const tamanhos = el('div', { class: 'meuJeito__tamanhos', role: 'radiogroup', 'aria-label': 'Tamanho da letra' });
+  const desenharTamanhos = (atual) => {
+    tamanhos.replaceChildren(...[['normal', 'Letra normal'], ['grande', 'Letra grande'], ['maior', 'Letra maior']]
+      .map(([valor, nome]) => el('button', {
+        type: 'button', role: 'radio', 'aria-checked': valor === atual ? 'true' : 'false', 'aria-label': nome,
+        class: `meuJeito__tamanho meuJeito__tamanho--${valor} ${valor === atual ? 'esta-escolhido' : ''}`,
+        onClick: () => desenharTamanhos(gravarPreferencia('letra', valor).letra)
+      }, 'A')));
+  };
+  desenharTamanhos(p.letra);
+  const chave = (nome, titulo, ajuda) => {
+    const caixa = el('input', { type: 'checkbox', role: 'switch', class: 'meuJeito__chave' });
+    caixa.checked = p[nome];
+    caixa.addEventListener('change', () => gravarPreferencia(nome, caixa.checked));
+    return el('label', { class: 'meuJeito__linha' }, [
+      el('span', { class: 'crescer' }, [el('strong', { texto: titulo }), el('small', { texto: ajuda })]),
+      caixa
+    ]);
+  };
+  return el('section', { class: 'meuJeito' }, [
+    el('h3', { class: 'meuJeito__titulo', texto: 'Meu jeito de jogar' }),
+    el('div', { class: 'meuJeito__linha' }, [
+      el('span', { class: 'crescer' }, [el('strong', { texto: 'Tamanho da letra' }), el('small', { texto: 'O app inteiro cresce junto' })]),
+      tamanhos
+    ]),
+    chave('contraste', 'Alto contraste', 'Bordas e textos fracos mais claros'),
+    chave('vibrar', 'Vibrar nos avisos', 'Quando o Mestre chamar você'),
+    chave('canhota', 'Canhota', 'O botão do dado vai para a esquerda'),
+    chave('telaAcesa', 'Tela acesa', 'Não apaga enquanto o app estiver aberto'),
+    el('p', { class: 'texto-xs texto-fraco', texto: 'Guardado só neste aparelho.' })
+  ]);
 }
 
 function abrirTrocaDeCodigo() {

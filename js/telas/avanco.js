@@ -16,14 +16,14 @@
  * nenhuma — só desenha e pergunta.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=baf1699ec3';
-import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=baf1699ec3';
-import { acoes } from '../estado.js?v=baf1699ec3';
-import { mensagemDoErro } from '../api.js?v=baf1699ec3';
-import * as dados from '../dados.js?v=baf1699ec3';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js?v=baf1699ec3';
-import { nomeComGlossa } from '../glossario.js?v=baf1699ec3';
-import { textoAnotado } from '../verbete.js?v=baf1699ec3';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0f4ded732e';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=0f4ded732e';
+import { acoes } from '../estado.js?v=0f4ded732e';
+import { mensagemDoErro } from '../api.js?v=0f4ded732e';
+import * as dados from '../dados.js?v=0f4ded732e';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js?v=0f4ded732e';
+import { nomeComGlossa } from '../glossario.js?v=0f4ded732e';
+import { textoAnotado } from '../verbete.js?v=0f4ded732e';
 
 /**
  * @param {{personagem:Object, catalogo:Object, aoAplicar?:Function}} opcoes
@@ -95,6 +95,10 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
     const rolagem = modal.caixa.scrollTop;
     limpar(corpo);
     corpo.append(
+      el('div', { class: 'avanco__nivelGrande' }, [
+        el('strong', { texto: `${info.nivelAtual} → ${info.nivelNovo}` }),
+        el('span', { class: 'texto-xs', texto: `${gastas()} de ${info.escolhasPorNivel} avanços` })
+      ]),
       el('p', { class: 'avanco__migalha', texto:
         `Nível ${info.nivelAtual} → ${info.nivelNovo} · ${info.patamar}º patamar` })
     );
@@ -219,6 +223,8 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       el('h4', { class: 'cartao__titulo crescer' }, nomeComGlossa(o.nome)),
       quadradinhos(o, jaEscolhida)
     ]));
+    const numero = numeroQueMuda(o, jaEscolhida);
+    if (numero) cartao.append(numero);
 
     if (o.doPatamarAnterior) {
       cartao.append(el('span', { class: 'selo', texto: `do ${o.patamar}º patamar` }));
@@ -317,6 +323,41 @@ export function abrirAvanco({ personagem, catalogo, aoAplicar } = {}) {
       onClick: escolher
     }));
     return cartao;
+  }
+
+  /*
+   * O NÚMERO QUE MUDA (proposta 23, versão A): cada carta diz o antes e o
+   * depois, com os números da própria ficha — "Evasão 11 → 12". Escolhida, o
+   * depois acende. Só as quatro opções de número têm conta; as outras dizem
+   * o que ganham em palavras. A regra (+1 por escolha) vem do texto de cada
+   * opção em data/avanco.json; a tela não aplica nada, só mostra.
+   */
+  const NUMEROS_DO_AVANCO = {
+    evasao: { rotulo: 'Evasão', valor: (f) => (f.defesas || {}).evasao },
+    'pontos-de-vida': { rotulo: 'PV', valor: (f) => (f.recursos || {}).pontosDeVidaMaximos },
+    estresse: { rotulo: 'Estresse', valor: (f) => (f.recursos || {}).estresseMaximo },
+    proficiencia: { rotulo: 'Proficiência', valor: (f) => (f.recursos || {}).proficiencia }
+  };
+  const PALAVRAS_DO_AVANCO = {
+    tracos: '+1 em dois traços',
+    experiencias: '+1 em duas Experiências',
+    'carta-de-dominio': '+1 carta de domínio'
+  };
+  function numeroQueMuda(o, vezes) {
+    const conta = NUMEROS_DO_AVANCO[o.id];
+    if (!conta) {
+      const palavras = PALAVRAS_DO_AVANCO[o.id];
+      return palavras ? el('p', { class: `avanco__numero ${vezes ? 'esta-agora' : ''}`, texto: palavras }) : null;
+    }
+    const antes = Number(conta.valor(personagem.ficha || {}));
+    if (!Number.isFinite(antes)) return null;
+    const depois = antes + Math.max(1, vezes);
+    return el('p', { class: `avanco__numero ${vezes ? 'esta-agora' : ''}` }, [
+      `${conta.rotulo} `,
+      el('span', { class: 'avanco__antes', texto: String(antes) }),
+      el('span', { class: 'avanco__seta', 'aria-hidden': 'true', texto: ' → ' }),
+      el('strong', { class: 'avanco__depois', texto: String(depois) })
+    ]);
   }
 
   /** A fileira de quadradinhos — igual à ficha de papel. */

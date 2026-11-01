@@ -1433,6 +1433,7 @@
 .descanso__movimento.esta-escolhido {
   border-color: var(--cor-ouro-escuro);
   box-shadow: var(--brilho-ouro);
+  transform: translateY(-2px); /* a carta escolhida "sobe" (proposta 22 A) */
 }
 
 .descanso__movTopo {
@@ -1441,6 +1442,50 @@
   justify-content: space-between;
   gap: var(--e2);
 }
+
+/* --- a fogueira (proposta 22 A) --- */
+.descanso__fogueira {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  padding: var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-ouro-escuro);
+  background: radial-gradient(circle at 12% 50%, rgba(232, 140, 60, .28), transparent 55%), var(--cor-superficie);
+}
+.descanso__fogueira > .icone { flex: none; color: #f0a24a; }
+.descanso__fogueira--longo { background: radial-gradient(circle at 12% 50%, rgba(232, 140, 60, .4), transparent 65%), var(--cor-superficie); }
+.descanso__brasas { display: flex; gap: 6px; }
+.descanso__brasas i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cor-borda-forte);
+}
+.descanso__brasas i.esta-acesa { border-color: #f0a24a; background: radial-gradient(circle at 40% 35%, #ffd27a, #e0802f); box-shadow: 0 0 8px rgba(240, 162, 74, .6); }
+.descanso__ordem {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 700 var(--txt-sm) var(--fonte-titulo);
+  background: var(--cor-ouro);
+  color: #2a1e07;
+}
+.descanso__movTopo .cartao__titulo { flex: 1; }
+.descanso__previaViva {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  padding: var(--e3);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-sucesso);
+  background: var(--cor-fundo-2);
+}
+.descanso__previaViva .descanso__subtitulo { margin: 0; }
+.descanso__antesDepois { display: flex; align-items: center; gap: var(--e2); font-size: var(--txt-sm); }
 
 .descanso__formula {
   margin: 0;
@@ -1657,6 +1702,25 @@
   gap: var(--e2);
   flex-wrap: wrap;
 }
+
+/* --- o número que muda (proposta 23 A) --- */
+.avanco__nivelGrande {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: var(--e3) var(--e4);
+  border-radius: var(--raio);
+  border: 1px solid var(--cor-ouro-escuro);
+  background: linear-gradient(90deg, #2a2214, var(--cor-superficie));
+}
+.avanco__nivelGrande strong { font: 700 var(--txt-2xl) var(--fonte-titulo); color: var(--cor-ouro-claro); }
+.avanco__nivelGrande span { color: var(--cor-texto-suave); }
+.avanco__numero { margin: 0; font-size: var(--txt-sm); color: var(--cor-texto-suave); }
+.avanco__numero .avanco__antes { font-family: var(--fonte-titulo); }
+.avanco__numero .avanco__depois { font-family: var(--fonte-titulo); font-size: var(--txt-lg); color: var(--cor-texto); }
+.avanco__numero.esta-agora { color: var(--cor-ouro-claro); }
+.avanco__numero.esta-agora .avanco__depois { color: var(--cor-sucesso); }
 
 .avanco__quadradinhos {
   display: flex;
@@ -2055,6 +2119,31 @@
 }
 .ficha__hud:focus-visible { outline: 2px solid var(--cor-foco); outline-offset: -2px; }
 
+/* As condições marcadas, logo abaixo dos números (proposta 29 B). */
+.ficha__hudCondicoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e1);
+  padding: 0 var(--e3) 8px;
+  background: var(--cor-fundo-2);
+}
+.ficha__hudCondicao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--alvo-min);
+  padding: 2px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--cor-perigo);
+  background: rgba(200, 70, 70, .16);
+  color: #ffb1b1;
+  font: inherit;
+  font-size: var(--txt-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+.ficha__hudCondicao::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cor-perigo); }
+
 .ficha__hudItem {
   display: flex;
   flex-direction: column;
@@ -2335,6 +2424,101 @@
 .ficha__veredito--esperanca { border-color: var(--cor-esperanca); color: var(--cor-esperanca); }
 .ficha__veredito--critico { border-color: var(--cor-esperanca); color: var(--cor-esperanca); box-shadow: 0 0 16px rgba(255, 201, 74, .25); }
 .ficha__veredito--medo { border-color: var(--cor-medo); color: #c9b3ff; }
+.ficha__danoDoAtaque { margin: 0; }
+.ficha__danoDoAtaque strong { color: var(--cor-ouro-claro); font-family: var(--fonte-titulo); }
+
+/* --- o botão do dado (proposta 20 A) ---------------------------------------
+   Fica no overlay da ficha, acima das abas. Fechado é só o botão; aberto, um
+   véu escurece a aba e as ações sobem em coluna, perto do polegar. */
+.ficha__turno {
+  position: absolute;
+  right: var(--e4);
+  bottom: calc(env(safe-area-inset-bottom) + var(--alvo-toque) + var(--e5));
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--e2);
+  /* A caixa tem a largura da ação mais comprida: fechada, ela não pode
+     roubar o toque do que está atrás. Só o botão (e a lista aberta) recebem. */
+  pointer-events: none;
+}
+/* O fim da aba Jogo não pode ficar embaixo do botão. */
+.ficha.com-turno .ficha__corpo { padding-bottom: calc(58px + var(--e6)); }
+.ficha__dadoDoTurno {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid var(--cor-ouro-claro);
+  background: radial-gradient(circle at 35% 30%, var(--cor-ouro-claro), var(--cor-ouro) 60%, #9a7330);
+  color: #2a1e07;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .55);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.ficha__dadoDoTurno .icone { grid-area: 1 / 1; transition: opacity var(--transicao), transform var(--transicao); }
+.ficha__dadoDoTurno .icone:last-child { opacity: 0; transform: rotate(-90deg); }
+.ficha__turno.esta-aberto .ficha__dadoDoTurno { background: var(--cor-superficie-alta); color: var(--cor-ouro-claro); }
+.ficha__turno.esta-aberto .ficha__dadoDoTurno .icone:first-child { opacity: 0; transform: rotate(90deg); }
+.ficha__turno.esta-aberto .ficha__dadoDoTurno .icone:last-child { opacity: 1; transform: none; }
+.ficha__veuDoTurno {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, .6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transicao);
+}
+.ficha__turno.esta-aberto .ficha__veuDoTurno { opacity: 1; pointer-events: auto; }
+.ficha__acoesDoTurno {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--e2);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity var(--transicao), transform var(--transicao), visibility var(--transicao);
+}
+.ficha__turno.esta-aberto .ficha__acoesDoTurno { opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+.ficha__acaoDoTurno {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: var(--alvo-min);
+  max-width: calc(100vw - 2 * var(--e4));
+  padding: 0 4px 0 var(--e3);
+  border: 0;
+  background: none;
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--txt-sm);
+  cursor: pointer;
+}
+.ficha__acaoDoTurno span {
+  padding: 6px 10px;
+  border-radius: var(--raio);
+  background: var(--cor-superficie-alta);
+  border: 1px solid var(--cor-borda-forte);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ficha__acaoDoTurno .icone {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 11px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--cor-superficie-alta);
+  border: 1px solid var(--cor-ouro-escuro);
+  color: var(--cor-ouro-claro);
+}
 
 /* ==========================================================================
    A TRILHA DO PERSONAGEM (proposta 9, 31/10/2026)
@@ -2485,3 +2669,68 @@
 .ficha-cartao__estado { display: flex; gap: var(--e3); margin: 4px 0 0; font-family: var(--fonte-mono); font-size: var(--txt-xs); color: var(--cor-texto-suave); }
 .ficha-cartao__estadoPv { color: #ff9a9a; }
 .ficha-cartao__estadoEsp { color: var(--cor-esperanca); }
+
+/* ==========================================================================
+   A ESTANTE DE CARTAS (proposta 27, versão A)
+
+   No celular, uma fileira que desliza com a próxima carta espiando; a carta
+   tem largura fixa (nem estica num celular largo, nem espreme num estreito)
+   e altura pelo conteúdo. Com mais de quatro, ou de 640px para cima, grade.
+   ========================================================================== */
+.roster__estante {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(76vw, 272px);
+  gap: var(--e3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding: 4px 0 var(--e3);
+  scrollbar-width: none;
+}
+.roster__estante::-webkit-scrollbar { display: none; }
+.roster__estante:has(> :only-child) { justify-content: center; }
+.roster__estante.e-grade { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr 1fr; overflow: visible; margin: 0; padding: 0; }
+@media (min-width: 640px) {
+  .roster__estante { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); overflow: visible; margin: 0; padding: 0; }
+}
+.ficha-cartao--carta { scroll-snap-align: start; min-height: 0; }
+.ficha-cartao--carta::after { left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 5px; background: var(--faixa); }
+.ficha-cartao--carta .ficha-cartao__abrir {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  padding: var(--e5) var(--e3) var(--e4);
+  text-align: center;
+  background: linear-gradient(170deg, rgba(255, 255, 255, .04), transparent 45%);
+}
+.ficha-cartao--carta .ficha-cartao__retrato { width: 84px; height: 84px; margin-bottom: var(--e2); }
+.ficha-cartao--carta .ficha-cartao__iniciais { font-size: var(--txt-2xl); }
+.ficha-cartao--carta .ficha-cartao__topo { flex-direction: column; align-items: center; gap: 4px; }
+.ficha-cartao--carta .ficha-cartao__nome { font-size: var(--txt-xl); }
+.ficha-cartao--carta .ficha-cartao__estado { justify-content: center; }
+.ficha-cartao--carta .ficha-cartao__rodape { margin-top: auto; padding-top: var(--e2); padding-right: 0; }
+.roster__estante.e-grade .ficha-cartao__retrato { width: 64px; height: 64px; }
+.roster__estante.e-grade .ficha-cartao__nome { font-size: var(--txt-lg); }
+.ficha-cartao__virar { position: absolute; right: var(--e1); top: var(--e2); z-index: 2; opacity: .75; }
+.ficha-cartao__virar:hover, .ficha-cartao__virar:focus-visible { opacity: 1; }
+.ficha-cartao__verso {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--e2);
+  padding: var(--e4);
+  text-align: center;
+  background: linear-gradient(160deg, #2a1424, var(--cor-superficie) 55%, #0f1a2e);
+}
+.ficha-cartao--carta.esta-virada .ficha-cartao__verso { display: flex; animation: cartaVira .32s ease-out; }
+.ficha-cartao--carta.esta-virada .ficha-cartao__abrir,
+.ficha-cartao--carta.esta-virada .ficha-cartao__virar { visibility: hidden; }
+@keyframes cartaVira { from { transform: perspective(700px) rotateY(80deg); opacity: .3; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ficha-cartao--carta.esta-virada .ficha-cartao__verso { animation: none; } }
