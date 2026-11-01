@@ -15,17 +15,17 @@
  * a pessoa não chegar no fim com a ficha errada.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=027582ea87';
-import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=027582ea87';
-import { acoes, obterEstado } from '../estado.js?v=027582ea87';
-import { mensagemDoErro } from '../api.js?v=027582ea87';
-import * as dados from '../dados.js?v=027582ea87';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=ede14ebfb2';
+import { avisarErro, avisarSucesso, avisar, confirmar, temModalAberto, abrirModal } from '../ui.js?v=ede14ebfb2';
+import { acoes, obterEstado } from '../estado.js?v=ede14ebfb2';
+import { mensagemDoErro } from '../api.js?v=ede14ebfb2';
+import * as dados from '../dados.js?v=ede14ebfb2';
 import {
   nomeQueAbreCarta,
   daCartaDeDominio, daSubclasse, daAncestralidade, daComunidade
-} from '../componentes/carta.js?v=027582ea87';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=027582ea87';
-import { textoAnotado, prepararVerbetes } from '../verbete.js?v=027582ea87';
+} from '../componentes/carta.js?v=ede14ebfb2';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=ede14ebfb2';
+import { textoAnotado, prepararVerbetes } from '../verbete.js?v=ede14ebfb2';
 
 const TRACOS_ORDEM = ['agilidade', 'forca', 'finesse', 'instinto', 'presenca', 'conhecimento'];
 

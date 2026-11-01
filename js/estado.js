@@ -6,10 +6,10 @@
  * "a ficha mudou mas o card do roster continuou velho".
  */
 
-import { api } from './api.js?v=027582ea87';
-import { CHAVES } from './config.js?v=027582ea87';
-import { guardado } from './util.js?v=027582ea87';
-import { enfileirar, marcarPendente } from './fila.js?v=027582ea87';
+import { api } from './api.js?v=ede14ebfb2';
+import { CHAVES } from './config.js?v=ede14ebfb2';
+import { guardado } from './util.js?v=ede14ebfb2';
+import { enfileirar, marcarPendente } from './fila.js?v=ede14ebfb2';
 
 const estado = {
   /** null enquanto não sabemos se há sessão válida. */

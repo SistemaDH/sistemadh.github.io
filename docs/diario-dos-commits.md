@@ -3299,3 +3299,13 @@ Gate: `teste:tudo` verde. Deploys depois do push, na ordem do CLAUDE.md.
   jsonb; `encerrada` vale null nas 8 fichas ativas).
 - Não testado com login de verdade (o roster cheio, a teia gravada, o chamado de
   ponta a ponta): isso fica para a primeira abertura da Vanessa.
+
+## 01/11/2026 — O leque puxa a carta antes de abrir
+
+A Vanessa notou que, na aba Cartas, tocar numa carta do leque já abria o visor —
+a animação aprovada (proposta 5) mostrava a carta SUBINDO primeiro. Agora o
+primeiro toque puxa a carta (sobe, borda dourada, nome embaixo) e o segundo toque
+na mesma abre o visor. Tocar noutra troca a escolhida. O `:hover` ficou só para
+aparelho com ponteiro: no celular ele grudava na última carta tocada.
+
+Gate: `teste:tudo` verde.

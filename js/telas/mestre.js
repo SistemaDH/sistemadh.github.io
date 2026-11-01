@@ -20,24 +20,24 @@
  *  • Nada destrutivo sem prévia — o descanso do grupo mostra antes.
  */
 
-import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=027582ea87';
-import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=027582ea87';
-import { CHAVES } from '../config.js?v=027582ea87';
-import { acoes } from '../estado.js?v=027582ea87';
-import { mensagemDoErro } from '../api.js?v=027582ea87';
-import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=027582ea87';
-import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=027582ea87';
-import { botaoDeRegras } from './regras.js?v=027582ea87';
-import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=027582ea87';
-import { abrirTeia } from './teia.js?v=027582ea87';
-import { abrirTelaDaMesa } from './tela-da-mesa.js?v=027582ea87';
-import { relogioDeContagem } from '../componentes/relogio.js?v=027582ea87';
-import { secaoDoEncontro } from './encontro.js?v=027582ea87';
-import { icone } from '../componentes/icone.js?v=027582ea87';
-import * as dados from '../dados.js?v=027582ea87';
+import { el, limpar, travarBotao, semCorretor, guardado } from '../util.js?v=ede14ebfb2';
+import { abrirModal, avisarErro, avisarSucesso, avisar, confirmar } from '../ui.js?v=ede14ebfb2';
+import { CHAVES } from '../config.js?v=ede14ebfb2';
+import { acoes } from '../estado.js?v=ede14ebfb2';
+import { mensagemDoErro } from '../api.js?v=ede14ebfb2';
+import { prepararGlossario, nomeComGlossa } from '../glossario.js?v=ede14ebfb2';
+import { textoAnotado, nomeAnotado, gatilhoPara, prepararVerbetes } from '../verbete.js?v=ede14ebfb2';
+import { botaoDeRegras } from './regras.js?v=ede14ebfb2';
+import { abaBestiario, catalogoDoBestiario, abrirFichaDeAdversario } from './bestiario.js?v=ede14ebfb2';
+import { abrirTeia } from './teia.js?v=ede14ebfb2';
+import { abrirTelaDaMesa } from './tela-da-mesa.js?v=ede14ebfb2';
+import { relogioDeContagem } from '../componentes/relogio.js?v=ede14ebfb2';
+import { secaoDoEncontro } from './encontro.js?v=ede14ebfb2';
+import { icone } from '../componentes/icone.js?v=ede14ebfb2';
+import * as dados from '../dados.js?v=ede14ebfb2';
 import {
   abrirCarta, daCartaDeDominio, daSubclasse, daTransformacao
-} from '../componentes/carta.js?v=027582ea87';
+} from '../componentes/carta.js?v=ede14ebfb2';
 
 /*
  * O BARALHO DA MESA — as cartas dos jogadores, para o lado de cá.

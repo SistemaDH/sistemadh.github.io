@@ -21,24 +21,24 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=027582ea87';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=027582ea87';
-import { acoes, obterEstado } from '../estado.js?v=027582ea87';
-import { mensagemDoErro } from '../api.js?v=027582ea87';
-import { aguardar, temPendente } from '../fila.js?v=027582ea87';
-import * as dados from '../dados.js?v=027582ea87';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=027582ea87';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=027582ea87';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=027582ea87';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=027582ea87';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=027582ea87';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=027582ea87';
-import { botaoDeRegras } from './regras.js?v=027582ea87';
-import { abrirDescanso } from './descanso.js?v=027582ea87';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=027582ea87';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=027582ea87';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=027582ea87';
-import { icone } from '../componentes/icone.js?v=027582ea87';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=ede14ebfb2';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=ede14ebfb2';
+import { acoes, obterEstado } from '../estado.js?v=ede14ebfb2';
+import { mensagemDoErro } from '../api.js?v=ede14ebfb2';
+import { aguardar, temPendente } from '../fila.js?v=ede14ebfb2';
+import * as dados from '../dados.js?v=ede14ebfb2';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=ede14ebfb2';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=ede14ebfb2';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=ede14ebfb2';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=ede14ebfb2';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=ede14ebfb2';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=ede14ebfb2';
+import { botaoDeRegras } from './regras.js?v=ede14ebfb2';
+import { abrirDescanso } from './descanso.js?v=ede14ebfb2';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=ede14ebfb2';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=ede14ebfb2';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=ede14ebfb2';
+import { icone } from '../componentes/icone.js?v=ede14ebfb2';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -5930,17 +5930,39 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
   function lequeDaMao(naMao, noCofre, baralho, ondeEsta) {
     const n = naMao.length;
     const passo = n > 4 ? 12 : n > 2 ? 16 : 10;
+    /*
+     * UM TOQUE ESCOLHE, O SEGUNDO ABRE — como na animação aprovada.
+     *
+     * Abrir no primeiro toque pulava o gesto que dá sentido ao leque: puxar
+     * uma carta da mão para olhar. Agora o primeiro toque sobe a carta e diz
+     * o nome dela embaixo; tocar de novo na mesma abre o visor. Tocar noutra
+     * troca a escolhida.
+     */
+    const legenda = el('p', { class: 'ficha__lequeLegenda', 'aria-live': 'polite',
+      texto: 'Toque numa carta para puxá-la; toque de novo para abrir.' });
     const leque = el('div', { class: 'ficha__leque', role: 'group', 'aria-label': 'Mão de cartas' },
       naMao.map((c, i) => {
         const angulo = (i - (n - 1) / 2) * passo;
-        return el('button', {
+        const botao = el('button', {
           type: 'button', class: 'ficha__lequeCarta',
           style: `--angulo:${angulo}deg;--ordem:${i};--cor-dominio:${catalogo.corDoDominio(c.dominio)}`,
-          'aria-label': `Ver a carta ${c.nome}`,
-          onClick: () => abrirCarta(visorDaCarta(c, baralho, 'cofre', ondeEsta))
+          'aria-label': `${c.nome}: tocar uma vez puxa a carta, duas vezes abre`,
+          onClick: () => {
+            if (botao.classList.contains('esta-escolhida')) {
+              abrirCarta(visorDaCarta(c, baralho, 'cofre', ondeEsta));
+              return;
+            }
+            leque.querySelectorAll('.ficha__lequeCarta.esta-escolhida')
+              .forEach((x) => { x.classList.remove('esta-escolhida'); x.setAttribute('aria-pressed', 'false'); });
+            botao.classList.add('esta-escolhida');
+            botao.setAttribute('aria-pressed', 'true');
+            legenda.textContent = `${c.nome} · ${c.dominioNome} · nível ${c.nivel} — toque de novo para abrir.`;
+          }
         }, c.imagem
           ? el('img', { src: encodeURI(c.imagem), alt: '', loading: 'lazy', decoding: 'async' })
           : el('span', { class: 'ficha__lequeNome', texto: c.nome }));
+        botao.setAttribute('aria-pressed', 'false');
+        return botao;
       }));
     const topo = noCofre[0];
     const monte = noCofre.length ? el('button', {
@@ -5957,7 +5979,7 @@ export async function abrirFichaEmJogo(id, { aoFechar } = {}) {
         el('span', { texto: 'tocar para ver e recordar' })
       ])
     ]) : null;
-    return el('div', { class: 'ficha__mesaDeCartas' }, [leque, monte].filter(Boolean));
+    return el('div', { class: 'ficha__mesaDeCartas' }, [leque, legenda, monte].filter(Boolean));
   }
 
   function cartaoDeCarta(c, lista, destino, ondeEsta) {
