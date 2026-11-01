@@ -289,6 +289,7 @@ function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
         extra: r.extra === undefined ? null : r.extra
       };
     }
+    anotarNoDiario_(r.ficha || atual.ficha, r.evento, r.extra);
     const validada = validarFicha_(r.ficha || atual.ficha);
     const json = JSON.stringify(validada);
     if (json.length > LIMITE_DADOS_CHARS) {
@@ -315,6 +316,81 @@ function mutarPersonagem_(jogador, id, versaoEsperada, fn) {
       extra: r.extra === undefined ? null : r.extra
     };
   });
+}
+
+/* ------------------------------------------------------------------------ *
+ *  O DIÁRIO DA FICHA (proposta 28, versão B — a linha do tempo da História)
+ * ------------------------------------------------------------------------ */
+
+/** Quantas entradas o diário guarda: as mais antigas saem primeiro. */
+const DIARIO_MAXIMO = 300;
+/** Uma anotação é uma frase de mesa, não um capítulo. */
+const DIARIO_TEXTO_MAXIMO = 400;
+
+/**
+ * ⚠ O DIÁRIO MORA EM `ficha.diario` E SÓ ESTE ARQUIVO ESCREVE NELE.
+ *
+ * Cada entrada: { id, sessao, quando, tipo, texto }. `sessao` é o número da
+ * sessão da mesa naquele instante (0 antes da primeira), para a linha do
+ * tempo agrupar por sessão. `tipo` é 'nota' (escrita pela pessoa) ou o nome
+ * do acontecimento que o motor anotou sozinho ('nivel', 'descanso', 'item').
+ *
+ * Os acontecimentos automáticos saem do `evento` que cada ação já devolve
+ * para o log — nenhuma regra nova, e os arquivos gerados não mudam.
+ */
+function normalizarDiario_(diario) {
+  if (!Array.isArray(diario)) return [];
+  return diario.filter(function (e) { return e && typeof e === 'object' && String(e.texto || '').trim(); })
+    .map(function (e) {
+      return {
+        id: String(e.id || '').slice(0, 40),
+        sessao: Math.max(0, Math.trunc(Number(e.sessao)) || 0),
+        quando: String(e.quando || '').slice(0, 40),
+        tipo: String(e.tipo || 'nota').slice(0, 20),
+        texto: String(e.texto || '').trim().slice(0, DIARIO_TEXTO_MAXIMO)
+      };
+    }).slice(-DIARIO_MAXIMO);
+}
+
+function sessaoDaMesaAgora_() {
+  try {
+    if (typeof mesaLer_ !== 'function') return 0;
+    return Math.max(0, Math.trunc(Number(((mesaLer_() || {}).sessao || {}).numero)) || 0);
+  } catch (e) {
+    return 0;
+  }
+}
+
+function entradaDoDiario_(tipo, texto) {
+  return {
+    id: 'd' + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36),
+    sessao: sessaoDaMesaAgora_(),
+    quando: agoraIso_(),
+    tipo: tipo,
+    texto: String(texto || '').trim().slice(0, DIARIO_TEXTO_MAXIMO)
+  };
+}
+
+/** O que cada ação anota sozinha. Evento desconhecido não anota nada. */
+function anotarNoDiario_(ficha, evento, extra) {
+  if (!ficha || typeof ficha !== 'object') return;
+  const novas = [];
+  const ev = String(evento || '');
+  const nivel = /^avanco-nivel-(\d+)$/.exec(ev);
+  if (nivel) {
+    const carta = ((((extra || {}).cartas) || {}).doNivel || {}).nome;
+    novas.push(entradaDoDiario_('nivel', 'Subiu para o nível ' + nivel[1] + (carta ? ' · carta ' + carta : '')));
+  } else if (ev === 'descanso-curto' || ev === 'descanso-longo') {
+    novas.push(entradaDoDiario_('descanso', ev === 'descanso-curto' ? 'Descanso curto' : 'Descanso longo'));
+  } else if (ev === 'ficha-ajustada') {
+    ((extra || {}).mudancas || []).forEach(function (m) {
+      if (m && m.tipo === 'inventario' && (m.acao === 'consumir' || m.acao === 'usar') && m.item) {
+        novas.push(entradaDoDiario_('item', 'Usou ' + m.item));
+      }
+    });
+  }
+  if (!novas.length) return;
+  ficha.diario = normalizarDiario_((ficha.diario || []).concat(novas));
 }
 
 /**

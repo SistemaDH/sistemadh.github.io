@@ -6,10 +6,10 @@
  * "a ficha mudou mas o card do roster continuou velho".
  */
 
-import { api } from './api.js?v=0f4ded732e';
-import { CHAVES } from './config.js?v=0f4ded732e';
-import { guardado } from './util.js?v=0f4ded732e';
-import { enfileirar, marcarPendente } from './fila.js?v=0f4ded732e';
+import { api } from './api.js?v=7151d8b057';
+import { CHAVES } from './config.js?v=7151d8b057';
+import { guardado } from './util.js?v=7151d8b057';
+import { enfileirar, marcarPendente } from './fila.js?v=7151d8b057';
 
 const estado = {
   /** null enquanto não sabemos se há sessão válida. */
@@ -286,6 +286,26 @@ export const acoes = {
       } finally {
         marcarPendente(id, -1);
       }
+    });
+  },
+
+  /**
+   * O DIÁRIO (proposta 28 B). Vai pela fila da ficha, sem versão — como os
+   * toques de trilha: acrescentar uma linha não pisa em nada que outro
+   * aparelho tenha gravado.
+   */
+  anotarNoDiario(id, texto) {
+    return enfileirar(id, async () => {
+      const dados = await api.anotarNoDiario(estado.token, id, texto);
+      if (estado.personagemAberto && estado.personagemAberto.id === id) definir({ personagemAberto: dados.personagem });
+      return dados;
+    });
+  },
+  apagarDoDiario(id, entrada) {
+    return enfileirar(id, async () => {
+      const dados = await api.apagarDoDiario(estado.token, id, entrada);
+      if (estado.personagemAberto && estado.personagemAberto.id === id) definir({ personagemAberto: dados.personagem });
+      return dados;
     });
   },
 

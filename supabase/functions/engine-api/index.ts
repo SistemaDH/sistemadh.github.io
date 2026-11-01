@@ -66,6 +66,7 @@ const ACOES = new Set([
   // Lote 5 de design (31/10/2026): a jogada com Medo vinda da ficha, a teia da
   // campanha e o chamado do Mestre. Todas moram no 99_Api.gs.
   "medoDaJogada","teiaDaMesa","salvarTeia","chamarJogador","chamadaDaMesa","responderChamada",
+  "anotarNoDiario","apagarDoDiario",
 ]);
 
 function resposta(obj: unknown, status = 200) {

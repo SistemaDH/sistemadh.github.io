@@ -7,11 +7,11 @@
  *   • Mestre  · entrar   (só o código)
  */
 
-import { el, travarBotao } from '../util.js?v=0f4ded732e';
-import { acoes } from '../estado.js?v=0f4ded732e';
-import { avisarErro, avisarSucesso } from '../ui.js?v=0f4ded732e';
-import { mensagemDoErro } from '../api.js?v=0f4ded732e';
-import { abrirAjustes } from './ajustes.js?v=0f4ded732e';
+import { el, travarBotao } from '../util.js?v=7151d8b057';
+import { acoes } from '../estado.js?v=7151d8b057';
+import { avisarErro, avisarSucesso } from '../ui.js?v=7151d8b057';
+import { mensagemDoErro } from '../api.js?v=7151d8b057';
+import { abrirAjustes } from './ajustes.js?v=7151d8b057';
 
 export function telaAbertura({ aoEntrar }) {
   let papel = 'jogador';   // 'jogador' | 'mestre'

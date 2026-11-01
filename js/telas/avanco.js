@@ -16,14 +16,14 @@
  * nenhuma — só desenha e pergunta.
  */
 
-import { el, limpar, travarBotao, semCorretor } from '../util.js?v=0f4ded732e';
-import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=0f4ded732e';
-import { acoes } from '../estado.js?v=0f4ded732e';
-import { mensagemDoErro } from '../api.js?v=0f4ded732e';
-import * as dados from '../dados.js?v=0f4ded732e';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js?v=0f4ded732e';
-import { nomeComGlossa } from '../glossario.js?v=0f4ded732e';
-import { textoAnotado } from '../verbete.js?v=0f4ded732e';
+import { el, limpar, travarBotao, semCorretor } from '../util.js?v=7151d8b057';
+import { abrirModal, avisarErro, avisarSucesso, confirmar } from '../ui.js?v=7151d8b057';
+import { acoes } from '../estado.js?v=7151d8b057';
+import { mensagemDoErro } from '../api.js?v=7151d8b057';
+import * as dados from '../dados.js?v=7151d8b057';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio } from '../componentes/carta.js?v=7151d8b057';
+import { nomeComGlossa } from '../glossario.js?v=7151d8b057';
+import { textoAnotado } from '../verbete.js?v=7151d8b057';
 
 /**
  * @param {{personagem:Object, catalogo:Object, aoAplicar?:Function}} opcoes

@@ -21,25 +21,26 @@
  * da criação de ficha.
  */
 
-import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=0f4ded732e';
-import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=0f4ded732e';
-import { acoes, obterEstado } from '../estado.js?v=0f4ded732e';
-import { mensagemDoErro } from '../api.js?v=0f4ded732e';
-import { aguardar, temPendente } from '../fila.js?v=0f4ded732e';
-import * as dados from '../dados.js?v=0f4ded732e';
-import { reguaDeDano } from '../componentes/regua-dano.js?v=0f4ded732e';
-import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=0f4ded732e';
-import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=0f4ded732e';
-import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=0f4ded732e';
-import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=0f4ded732e';
-import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=0f4ded732e';
-import { botaoDeRegras } from './regras.js?v=0f4ded732e';
-import { abrirDescanso } from './descanso.js?v=0f4ded732e';
-import { abrirAvanco, desfazerAvanco } from './avanco.js?v=0f4ded732e';
-import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=0f4ded732e';
-import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=0f4ded732e';
-import { icone } from '../componentes/icone.js?v=0f4ded732e';
-import { vibrar } from '../preferencias.js?v=0f4ded732e';
+import { el, limpar, dataRelativa, semCorretor, travarBotao } from '../util.js?v=7151d8b057';
+import { avisarErro, avisarSucesso, avisar, abrirModal, temModalAberto } from '../ui.js?v=7151d8b057';
+import { acoes, obterEstado } from '../estado.js?v=7151d8b057';
+import { mensagemDoErro } from '../api.js?v=7151d8b057';
+import { aguardar, temPendente } from '../fila.js?v=7151d8b057';
+import * as dados from '../dados.js?v=7151d8b057';
+import { reguaDeDano } from '../componentes/regua-dano.js?v=7151d8b057';
+import { blocoDaTrilha } from '../componentes/trilha-do-personagem.js?v=7151d8b057';
+import { blocoDaLinhaDoTempo } from '../componentes/linha-do-tempo.js?v=7151d8b057';
+import { abrirCartaoDoPersonagem } from '../componentes/cartao-do-personagem.js?v=7151d8b057';
+import { abrirCarta, nomeQueAbreCarta, daCartaDeDominio, daTransformacao } from '../componentes/carta.js?v=7151d8b057';
+import { prepararGlossario, nomeComGlossa, jamboDe } from '../glossario.js?v=7151d8b057';
+import { textoAnotado, nomeAnotado, gatilhoPara, abrirVerbete, prepararVerbetes } from '../verbete.js?v=7151d8b057';
+import { botaoDeRegras } from './regras.js?v=7151d8b057';
+import { abrirDescanso } from './descanso.js?v=7151d8b057';
+import { abrirAvanco, desfazerAvanco } from './avanco.js?v=7151d8b057';
+import { abrirParalela, paralelasPossiveis, acharParalela } from './paralelas.js?v=7151d8b057';
+import { abrirEditorDeFoto, urlDaFoto } from './foto.js?v=7151d8b057';
+import { icone } from '../componentes/icone.js?v=7151d8b057';
+import { vibrar } from '../preferencias.js?v=7151d8b057';
 
 /**
  * Teto do livro para PV, Estresse e Armadura (errata de 9/9/2025).
@@ -7821,6 +7822,32 @@ function ouroEmPunhados(ouro) {
   }
 
   function abaHistoria(pai, ficha) {
+    /*
+     * A LINHA DO TEMPO VEM PRIMEIRO (proposta 28 B): a História abre no que o
+     * personagem viveu, sessão a sessão. O resto da aba continua embaixo.
+     */
+    pai.append(secao('Linha do tempo', blocoDaLinhaDoTempo({
+      ficha,
+      aoAnotar: async (texto) => {
+        try {
+          const r = await acoes.anotarNoDiario(p.id, texto);
+          p = r.personagem;
+          desenhar();
+          avisarSucesso('Anotado na linha do tempo.');
+        } catch (e) {
+          avisarErro(mensagemDoErro(e));
+        }
+      },
+      aoApagar: async (entrada) => {
+        try {
+          const r = await acoes.apagarDoDiario(p.id, entrada);
+          p = r.personagem;
+          desenhar();
+        } catch (e) {
+          avisarErro(mensagemDoErro(e));
+        }
+      }
+    })));
     const exp = ficha.experiencias || [];
     const reliquiaExp = ((ficha || {}).inventario || []).find((item) =>
       item && item.emUso && item.id === 'loot-47' && item.vinculo);

@@ -3,8 +3,8 @@
  * Backend 100% Supabase Edge Functions.
  */
 
-import { CONFIG, MENSAGENS_ERRO } from './config.js?v=0f4ded732e';
-import { esperar } from './util.js?v=0f4ded732e';
+import { CONFIG, MENSAGENS_ERRO } from './config.js?v=7151d8b057';
+import { esperar } from './util.js?v=7151d8b057';
 
 /*
  * ⚠ O ENDEREÇO É LIDO A CADA CHAMADA, NÃO NA IMPORTAÇÃO.
@@ -91,7 +91,8 @@ const ACOES_ENGINE = new Set([
   'parearContagens','desparearContagem','avancarPerseguicao',
   'previaDescansoDaMesa','aplicarDescansoDaMesa',
   // Lote 5 de design (31/10/2026): o Medo da jogada, a teia e o chamado.
-  'medoDaJogada','teiaDaMesa','salvarTeia','chamarJogador','chamadaDaMesa','responderChamada'
+  'medoDaJogada','teiaDaMesa','salvarTeia','chamarJogador','chamadaDaMesa','responderChamada',
+  'anotarNoDiario','apagarDoDiario'
 ]);
 
 export class ErroApi extends Error {
@@ -258,6 +259,8 @@ export const api = {
   chamarJogador: (token,dados) => chamar('chamarJogador',{token,...dados}),
   chamadaDaMesa: token => chamar('chamadaDaMesa',{token}),
   responderChamada: (token,id) => chamar('responderChamada',{token,id}),
+  anotarNoDiario: (token,id,texto) => chamar('anotarNoDiario',{token,id,texto}),
+  apagarDoDiario: (token,id,entrada) => chamar('apagarDoDiario',{token,id,entrada}),
   salvarAdversarioDaMesa: (token,ficha) => chamar('salvarAdversarioDaMesa',{token,ficha}),
   excluirAdversarioDaMesa: (token,id) => chamar('excluirAdversarioDaMesa',{token,id}),
 

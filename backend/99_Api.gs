@@ -777,6 +777,42 @@ function executar_(p) {
       }
 
       /**
+       * O DIÁRIO (proposta 28 B): a pessoa escreve uma anotação no ponto de
+       * agora da linha do tempo. O motor carimba a sessão da mesa e a hora;
+       * os acontecimentos automáticos entram sozinhos (anotarNoDiario_).
+       * Só a anotação escrita à mão pode ser apagada — o resto é registro.
+       */
+      case 'anotarNoDiario': {
+        const jogador = exigirSessao_(p.token);
+        const texto = String(p.texto || '').trim();
+        if (!texto) throw erroApi_(ERRO.DADOS_INVALIDOS, 'Escreva a anotação antes de guardar.');
+        if (texto.length > DIARIO_TEXTO_MAXIMO) {
+          throw erroApi_(ERRO.DADOS_INVALIDOS, 'A anotação passa de ' + DIARIO_TEXTO_MAXIMO + ' letras.');
+        }
+        const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
+          ficha.diario = normalizarDiario_((ficha.diario || []).concat([entradaDoDiario_('nota', texto)]));
+          return { ficha: ficha, evento: 'diario-anotado' };
+        });
+        return ok_({ personagem: r.personagem });
+      }
+
+      case 'apagarDoDiario': {
+        const jogador = exigirSessao_(p.token);
+        const alvo = String(p.entrada || '');
+        const r = mutarPersonagem_(jogador, p.id, p.versao, function (ficha) {
+          const antes = normalizarDiario_(ficha.diario);
+          const achada = antes.filter(function (e) { return e.id === alvo; })[0];
+          if (!achada) throw erroApi_(ERRO.NAO_ENCONTRADO, 'Essa anotação não está mais no diário.');
+          if (achada.tipo !== 'nota') {
+            throw erroApi_(ERRO.DADOS_INVALIDOS, 'Só as anotações escritas à mão podem ser apagadas.');
+          }
+          ficha.diario = antes.filter(function (e) { return e.id !== alvo; });
+          return { ficha: ficha, evento: 'diario-apagado' };
+        });
+        return ok_({ personagem: r.personagem });
+      }
+
+      /**
        * Uma característica da ficha de origem altera um recurso de um aliado.
        * Maestro é o primeiro caso. A origem não muda e não sobe versão.
        */

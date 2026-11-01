@@ -6717,6 +6717,68 @@ teste('o chamado vai do Mestre para a ficha e a resposta volta', () => {
   igual(api('chamadaDaMesa', { token: tokenPainel }).dados.chamada.pronto, true, 'o painel vê a resposta');
 });
 
+teste('o diário: a dona anota, o motor carimba a sessão, ninguém de fora escreve', () => {
+  const dona = api('registrar', { nome: 'Do Diário', codigo: 'senha-do-diario' }).dados.token;
+  const outra = api('registrar', { nome: 'Fora do Diário', codigo: 'senha-fora-diario' }).dados.token;
+  const ficha = api('criarPersonagem', { token: dona, ficha: fichaDoLote5('Lyra do Diário') });
+  verdade(ficha.ok, JSON.stringify(ficha));
+  const id = ficha.dados.personagem.id;
+  const sessao = Number(((api('painelDoMestre', { token: tokenPainel }).dados.mesa || {}).sessao || {}).numero) || 0;
+
+  const r = api('anotarNoDiario', { token: dona, id, texto: '  O Thorn me deve uma.  ' });
+  verdade(r.ok, JSON.stringify(r));
+  const diario = r.dados.personagem.ficha.diario;
+  const nota = diario[diario.length - 1];
+  igual(nota.tipo, 'nota');
+  igual(nota.texto, 'O Thorn me deve uma.', 'as pontas em branco saem');
+  igual(nota.sessao, sessao, 'a sessão vem da mesa, não do pedido');
+  verdade(nota.id && nota.quando);
+
+  igual(api('anotarNoDiario', { token: outra, id, texto: 'invasão' }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('anotarNoDiario', { token: dona, id, texto: '   ' }).erro.codigo, 'DADOS_INVALIDOS');
+  igual(api('anotarNoDiario', { token: dona, id, texto: 'x'.repeat(401) }).erro.codigo, 'DADOS_INVALIDOS');
+  igual(api('anotarNoDiario', { id, texto: 'sem sessão' }).erro.codigo, 'NAO_AUTENTICADO');
+
+  igual(api('apagarDoDiario', { token: outra, id, entrada: nota.id }).erro.codigo, 'SEM_PERMISSAO');
+  igual(api('apagarDoDiario', { token: dona, id, entrada: 'nao-existe' }).erro.codigo, 'NAO_ENCONTRADO');
+  const apagada = api('apagarDoDiario', { token: dona, id, entrada: nota.id });
+  verdade(apagada.ok, JSON.stringify(apagada));
+  igual(apagada.dados.personagem.ficha.diario.filter((e) => e.id === nota.id).length, 0);
+});
+
+teste('o diário anota sozinho nível, descanso e item usado — e só isso', () => {
+  const ficha = { diario: [] };
+  contexto.anotarNoDiario_(ficha, 'avanco-nivel-3', { cartas: { doNivel: { nome: 'Não Conte Mentiras' } } });
+  contexto.anotarNoDiario_(ficha, 'descanso-curto', {});
+  contexto.anotarNoDiario_(ficha, 'ficha-ajustada', { mudancas: [
+    { tipo: 'inventario', acao: 'consumir', item: 'Poção de saúde menor' },
+    { tipo: 'recurso', chave: 'esperanca' }
+  ] });
+  contexto.anotarNoDiario_(ficha, 'personagem-ajustado', {});
+  contexto.anotarNoDiario_(ficha, 'diario-anotado', {});
+  igual(ficha.diario.map((e) => e.tipo).join(','), 'nivel,descanso,item');
+  igual(ficha.diario[0].texto, 'Subiu para o nível 3 · carta Não Conte Mentiras');
+  igual(ficha.diario[2].texto, 'Usou Poção de saúde menor');
+  const vazia = {};
+  contexto.anotarNoDiario_(vazia, 'personagem-ajustado', {});
+  igual(vazia.diario, undefined, 'evento sem anotação não cria o campo');
+});
+
+teste('a anotação automática não pode ser apagada, e o diário guarda as 300 últimas', () => {
+  const dona = api('registrar', { nome: 'Diário Cheio', codigo: 'senha-diario-cheio' }).dados.token;
+  const criada = api('criarPersonagem', { token: dona, ficha: Object.assign(fichaDoLote5('Kess do Diário'), {
+    diario: [{ id: 'auto1', sessao: 1, quando: '2026-10-31T20:00:00Z', tipo: 'nivel', texto: 'Subiu para o nível 2' }]
+  }) });
+  verdade(criada.ok, JSON.stringify(criada));
+  const id = criada.dados.personagem.id;
+  igual(api('apagarDoDiario', { token: dona, id, entrada: 'auto1' }).erro.codigo, 'DADOS_INVALIDOS');
+  const muitas = Array.from({ length: 320 }, (_, i) => ({ id: 'n' + i, tipo: 'nota', texto: 'nota ' + i }));
+  const cortado = contexto.normalizarDiario_(muitas);
+  igual(cortado.length, 300);
+  igual(cortado[0].texto, 'nota 20', 'saem as mais antigas');
+  igual(contexto.normalizarDiario_('lixo').length, 0);
+});
+
 teste('a chamada de mais de 10 minutos não acende ninguém', () => {
   igual(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 11 * 60000).toISOString() }), null);
   verdade(contexto.chamadaValida_({ id: 'x', em: new Date(Date.now() - 60000).toISOString() }));
